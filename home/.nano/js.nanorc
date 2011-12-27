@@ -19,8 +19,8 @@ color green "\<(switch|this|throw|try|typeof|undefined|var|void|while|with)\>"
 color red "\<(Array|Boolean|Class|Date|Element|Enumerator|Error|Event|Function|Math|Number|Object|RegExp|String|true|false)\>"
 
 ## Strings
-color brightyellow "L?\"(\\"|[^"])*?\""
-color brightyellow "L?'(\'|[^'])*?'"
+color brightyellow "L?"(\"|[^"])*""
+color brightyellow "L?'(\'|[^'])*'"
 
 ## Escape sequences
 color red "\\[0-7][0-7]?[0-7]?|\\x[0-9a-fA-F]+|\\[bfnrt'"\?\\]"

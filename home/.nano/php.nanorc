@@ -29,7 +29,7 @@ color red "\$[a-zA-Z_0-9$]*"
 #color red "->[a-zA-Z_0-9$]*->[a-zA-Z_0-9$]*->[a-zA-Z_0-9$]*->[a-zA-Z_0-9$]*->[a-zA-Z_0-9$]*->[a-zA-Z_0-9$]*->[a-zA-Z_0-9$]*->[a-zA-Z_0-9$]*->[a-zA-Z_0-9$]*[^\(]"
 
 ## function calls
-color brightgreen "[a-zA-Z_0-9]*[[:space:]]?*\("
+color brightgreen "[a-zA-Z_0-9]*[[:space:]]*\("
 
 ## method calls
 #color brightgreen "->[a-zA-Z_0-9]*[[:space:]]?*\("
@@ -51,8 +51,8 @@ color green "\<(true|false|null|and|or|xor|not|include|include_once|require|requ
 color brightyellow "\"(\\.|[^\\\"])*\"|'(\\.|[^\\'])*'"
 
 ## comments
-color brightblue "[[:space:]]?*//.*$"
-color brightblue "[[:space:]]?*#.*$"
+color brightblue "[[:space:]]*//.*$"
+color brightblue "[[:space:]]*#.*$"
 color brightblue start="/\*" end="\*/"
 
 ## phpdoc
