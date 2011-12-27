@@ -82,11 +82,12 @@ PATH=${PATH/\/usr\/local\/bin:}
 PATH=${PATH/\/usr\/local\/sbin:}
 
 #
-# add /usr/local/bin, /usr/local/sbin, ~/bin and ~/.local/bin to path
+# add /usr/local/bin, /usr/local/sbin, ~/bin, ~/.bin and ~/.local/bin to path
 #
 [[ ! $PATH =~ "/usr/local/bin" ]]	&& PATH="/usr/local/bin:${PATH}"
 [[ ! $PATH =~ "/usr/local/sbin" ]]	&& PATH="/usr/local/sbin:${PATH}"
 [[ -d "${HOME}/bin" ]]				&& PATH="${HOME}/bin:${PATH}"
+[[ -d "${HOME}/.bin" ]]				&& PATH="${HOME}/.bin:${PATH}"
 [[ -d "${HOME}/.local/bin" ]]		&& PATH="${HOME}/.local/bin:${PATH}"
 
 # MacOSX paths too
