@@ -1,0 +1,5 @@
+## Here is a short example for HTML.
+##
+syntax "html" "\.html$"
+color brightblue start="<" end=">"
+color red "&[^;[[:space:]]]*;"

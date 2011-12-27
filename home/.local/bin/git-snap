@@ -1,0 +1,73 @@
+#!/bin/bash
+
+_help() {
+	echo 'usage: git snap [--branch=master] [--format=tar] [--filter=gzip] [branch] [format] [filter]'
+	exit 1
+}
+
+_filter() {
+	if [[ ${2} != 'zip' ]]; then
+		case ${1} in
+			gz*)
+				echo '.gz'
+				;;
+			bz*)
+				echo '.bz2'
+				;;
+			xz*)
+				echo '.xz'
+				;;
+		esac
+	fi
+}
+
+BRANCH=""
+FORMAT=""
+FILTER=""
+OUTPUT=""
+
+while [[ ! -z ${1} ]]; do
+	case ${1} in
+		--format=*)
+			FORMAT=${1/--format=/}
+			;;
+		--branch=*)
+			BRANCH=${1/--branch=/}
+			;;
+		--filter=*)
+			FILTER=${1/--filter=/}
+			;;
+		--out*=*)
+			OUTPUT=${1/--out*=/}
+			;;
+		--*)
+			_help
+			;;
+		*)
+			if [[ -z ${BRANCH} ]]; then
+				BRANCH=${1}
+			elif [[ -z ${FORMAT} ]]; then
+				FORMAT=${1}
+			elif [[ -z ${FILTER} ]]; then
+				FILTER=${1}
+			elif [[ -z ${OUTPUT} ]]; then
+				OUTPUT=${1}
+			else
+				_help
+			fi
+			;;
+	esac
+
+	shift
+done
+
+BRANCH=${BRANCH:-master}
+FORMAT=${FORMAT:-tar}
+FILTER=${FILTER:-gzip}
+OUTPUT=${OUTPUT:-${BRANCH}.${FORMAT}`_filter ${FILTER} ${FORMAT}`}
+
+if [[ ${FORMAT} == 'zip' ]]; then
+	git archive ${BRANCH} --format=zip > ${OUTPUT}
+else
+	git archive ${BRANCH} --format=${FORMAT} | ${FILTER} > ${OUTPUT}
+fi

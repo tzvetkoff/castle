@@ -1,0 +1,207 @@
+#!/usr/bin/env ruby
+# encoding: utf-8
+
+require 'unicode'
+require 'thor/group'
+
+
+class Radio < Thor::Group
+
+  STREAMS = {
+    'Дарик Радио' => {
+      :tags => [:darik],
+      :stream => 'http://mp3.orbitel.bg:8000/darik.m3u',
+    },
+    'Радио 1' => {
+      :tags => [:radio1, :radio_1],
+      :stream => 'http://80.72.68.217/radio1.ogg.m3u',
+    },
+    'Радио 1 Рок' => {
+      :tags => [:radio1rock, :radio1_rock, :radio_1_rock],
+      :stream => 'http://80.72.68.217/radio1rock.ogg.m3u',
+    },
+    'БГ Радио' => {
+      :tags => [:bgradio, :bg_radio],
+      :stream => 'http://80.72.68.217/bgradio.ogg.m3u',
+    },
+    'Радио Вероника' => {
+      :tags => [:veronika],
+      :stream => 'http://80.72.68.217/veronika.ogg.m3u',
+    },
+    'Радио Веселина' => {
+      :tags => [:veselina],
+      :stream => 'http://193.108.24.18:8000/veselina.m3u',
+    },
+    'Радио Витоша' => {
+      :tags => [:vitosha],
+      :stream => 'http://193.108.24.18:8000/vitosha.m3u',
+    },
+    'Радио Energy' => {
+      :tags => [:energy, :nrj],
+      :stream => 'http://80.72.68.217/nrj.ogg.m3u',
+    },
+    'Радио N-Joy' => {
+      :tags => [:njoy, :n_joy],
+      :stream => 'http://pulsar.atlantis.bg:8000/njoy.ogg.m3u',
+    },
+    'Радио Z-Rock' => {
+      :tags => [:zrock, :z_rock],
+      :stream => 'http://pulsar.atlantis.bg:8000/zrock.ogg.m3u',
+    },
+    'Радио City' => {
+      :tags => [:city],
+      :stream => 'http://62.204.145.218:8000/city64.m3u',
+    },
+    'Радио Star FM' => {
+      :tags => [:starfm, :star_fm],
+      :stream => 'http://pulsar.atlantis.bg:8000/inforadio.ogg.m3u',
+    },
+    'Радио FM+' => {
+      :tags => [:fmplus, :'fm+'],
+      :stream => 'http://pulsar.atlantis.bg:8000/fmplus.ogg.m3u',
+    },
+    'Радио Fresh!' => {
+      :tags => [:fresh],
+      :stream => 'http://193.108.24.21:8000/fresh.m3u',
+    },
+    'Тангра Мега Рок' => {
+      :tags => [:tangramegarock, :tangra_megarock, :tangra_mega_rock],
+      :stream => 'http://stream-bg-01.radiotangra.com:8000/Tangra-high.m3u',
+    },
+    'I Hate Mondays Radio' => {
+      :tags => [:hatemondays, :hate_mondays, :ihate_mondays, :i_hate_mondays],
+      :stream => 'http://77.70.53.35:8000/listen.pls',
+    },
+    'Радио Реакция' => {
+      :tags => [:reakcia],
+      :stream => 'http://stream.reakcia.net/live.m3u',
+    },
+    'Pro FM Rock' => {
+      :tags => [:profmrock, :profm_rock, :pro_fm_rock],
+      :stream => 'http://live.profm.bg:8000/rock.mp3.m3u',
+    },
+    'Радио Melody' => {
+      :tags => [:melody],
+      :stream => 'http://193.108.24.21:8000/melody.ogg.m3u',
+    },
+    'Радио Романтика' => {
+      :tags => [:romantika],
+      :stream => 'http://89.190.212.173:8000/listen.pls',
+    },
+    'Радио Татковина' => {
+      :tags => [:tatkovina],
+      :stream => 'http://67.205.111.204:8000/bg.m3u',
+    },
+    'Радио ФСБ' => {
+      :tags => [:fsb],
+      :stream => 'http://91.121.91.172:8557/listen.pls',
+    },
+    'Pro FM Rhythm and Blues' => {
+      :tags => [:rhythmblues, :rhythmandblues, :rhythm_and_blues, :profmrhythmandblues, :pro_fm_rhythm_and_blues],
+      :stream => 'http://live.profm.bg:8000/blues.mp3.m3u',
+    },
+    'Pro FM Black' => {
+      :tags => [:profmblack, :profm_black, :pro_fm_black],
+      :stream => 'http://live.profm.bg:8000/black.mp3.m3u',
+    },
+    'Black Side' => {
+      :tags => [:blackside, :black_side],
+      :stream => 'http://88.213.199.204:8070/listen.pls',
+    },
+    'Pro FM Chillout' => {
+      :tags => [:profmchillout, :profm_chillout, :pro_fm_chillout],
+      :stream => 'http://live.profm.bg:8000/chillout.mp3.m3u',
+    },
+    'Pro FM Love' => {
+      :tags => [:profmlove, :profm_love, :pro_fm_love],
+      :stream => 'http://live.profm.bg:8000/love.mp3.m3u',
+    },
+    'Pro FM Oldies' => {
+      :tags => [:profmoldies, :profm_oldies, :pro_fm_oldies],
+      :stream => 'http://live.profm.bg:8000/oldies.mp3.m3u',
+    },
+    'Pro FM Gold' => {
+      :tags => [:profmgold, :profm_gold, :pro_fm_gold],
+      :stream => 'http://live.profm.bg:8000/gold.mp3.m3u',
+    },
+  }
+
+  class_option :list, :desc => 'Show list of available streams', :type => :boolean
+  class_option :tags, :desc => 'Show list of streams with tags', :type => :boolean
+  class_option :tag, :desc => 'Find radio by tag', :type => :string
+  class_option :name, :desc => 'Find radio by name', :type => :string
+  class_option :random, :desc => 'Play random radio', :type => :boolean, :default => true
+
+  def initialize(*args, &block)
+    super
+
+    print_list(options.tags?) if options.list? or options.tags?
+
+    stream = nil
+
+    if options.tag
+      search = options.tag.downcase.to_sym
+
+      STREAMS.each do |k, v|
+        if v[:tags].index(search)
+          stream = v[:stream]
+          break
+        end
+      end
+    elsif options.name
+      search = options.name.downcase
+
+      STREAMS.each do |k, v|
+        if k.downcase.index(search)
+          stream = v[:stream]
+          break
+        end
+      end
+    elsif options.random?
+      stream = STREAMS[STREAMS.keys[rand(STREAMS.keys.length)]][:stream]
+    end
+
+    if not stream
+      puts "Cannot find stream for parameters [#{options.reject{ |k, v| k == 'random' }.map{ |k, v| "--#{k}='#{v}'" }.join(' ')}]"
+      exit
+    end
+
+    system "mplayer -playlist #{stream}"
+  end
+
+  def self.banner
+    "#{File.basename(__FILE__)} #{self.arguments.map{ |a| a.usage }.join(' ')} [options]"
+  end
+
+  private
+
+  def print_list(tags)
+    puts "#{'Name'.ljust(24)}  #{'URL'.ljust(60)}" + (tags ? "  Tags" : '')
+    puts '='.ljust(tags ? 160 : 86, '=')
+
+    STREAMS.each do |k, v|
+      puts "#{k.ljust(24)}  #{v[:stream].ljust(60)}" + (tags ? "  [#{v[:tags].map{ |t| t.to_s }.join(' ')}]" : '')
+    end
+
+    puts '='.ljust(tags ? 160 : 86, '=')
+    exit
+  end
+
+  def print_usage
+    self.class.help(Thor::Base.shell.new)
+    exit
+  end
+
+end
+
+
+class String
+
+  def downcase
+    Unicode::downcase(self)
+  end
+
+end
+
+
+Radio.start(ARGV)

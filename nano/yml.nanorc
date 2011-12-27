@@ -1,0 +1,16 @@
+syntax "yml" "\.ya?ml$"
+
+## default
+color brightyellow ".*"
+
+## separators
+color brightred "^[[:space:]]*[^:-]*[:-]"
+
+## keys
+color brightgreen "^[[:space:]]*[^:-]+"
+
+## trailing spaces
+color ,green "[[:space:]]+$"
+
+## leading tabs
+color ,red "^( *	+ *)+"

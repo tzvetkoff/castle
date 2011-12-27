@@ -1,0 +1,63 @@
+## lua syntax highlighting
+syntax "lua" ".*\.(lua|m(oon)?)$"
+
+## general
+color brightwhite ".+"
+
+## operators
+color brightyellow ":|\*\*|\*|/|%|\+|-|\^|>|>=|<|<=|~=|=|\.\.|\.\.\.|\<(not|and|or)\>"
+
+## statements
+color brightblue "\<(break|continue|do|end|while|repeat|until|if|elseif|then|else|for|in|function|local|return)\>"
+
+## keywords
+color brightyellow "\<(debug|string|math|table|io|coroutine|os)\>\."
+color brightyellow "\<(_G|_VERSION|assert|collectgarbage|dofile|error|getfenv|getmetatable|ipairs|load|loadfile|module|next|pairs|pcall|print|rawequal|rawget|rawset|require|select|setfenv|setmetatable|tonumber|tostring|type|unpack|xpcall)\s*\("
+
+## standard library
+color brightyellow "io\.\<(close|flush|input|lines|open|output|popen|read|tmpfile|type|write)\>"
+color brightyellow "math\.\<(abs|acos|asin|atan2|atan|ceil|cosh|cos|deg|exp|floor|fmod|frexp|huge|ldexp|log10|log|max|min|modf|pi|pow|rad|random|randomseed|sinh|tan)\>"
+color brightyellow "os\.\<(clock|date|difftime|execute|exit|fork|getenv|getpid|remove|rename|setlocale|sleep|time|tmpname|usleep)\>"
+color brightyellow "package\.\<(cpath|loaded|loadlib|path|preload|seeall)\>"
+color brightyellow "string\.\<(byte|char|dump|find|format|gmatch|gsub|len|lower|match|rep|reverse|split|sub|upper)\>"
+color brightyellow "table\.\<(concat|insert|maxn|remove|sort)\>"
+color brightyellow "coroutine\.\<(create|resume|running|status|wrap|yield)\>"
+color brightyellow "debug\.\<(debug|getfenv|gethook|getinfo|getlocal|getmetatable|getregistry|getupvalue|setfenv|sethook|setlocal|setmetatable|setupvalue|traceback)\>"
+color brightyellow "dns\.\<(host2ip|ip2host)\>"
+color brightyellow "socket\.\<(accept|close|listen|open|read|write)\>"
+
+## file handle methods
+color brightyellow "\:\<(close|flush|lines|read|seek|setvbuf|write)\>"
+
+## string methods
+color brightyellow "\:\<(find|gsub|lower|reverse|split|sub|upper)\>"
+
+## false, nil, true
+color brightmagenta "\<(false|nil|true)\>"
+
+## external files
+color brightgreen "(\<(dofile|require|include)|%q|%!|%Q|%r|%x)\>"
+
+## numbers
+color red "\<([0-9]+)\>"
+
+## symbols
+color brightmagenta "(\(|\)|\[|\]|\{|\})"
+
+## strings
+color red "\"(\\.|[^\\\"])*\"|'(\\.|[^\\'])*'"
+
+## escapes
+color red "\\[0-7][0-7][0-7]|\\x[0-9a-fA-F][0-9a-fA-F]|\\[abefnrs]|(\\c|\\C-|\\M-|\\M-\\C-)."
+
+## sh!bang
+color brightcyan   "^#!.*"
+
+## simple comments
+color green        "\-\-.*$"
+
+## multiline comments
+color green         start="--\[\[" end="--\]\]"
+
+## trailing whitespaces
+color ,green "[[:space:]]+$"

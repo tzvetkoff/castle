@@ -1,0 +1,20 @@
+## makefile syntax
+syntax "makefile" "Makefile[^/]*$"
+
+## assignments?
+color red "[:=]"
+
+## keywords
+color magenta "\<(if|ifeq|else|endif)\>"
+
+## variables
+#color blue "\$+[{(][a-Z0-9_-]+[})]"
+icolor cyan "\$+\{[a-z0-9_-]+\}"
+icolor cyan "\$+\[[a-z0-9_-]+\]"
+icolor cyan "\$+\([a-z0-9_-]+\)"
+
+## targets
+color brightblue "^[^ 	]+:"
+
+## comments
+color green "#.*$"

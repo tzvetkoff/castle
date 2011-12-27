@@ -1,0 +1,29 @@
+#!/bin/bash
+
+if [ $# -eq "1" ]; then
+    set "$1" "$1"
+elif [ $# -lt "2" ]; then
+    echo "Usage: `basename $0` <file.tar.bz2> [files...]"
+    exit 1
+fi
+
+outfile=`echo "$1" | sed 's/\/$//g'`
+files=""
+shift
+
+while [ ! -z "$1" ]; do
+    files="$files `echo "$1" | sed 's/\/$//g'`"
+    shift
+done
+
+case $outfile in
+    *.tbz2 | *.tar.bz2)
+        tar -c -- $files | lzma --best > $outfile || rm -rf -- $outfile
+        ;;
+    *)
+        tar -c -- $files | lzma --best > $outfile.tar.bz2 || rm -rf -- $outfile.tar.bz2
+        ;;
+esac
+
+echo "Done!"
+exit 0

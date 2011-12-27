@@ -1,0 +1,16 @@
+#!/bin/bash
+
+echo
+if [ ! -f /etc/motd.esc ]; then
+	uname -sr
+else
+	IFS=$'\n'
+	arr=($(< /etc/motd.esc))
+	IFS=''
+	i=0
+	while [ ! -z "${arr[$i]}" ]; do
+		echo -e ${arr[$i]}
+		let i++
+	done
+fi
+echo

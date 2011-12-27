@@ -1,0 +1,21 @@
+## Here is an example for Python.
+##
+syntax "python" "\.py$"
+header "^#!.*/python[-0-9._]*"
+
+## definition keyword
+icolor brightblue "def [0-9A-Z_]+"
+
+## other keywords
+color brightcyan "\<(and|as|assert|break|class|continue|def|del|elif|else|except|exec|finally|for|from|global|if|import|in|is|lambda|not|or|pass|print|raise|return|try|while|with|yield)\>"
+
+## strings
+color brightgreen "\"(\\.|[^\\\"])*\"|'(\\.|[^\\'])*'"
+#color brightgreen start=""""" end="""""
+#color brightgreen start="'''" end="'''"
+
+## comments
+color brightred "#.*$"
+
+## trailing whitespaces
+color ,green "[[:space:]]+$"

@@ -1,0 +1,64 @@
+#!/bin/bash
+
+gemdir_bak=${HOME}/.rvm/gems-bak
+gemdir_phy=${HOME}/.rvm/gems-phy
+gemdir_mem=${HOME}/.rvm/gems
+
+_start() {
+	sudo mount -t tmpfs -osize=256m,noatime,nodiratime tmpfs ${gemdir_mem}
+	cp -r ${gemdir_phy}/* ${gemdir_mem}
+}
+
+_stop() {
+	sudo umount ${gemdir_mem}
+}
+
+_sync() {
+	echo 'removing stale gem backups...'
+	rm -rf ${gemdir_bak}
+
+	echo 'backing up old physical gems...'
+	cp -r ${gemdir_phy} ${gemdir_bak}
+
+	echo 'cleaning up old physical gems...'
+	rm -rf ${gemdir_phy}
+
+	echo 'copying in-memory gems to physical drive...'
+	cp -r ${gemdir_mem} ${gemdir_phy}
+
+	echo 'done!'
+	echo ''
+}
+
+_status() {
+	if `mount|grep -q ${HOME}/.rvm/gems`; then
+		echo 'started'
+	else
+		echo 'stopped'
+	fi
+}
+
+_help() {
+	cat <<EOF
+usage: ${0} {start|stop|sync|status}
+EOF
+	exit 1
+}
+
+case ${1:-help} in
+	stat*)
+		_status
+		;;
+	star*)
+		_start
+		;;
+	sto*)
+		_stop
+		;;
+	sy*)
+		_sync
+		;;
+	*)
+		_help
+		;;
+esac

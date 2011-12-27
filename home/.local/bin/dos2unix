@@ -1,0 +1,19 @@
+#!/bin/bash
+
+if [ -z "$1" ]; then
+    echo "Usage: `basename $0` <files>"
+    exit 1
+fi
+
+green="\033[01;32m"
+red="\033[01;31m"
+none="\033[00m"
+ok="[  ${green}ok${none}  ]"
+fail="[ ${red}fail${none} ]"
+
+while [ ! -z "$1" ]; do
+    [ ! -f "$1" ] && echo -e "$fail $1 does not exist" || (sed -i 's/\x0D//' "$1" && echo -e "$ok $1" || echo -e "$fail $1")
+    shift
+done
+
+exit 0

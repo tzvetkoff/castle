@@ -1,0 +1,3 @@
+#!/bin/bash
+
+svn st $*|grep -v cache/|grep -v compiled/|grep -v files/|grep -v thumbs/

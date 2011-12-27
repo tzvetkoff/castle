@@ -1,0 +1,35 @@
+#!/bin/bash
+
+if [[ "${1}" = '' ]]; then
+	echo "Usage: `basename ${0}` <file.tar.gz> [files...]"
+	exit 1
+fi
+
+if [[ "${2}" = "" ]]; then
+	set "${1}" "${1}"
+fi
+
+out=${1%/}
+shift
+
+case ${out} in
+	*.tgz | *.tar.gz)
+		tar -c -- "${*}" | gzip --best > ${out}
+		ret=$?
+		;;
+	*)
+		tar -c -- "${*}" | gzip --best > ${out}.tar.gz
+		ret=$?
+		;;
+esac
+
+case ${ret} in
+	0)
+		echo 'Done!'
+		;;
+	*)
+		echo 'Unknown error!'
+		;;
+esac
+
+exit ${ret}

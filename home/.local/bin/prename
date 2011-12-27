@@ -1,0 +1,11 @@
+#!/usr/bin/perl
+
+$regex = shift @ARGV || die "Usage: rename <perl expression> <files>\n";
+
+for my $file (@ARGV) {
+	$_ = $file;
+	eval $regex;
+	if ($_ ne $file) {
+		rename $file, $_;
+	}
+}

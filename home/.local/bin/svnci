@@ -1,0 +1,36 @@
+#!/bin/bash
+
+if [[ -f svnignore.tmp~ ]]; then
+	files=$(svn st|grep -v '^?'|cut -d' ' -f2-)
+	IFS=$'\n'
+	ignores=($(< svnignore.tmp~))
+	IFS=''
+
+	rm -f commit.tmp~
+
+	i=0
+	while [ ! -z "${ignores[$i]}" ]; do
+		quoted=${ignores[$i]}
+		quoted=${quoted//\./\\.}
+		quoted=${quoted//\*/.*}
+		files=$(echo $files | grep -v "^[[:space:]]*${quoted}")
+		let i++
+	done
+
+	#for ignore in $ignores[@]; do
+	#	quoted=${ignore//\./\\.}
+	#	quoted=${quoted//\*/.*}
+	#	files=$(echo $files | grep -v "^[[:space:]]*${quoted}")
+	#done
+
+	for file in $files; do
+		echo ${file// /} >> commit.tmp~
+	done
+
+	if [[ -f commit.tmp~ ]]; then
+		svn ci --targets commit.tmp~
+		#rm -f commit.tmp~
+	fi
+else
+	svn ci $*
+fi
