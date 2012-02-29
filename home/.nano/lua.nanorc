@@ -1,5 +1,5 @@
 ## lua syntax highlighting
-syntax "lua" ".*\.(lua|m(oon)?)$"
+syntax "lua" ".*\.(lua|moon?)$"
 
 ## general
 color brightwhite ".+"

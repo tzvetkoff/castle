@@ -73,7 +73,6 @@ alias cd..='cd ..'
 ## some administrative ones
 alias su='sudo su'
 alias chown='sudo chown'
-alias port='sudo port'
 
 #
 # for macosx - remove /usr/local/bin and /usr/local/sbin from path
@@ -128,3 +127,9 @@ export EDITOR=vim
 if [ -f `brew --prefix`/etc/bash_completion ]; then
 	. `brew --prefix`/etc/bash_completion
 fi
+
+export PATH=/Applications/SenchaSDKTools-2.0.0-Developer-Preview:$PATH
+
+export PATH=/Applications/SenchaSDKTools-2.0.0-Developer-Preview/command:$PATH
+
+export PATH=/Applications/SenchaSDKTools-2.0.0-Developer-Preview/jsbuilder:$PATH
