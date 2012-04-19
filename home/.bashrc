@@ -70,6 +70,10 @@ alias CD='cd'
 alias cd.='source /usr/local/bin/cd.'
 alias cd..='cd ..'
 
+## rails!
+alias r='rails'
+alias brake='bundle exec rake'
+
 ## some administrative ones
 alias su='sudo su'
 alias chown='sudo chown'
@@ -133,3 +137,5 @@ export PATH=/Applications/SenchaSDKTools-2.0.0-Developer-Preview:$PATH
 export PATH=/Applications/SenchaSDKTools-2.0.0-Developer-Preview/command:$PATH
 
 export PATH=/Applications/SenchaSDKTools-2.0.0-Developer-Preview/jsbuilder:$PATH
+
+PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
