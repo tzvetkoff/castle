@@ -93,7 +93,10 @@ PATH=${PATH/\/usr\/local\/sbin:}
 [[ -d "${HOME}/.bin" ]]				&& PATH="${HOME}/.bin:${PATH}"
 [[ -d "${HOME}/.local/bin" ]]		&& PATH="${HOME}/.local/bin:${PATH}"
 
-# MacOSX paths too
+# Homebrew paths here
+[[ -d "/usr/local/share/python" ]]	&& PATH="/usr/local/share/python:${PATH}"
+
+# MacPorts paths here
 [[ -d "/opt/local/bin" ]]			&& PATH="/opt/local/bin:${PATH}"
 [[ -d "/opt/local/sbin" ]]			&& PATH="/opt/local/sbin:${PATH}"
 
@@ -128,14 +131,6 @@ export EDITOR=vim
 #
 # Bash completion
 #
-if [ -f `brew --prefix`/etc/bash_completion ]; then
+if [[ -f `brew --prefix`/etc/bash_completion ]]; then
 	. `brew --prefix`/etc/bash_completion
 fi
-
-export PATH=/Applications/SenchaSDKTools-2.0.0-Developer-Preview:$PATH
-
-export PATH=/Applications/SenchaSDKTools-2.0.0-Developer-Preview/command:$PATH
-
-export PATH=/Applications/SenchaSDKTools-2.0.0-Developer-Preview/jsbuilder:$PATH
-
-PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
