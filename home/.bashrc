@@ -1,35 +1,80 @@
 # ~/.bashrc - bash interactive session config
 
 # load rvm stuff
-[[ -s "${HOME}/.rvm/scripts/rvm" ]] && source "${HOME}/.rvm/scripts/rvm"
+[[ -s "${HOME}/.rvm/scripts/rvm" ]]			&& source "${HOME}/.rvm/scripts/rvm"
+[[ -r "${HOME}/.rvm/scripts/completion" ]]	&& source "${HOME}/.rvm/scripts/completion"
 
 # is this an interactive session?
 [ -z "$PS1" ] && return
 
 
 #
-# prompt string
+# PS1 made the nice way
 #
-## common colors
-reset='\[\033[00m\]'
-red='\[\033[01;31m\]'
-green='\[\033[01;32m\]'
-yellow='\[\033[01;33m\]'
-blue='\[\033[01;34m\]'
-pink='\[\033[01;35m\]'
-cyan="\[\033[01;36m\]"
+prompt_command() {
+	## colors
+	local reset='\[\033[00m\]'
+	local grey='\[\033[01;30m\]'
+	local red='\[\033[01;31m\]'
+	local green='\[\033[01;32m\]'
+	local yellow='\[\033[01;33m\]'
+	local blue='\[\033[01;34m\]'
+	local pink='\[\033[01;35m\]'
+	local cyan='\[\033[01;36m\]'
 
-## make it fancy
-where_am_i() {
-    t=${PWD/$HOME/\~}
-    t=${t/\/home\//\~}
-    echo $t
+	## nifty current directory
+    local pwd=${PWD/$HOME/\~}
+    pwd=${pwd/\/home\//\~}
+
+	## git status
+	local git=
+	local svn=
+	local dir=${PWD}
+
+	if [[ ${dir} != ${HOME} ]]; then
+		while [[ ! -d ${dir}/.git && ${dir} != '/' && -n ${dir} ]]; do
+			dir=${dir%/*}
+		done
+
+		if [[ -n ${dir} ]]; then
+			local branch=`git symbolic-ref HEAD 2>/dev/null`
+			branch=${branch#refs/heads/}
+			if [[ -n ${branch} ]]; then
+				local status=`git status --porcelain 2>/dev/null`
+				if [[ -n ${status} ]]; then
+					git="${reset}(${grey}git:${red}${branch}${reset})"
+				else
+					git="${reset}(${grey}git:${green}${branch}${reset})"
+				fi
+			fi
+		fi
+
+		if [[ -z ${git} ]]; then
+			dir=${PWD}
+			while [[ ! -d ${dir}/.svn && ${dir} != '/' && -n ${dir} ]]; do
+				dir=${dir%/*}
+			done
+
+			if [[ -n ${dir} ]]; then
+				local revision=`svn info 2>/dev/null|grep Revision:|awk '{ print $2 }'`
+				if [[ -n ${revision} ]]; then
+					#svn="${reset}(${grey}svn:${blue}r${revision}${reset})"
+					local status=`svn status 2>/dev/null|head -1`
+					if [[ -n ${status} ]]; then
+						svn="${reset}(${grey}svn:${red}r${revision}${reset})"
+					else
+						svn="${reset}(${grey}svn:${green}r${revision}${reset})"
+					fi
+				fi
+			fi
+		fi
+	fi
+
+	PS1="${reset}[${green}${USER}${reset}@${blue}darkstar${reset}(${yellow}${pwd}${git}${svn}${reset})]\\$ "
 }
 
-#PS1="${reset}[${red}\u${reset}@${blue}\h${reset}(${pink}\`where_am_i\`${reset})]\\$ "
-#PS1="${reset}[${green}\u${reset}@${green}\h${reset}(${yellow}\`where_am_i\`${reset})]\\$ "
-PS1="${green}\u${reset}@${blue}darkstar${reset}:${yellow}\`where_am_i\`${reset}\\$ "
-#PS1="${reset}[${cyan}\u${reset}@${red}darkstar${reset}(${yellow}\`where_am_i\`${reset})]\\$ "
+PS1="\u@\h:\w\\$ "
+PROMPT_COMMAND=prompt_command
 
 
 #
@@ -133,4 +178,12 @@ export EDITOR=vim
 #
 if [[ -f `brew --prefix`/etc/bash_completion ]]; then
 	. `brew --prefix`/etc/bash_completion
+fi
+
+
+#
+# Git completion
+#
+if [[ -f ${HOME}/.git-completion.bash ]]; then
+	. ${HOME}/.git-completion.bash
 fi
