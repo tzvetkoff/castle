@@ -23,8 +23,8 @@ prompt_command() {
 	local cyan='\[\033[01;36m\]'
 
 	## nifty current directory
-    local pwd=${PWD/$HOME/\~}
-    pwd=${pwd/\/home\//\~}
+	local pwd=${PWD/$HOME/\~}
+	pwd=${pwd/\/home\//\~}
 
 	## git status
 	local git=
