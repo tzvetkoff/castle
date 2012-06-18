@@ -36,7 +36,7 @@ prompt_command() {
 			dir=${dir%/*}
 		done
 
-		if [[ -n ${dir} ]]; then
+		if [[ -n ${dir} && -z ${BASHRC_DISABLE_GIT} ]]; then
 			local branch=`git symbolic-ref HEAD 2>/dev/null`
 			branch=${branch#refs/heads/}
 			if [[ -n ${branch} ]]; then
@@ -49,7 +49,7 @@ prompt_command() {
 			fi
 		fi
 
-		if [[ -z ${git} ]]; then
+		if [[ -z ${git} && -z ${BASHRC_DISABLE_SVN} ]]; then
 			dir=${PWD}
 			while [[ ! -d ${dir}/.svn && ${dir} != '/' && -n ${dir} ]]; do
 				dir=${dir%/*}
@@ -112,7 +112,6 @@ alias vim='vim -i NONE'
 
 ## fix some other typos i make intensively
 alias CD='cd'
-alias cd.='source /usr/local/bin/cd.'
 alias cd..='cd ..'
 
 ## rails!
