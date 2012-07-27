@@ -45,6 +45,15 @@ if &t_Co > 2 || has("gui_running")
   set hlsearch
 endif
 
+" Set color scheme on macvim
+if has("gui_macvim")
+  if !exists("colors_name")
+    " Use the macvim color scheme by default
+    colorscheme torte
+  endif
+endif
+
+
 " Only do this part when compiled with support for autocommands.
 if has("autocmd")
   " Enable file type detection.
@@ -90,11 +99,55 @@ autocmd FileType * execute "setlocal complete+="."k/usr/share/vim/vim72/syntax/"
 set completeopt=longest,menuone
 
 " <C-S> completion (much like every other ide)
-function! Completion_CtrlSpace()
-  if pumvisible()
-    return "\<C-N>"
-  elseif col('.') > 1 && strpart(getline('.'), col('.') - 2, 3) =~ '^\w'
-    return "\<C-P>"
+"function! Completion_CtrlSpace()
+"  if pumvisible() || &omnifunc == ''
+"    return "\<C-n>"
+"  elseif col('.') > 1 && strpart(getline('.'), col('.') - 2, 3) =~ '^\w'
+"    return "\<C-p>"
+"  endif
+"endfunction
+"inoremap <Nul> <C-R>=Completion_CtrlSpace()<CR>
+inoremap <expr> <C-Space> pumvisible() \|\| &omnifunc == '' ?
+\ "\<lt>C-n>" :
+\ "\<lt>C-x>\<lt>C-o><c-r>=pumvisible() ?" .
+\ "\"\\<lt>c-n>\\<lt>c-p>\\<lt>c-n>\" :" .
+\ "\" \\<lt>bs>\\<lt>C-n>\"\<CR>"
+imap <C-@> <C-Space>
+
+" Smart HOME key
+function! SmartHome()
+  let s:col = col(".")
+  normal! ^
+  if s:col == col(".")
+    normal! 0
   endif
 endfunction
-inoremap <Nul> <C-R>=Completion_CtrlSpace()<CR>
+nnoremap <silent> <Home> :call SmartHome()<CR>
+inoremap <silent> <Home> <C-O>:call SmartHome()<CR>
+
+" Tab navigation - command mode
+map <D-1> :tabn 1<CR>
+map <D-2> :tabn 2<CR>
+map <D-3> :tabn 3<CR>
+map <D-4> :tabn 4<CR>
+map <D-5> :tabn 5<CR>
+map <D-6> :tabn 6<CR>
+map <D-7> :tabn 7<CR>
+map <D-8> :tabn 8<CR>
+map <D-9> :tabn 9<CR>
+
+" Tab navigation - insert mode
+map! <D-1> <C-O>:tabn 1<CR>
+map! <D-2> <C-O>:tabn 2<CR>
+map! <D-3> <C-O>:tabn 3<CR>
+map! <D-4> <C-O>:tabn 4<CR>
+map! <D-5> <C-O>:tabn 5<CR>
+map! <D-6> <C-O>:tabn 6<CR>
+map! <D-7> <C-O>:tabn 7<CR>
+map! <D-8> <C-O>:tabn 8<CR>
+map! <D-9> <C-O>:tabn 9<CR>
+
+
+" Pathogen
+call pathogen#infect()
+call pathogen#helptags()
