@@ -149,5 +149,5 @@ map! <D-9> <C-O>:tabn 9<CR>
 
 
 " Pathogen
-call pathogen#infect()
-call pathogen#helptags()
+"call pathogen#infect()
+"call pathogen#helptags()

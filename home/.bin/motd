@@ -1,11 +1,11 @@
 #!/bin/bash
 
 echo
-if [ ! -f /etc/motd.esc ]; then
+if [ ! -f ${HOME}/.motd ]; then
 	uname -sr
 else
 	IFS=$'\n'
-	arr=($(< /etc/motd.esc))
+	arr=($(< ${HOME}/.motd))
 	IFS=''
 	i=0
 	while [ ! -z "${arr[$i]}" ]; do

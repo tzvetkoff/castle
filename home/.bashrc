@@ -126,7 +126,9 @@ alias chown='sudo chown'
 # for macosx - remove /usr/local/bin and /usr/local/sbin from path
 #
 PATH=${PATH/\/usr\/local\/bin:}
+PATH=${PATH/:\/usr\/local\/bin}
 PATH=${PATH/\/usr\/local\/sbin:}
+PATH=${PATH/:\/usr\/local\/sbin}
 
 #
 # add /usr/local/bin, /usr/local/sbin, ~/bin, ~/.bin and ~/.local/bin to path
@@ -186,3 +188,5 @@ fi
 if [[ -f ${HOME}/.git-completion.bash ]]; then
 	. ${HOME}/.git-completion.bash
 fi
+
+PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
