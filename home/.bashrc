@@ -12,6 +12,9 @@
 # PS1 made the nice way
 #
 prompt_command() {
+	## hostname
+	local host=${HOSTNAME%.local}
+
 	## colors
 	local reset='\[\033[00m\]'
 	local grey='\[\033[01;30m\]'
@@ -20,15 +23,17 @@ prompt_command() {
 	local yellow='\[\033[01;33m\]'
 	local blue='\[\033[01;34m\]'
 	local pink='\[\033[01;35m\]'
-	local cyan='\[\033[01;36m\]'
+	local cyan='\[\033[00;36m\]'
+
 
 	## nifty current directory
 	local pwd=${PWD/$HOME/\~}
 	pwd=${pwd/\/home\//\~}
 
-	## git status
+	## git/svn status, python virtualenv
 	local git=
 	local svn=
+	local pve=
 	local dir=${PWD}
 
 	if [[ ${dir} != ${HOME} ]]; then
@@ -68,9 +73,13 @@ prompt_command() {
 				fi
 			fi
 		fi
+
+		if [[ -n ${VIRTUAL_ENV} && -z ${BASHRC_DISABLE_VIRTUALENV} ]]; then
+			pve="${reset}{${cyan}${VIRTUAL_ENV##*/}${reset}}"
+		fi
 	fi
 
-	PS1="${reset}[${green}${USER}${reset}@${blue}darkstar${reset}(${yellow}${pwd}${git}${svn}${reset})]\\$ "
+	PS1="${reset}[${green}${USER}${reset}@${blue}${host}${reset}(${yellow}${pwd}${git}${svn}${pve}${reset})]\\$ "
 }
 
 PS1="\u@\h:\w\\$ "
