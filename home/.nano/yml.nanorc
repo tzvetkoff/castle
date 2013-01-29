@@ -14,3 +14,6 @@ color ,green "[[:space:]]+$"
 
 ## leading tabs
 color ,red "^( *	+ *)+"
+
+## comments
+color brightblue "[[:space:]]*#.*$"

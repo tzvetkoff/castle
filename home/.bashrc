@@ -1,15 +1,14 @@
 # ~/.bashrc - bash interactive session config
 
-# load rvm stuff
-[[ -s "${HOME}/.rvm/scripts/rvm" ]]			&& source "${HOME}/.rvm/scripts/rvm"
-[[ -r "${HOME}/.rvm/scripts/completion" ]]	&& source "${HOME}/.rvm/scripts/completion"
 
+#
 # is this an interactive session?
+#
 [ -z "$PS1" ] && return
 
 
 #
-# PS1 made the nice way
+# prompt string made the nice way
 #
 prompt_command() {
 	## hostname
@@ -87,7 +86,7 @@ PROMPT_COMMAND=prompt_command
 
 
 #
-# ls colors
+# ls colors on teh mac
 #
 export CLICOLOR=1
 export LSCOLORS=gxBxhxDxfxhxhxhxhxcxcx
@@ -131,6 +130,7 @@ alias brake='bundle exec rake'
 alias su='sudo su'
 alias chown='sudo chown'
 
+
 #
 # for macosx - remove /usr/local/bin and /usr/local/sbin from path
 #
@@ -139,8 +139,9 @@ PATH=${PATH/:\/usr\/local\/bin}
 PATH=${PATH/\/usr\/local\/sbin:}
 PATH=${PATH/:\/usr\/local\/sbin}
 
+
 #
-# add /usr/local/bin, /usr/local/sbin, ~/bin, ~/.bin and ~/.local/bin to path
+# prepend /usr/local/bin, /usr/local/sbin, ~/bin, ~/.bin and ~/.local/bin to path
 #
 [[ ! $PATH =~ "/usr/local/bin" ]]	&& PATH="/usr/local/bin:${PATH}"
 [[ ! $PATH =~ "/usr/local/sbin" ]]	&& PATH="/usr/local/sbin:${PATH}"
@@ -148,10 +149,10 @@ PATH=${PATH/:\/usr\/local\/sbin}
 [[ -d "${HOME}/.bin" ]]				&& PATH="${HOME}/.bin:${PATH}"
 [[ -d "${HOME}/.local/bin" ]]		&& PATH="${HOME}/.local/bin:${PATH}"
 
-# Homebrew paths here
+# homebrew paths here
 [[ -d "/usr/local/share/python" ]]	&& PATH="/usr/local/share/python:${PATH}"
 
-# MacPorts paths here
+# macports paths here
 [[ -d "/opt/local/bin" ]]			&& PATH="/opt/local/bin:${PATH}"
 [[ -d "/opt/local/sbin" ]]			&& PATH="/opt/local/sbin:${PATH}"
 
@@ -169,6 +170,7 @@ export LESSHSTFILE=/dev/null
 # set some other handy stuff
 #
 export SVN_EDITOR=vim
+export EDITOR=vim
 
 
 #
@@ -178,24 +180,25 @@ export SVN_EDITOR=vim
 
 
 #
-# Set vim as default editor
+# bash completion
 #
-export EDITOR=vim
-
-
-#
-# Bash completion
-#
-if [[ -f `brew --prefix`/etc/bash_completion ]]; then
+if [[ -x /usr/local/bin/brew && -f `brew --prefix`/etc/bash_completion ]]; then
 	. `brew --prefix`/etc/bash_completion
+elif [[ -f /etc/bash_completion ]]; then
+	. /etc/bash_completion
 fi
 
 
 #
-# Git completion
+# git completion
 #
 if [[ -f ${HOME}/.git-completion.bash ]]; then
 	. ${HOME}/.git-completion.bash
 fi
 
-PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
+
+#
+# load rvm stuff
+#
+[[ -s "${HOME}/.rvm/scripts/rvm" ]]			&& . "${HOME}/.rvm/scripts/rvm"
+[[ -r "${HOME}/.rvm/scripts/completion" ]]	&& . "${HOME}/.rvm/scripts/completion"

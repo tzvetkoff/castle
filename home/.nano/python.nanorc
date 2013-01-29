@@ -1,7 +1,7 @@
 ## Here is an example for Python.
 ##
 syntax "python" "\.py$"
-header "^#!.*/python[-0-9._]*"
+header "^#!.*(/|env )python[-0-9._]*"
 
 ## definition keyword
 icolor brightblue "def [0-9A-Z_]+"

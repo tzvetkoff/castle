@@ -1,5 +1,6 @@
 ## php syntax highlighting
 syntax "php" "\.(php[2345s~]?|tpl)$"
+header "^<\?(php)?"
 
 ## php tags
 color yellow "(<\?(php)?|\?>)"
