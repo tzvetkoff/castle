@@ -24,10 +24,11 @@ prompt_command() {
 	local pink='\[\033[01;35m\]'
 	local cyan='\[\033[00;36m\]'
 
-
 	## nifty current directory
 	local pwd=${PWD/$HOME/\~}
-	pwd=${pwd/\/home\//\~}
+	if [[ $pwd = /home/* ]]; then
+		pwd=\~${pwd#/home/}
+	fi
 
 	## git/svn status, python virtualenv
 	local git=
