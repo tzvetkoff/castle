@@ -127,6 +127,9 @@ alias cd..='cd ..'
 alias r='rails'
 alias brake='bundle exec rake'
 
+## pngcrush
+alias pngcrush='/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/pngcrush'
+
 ## some administrative ones
 alias su='sudo su'
 alias chown='sudo chown'
