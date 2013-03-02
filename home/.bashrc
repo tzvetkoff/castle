@@ -194,14 +194,6 @@ fi
 
 
 #
-# git completion
-#
-if [[ -f ${HOME}/.git-completion.bash ]]; then
-	. ${HOME}/.git-completion.bash
-fi
-
-
-#
 # load rvm stuff
 #
 [[ -s "${HOME}/.rvm/scripts/rvm" ]]			&& . "${HOME}/.rvm/scripts/rvm"
