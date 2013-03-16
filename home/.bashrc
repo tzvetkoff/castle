@@ -87,17 +87,17 @@ PROMPT_COMMAND=prompt_command
 
 
 #
-# ls colors on teh mac
-#
-export CLICOLOR=1
-export LSCOLORS=gxBxhxDxfxhxhxhxhxcxcx
-
-
-#
 # aliases
 #
 ## ls aliases
-alias ls='ls -ACFG'
+if [[ $OSTYPE = darwin* ]]; then
+	export CLICOLOR=1
+	export LSCOLORS=gxBxhxDxfxhxhxhxhxcxcx
+	alias ls='ls -ACFG'
+else
+	alias ls='ls -ACFG --color=auto'
+fi
+
 alias ll='ls -hAlFG'
 alias li='ls -hAlFiG'
 
