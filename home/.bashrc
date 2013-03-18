@@ -93,13 +93,13 @@ PROMPT_COMMAND=prompt_command
 if [[ $OSTYPE = darwin* ]]; then
 	export CLICOLOR=1
 	export LSCOLORS=gxBxhxDxfxhxhxhxhxcxcx
-	alias ls='ls -ACFG'
+	alias ls='ls -ACF'
 else
-	alias ls='ls -ACFG --color=auto'
+	alias ls='ls -ACF --color=auto'
 fi
 
-alias ll='ls -hAlFG'
-alias li='ls -hAlFiG'
+alias ll='ls -hAlF'
+alias li='ls -hAlFi'
 
 ## dooh!
 alias sl='ls'
