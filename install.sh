@@ -34,6 +34,15 @@ W="\033[00;00m"
 P=$(cd $(dirname ${BASH_SOURCE[0]}) && pwd)
 
 #
+# force?
+#
+if [[ "${1}" = "-f" || "${1}" = "--force" ]]; then
+	F="yes"
+else
+	F=""
+fi
+
+#
 # question? [Y/n]
 #
 
@@ -55,13 +64,15 @@ Q() {
 pushd ${HOME} >/dev/null
 for z in ${H[@]}; do
 	if [[ -e ./${z} ]]; then
-		if ! Q "File ${W}${HOME}/${z}${Y} already exists. Overwrite?"; then
+		if [[ -n ${F} ]] || Q "File ${W}${HOME}/${z}${Y} already exists. Overwrite?"; then
+			rm -rf -- ${z}
+		else
 			echo -e "${R}skip${W} ${z}"
 			continue
 		fi
 	fi
 
-	echo "${G}install${W} ${z}"
+	echo -e "${G}install${W} ${z}"
 	ln -s ${P}/home/${z} ./${z}
 done
 popd >/dev/null
