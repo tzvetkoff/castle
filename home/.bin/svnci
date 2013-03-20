@@ -9,7 +9,7 @@ if [[ -f svnignore.tmp~ ]]; then
 	rm -f commit.tmp~
 
 	i=0
-	while [ ! -z "${ignores[$i]}" ]; do
+	while [[ ! -z "${ignores[$i]}" ]]; do
 		quoted=${ignores[$i]}
 		quoted=${quoted//\./\\.}
 		quoted=${quoted//\*/.*}

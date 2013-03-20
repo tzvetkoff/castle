@@ -1,29 +1,35 @@
 #!/bin/bash
 
-if [ $# -eq "1" ]; then
-    set "$1" "$1"
-elif [ $# -lt "2" ]; then
-    echo "Usage: `basename $0` <file.tar.bz2> [files...]"
+if [[ -z "${1}" ]]; then
+    echo "Usage: `basename ${0}` <file.tar.bz2> [files...]"
     exit 1
 fi
 
-outfile=`echo "$1" | sed 's/\/$//g'`
-files=""
+if [[ -z "${2}" ]]; then
+    set "${1}" "${1}"
+fi
+
+out=${1%/}
 shift
 
-while [ ! -z "$1" ]; do
-    files="$files `echo "$1" | sed 's/\/$//g'`"
-    shift
-done
-
-case $outfile in
+case ${out} in
     *.tbz2 | *.tar.bz2)
-        tar -c -- $files | bzip2 --best > $outfile || rm -rf -- $outfile
+        tar -c -- "${*}" | bzip2 --best > ${out}
+        ret=$?
         ;;
     *)
-        tar -c -- $files | bzip2 --best > $outfile.tar.bz2 || rm -rf -- $outfile.tar.bz2
+        tar -c -- "${*}" | bzip2 --best > ${out}.tar.bz2
+        ret=$?
         ;;
 esac
 
-echo "Done!"
-exit 0
+case ${ret} in
+    0)
+        echo 'Done!'
+        ;;
+    *)
+        echo 'Unknown error!'
+        ;;
+esac
+
+exit ${ret}

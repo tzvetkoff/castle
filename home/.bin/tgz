@@ -1,11 +1,11 @@
 #!/bin/bash
 
-if [[ "${1}" = '' ]]; then
+if [[ -z "${1}" ]]; then
 	echo "Usage: `basename ${0}` <file.tar.gz> [files...]"
 	exit 1
 fi
 
-if [[ "${2}" = "" ]]; then
+if [[ -z "${2}" ]]; then
 	set "${1}" "${1}"
 fi
 
