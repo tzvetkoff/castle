@@ -53,7 +53,6 @@ if has("gui_macvim")
   endif
 endif
 
-
 " Only do this part when compiled with support for autocommands.
 if has("autocmd")
   " Enable file type detection.
@@ -147,7 +146,11 @@ map! <D-7> <C-O>:tabn 7<CR>
 map! <D-8> <C-O>:tabn 8<CR>
 map! <D-9> <C-O>:tabn 9<CR>
 
+" Line numbers
+set number
+
 
 " Pathogen
-"call pathogen#infect()
-"call pathogen#helptags()
+runtime bundle/vim-pathogen/autoload/pathogen.vim
+call pathogen#infect()
+call pathogen#helptags()
