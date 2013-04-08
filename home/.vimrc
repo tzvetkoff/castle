@@ -149,6 +149,9 @@ map! <D-9> <C-O>:tabn 9<CR>
 " Line numbers
 set number
 
+" Disable .viminfo
+set viminfo=
+
 
 " Pathogen
 runtime bundle/vim-pathogen/autoload/pathogen.vim
