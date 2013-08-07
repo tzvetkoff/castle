@@ -126,6 +126,7 @@ alias cd..='cd ..'
 ## rails!
 alias r='rails'
 alias brake='bundle exec rake'
+alias bundel='bundle'
 
 ## pngcrush
 alias pngcrush='/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/pngcrush'
