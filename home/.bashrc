@@ -4,7 +4,7 @@
 #
 # is this an interactive session?
 #
-[ -z "$PS1" ] && return
+[[ -z "${PS1}" ]] && return
 
 
 #
@@ -125,6 +125,7 @@ alias cd..='cd ..'
 
 ## rails!
 alias r='rails'
+alias rc='rails console'
 alias brake='bundle exec rake'
 alias bundel='bundle'
 
@@ -156,10 +157,7 @@ PATH=${PATH/:\/usr\/local\/sbin}
 
 # homebrew paths here
 [[ -d "/usr/local/share/python" ]]	&& PATH="/usr/local/share/python:${PATH}"
-
-# macports paths here
-[[ -d "/opt/local/bin" ]]			&& PATH="/opt/local/bin:${PATH}"
-[[ -d "/opt/local/sbin" ]]			&& PATH="/opt/local/sbin:${PATH}"
+[[ -d "/usr/local/share/python3" ]]	&& PATH="/usr/local/share/python3:${PATH}"
 
 export PATH
 
