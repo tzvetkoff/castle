@@ -130,7 +130,9 @@ alias brake='bundle exec rake'
 alias bundel='bundle'
 
 ## pngcrush
-alias pngcrush='/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/pngcrush'
+if [[ -x /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/pngcrush ]]; then
+	alias pngcrush='/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/pngcrush'
+fi
 
 ## some administrative ones
 alias su='sudo su'
