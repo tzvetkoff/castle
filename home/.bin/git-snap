@@ -1,56 +1,31 @@
 #!/bin/bash
 
 _help() {
-	echo 'usage: git snap [--branch=master] [--format=tar] [--filter=gzip] [branch] [format] [filter]'
+	echo 'usage: git snap [--branch=current] [filename]'
 	exit 1
 }
 
-_filter() {
-	if [[ ${2} != 'zip' ]]; then
-		case ${1} in
-			gz*)
-				echo '.gz'
-				;;
-			bz*)
-				echo '.bz2'
-				;;
-			xz*)
-				echo '.xz'
-				;;
-		esac
-	fi
-}
+DIR=${PWD}
+while [[ -n ${DIR} && ${DIR} != '/' && ! -d ${DIR}/.git ]]; do
+	DIR=${DIR%/*}
+done
+if [[ -z ${DIR} ]]; then
+	echo 'not a git repository!'
+	exit 2
+fi
 
-BRANCH=""
-FORMAT=""
-FILTER=""
-OUTPUT=""
+REPO=${DIR##*/}
 
-while [[ ! -z ${1} ]]; do
+while [[ -n ${1} ]]; do
 	case ${1} in
-		--format=*)
-			FORMAT=${1/--format=/}
-			;;
 		--branch=*)
 			BRANCH=${1/--branch=/}
-			;;
-		--filter=*)
-			FILTER=${1/--filter=/}
-			;;
-		--out*=*)
-			OUTPUT=${1/--out*=/}
 			;;
 		--*)
 			_help
 			;;
 		*)
-			if [[ -z ${BRANCH} ]]; then
-				BRANCH=${1}
-			elif [[ -z ${FORMAT} ]]; then
-				FORMAT=${1}
-			elif [[ -z ${FILTER} ]]; then
-				FILTER=${1}
-			elif [[ -z ${OUTPUT} ]]; then
+			if [[ -z ${OUTPUT} ]]; then
 				OUTPUT=${1}
 			else
 				_help
@@ -61,13 +36,45 @@ while [[ ! -z ${1} ]]; do
 	shift
 done
 
-BRANCH=${BRANCH:-master}
-FORMAT=${FORMAT:-tar}
-FILTER=${FILTER:-gzip}
-OUTPUT=${OUTPUT:-${BRANCH}.${FORMAT}`_filter ${FILTER} ${FORMAT}`}
+if [[ -z ${BRANCH} ]]; then
+	BRANCH=`git symbolic-ref HEAD 2>/dev/null`
+	BRANCH=${BRANCH#refs/heads/}
+fi
+
+if [[ -z ${OUTPUT} ]]; then
+	OUTPUT="${REPO}-${BRANCH}.tar.gz"
+	FORMAT='tar'
+	FILTER='gzip'
+else
+	case ${OUTPUT} in
+		*.tar.gz)
+			FORMAT='tar'
+			FILTER='gzip'
+			;;
+		*.tar.bz2)
+			FORMAT='tar'
+			FILTER='bzip2'
+			;;
+		*.tar)
+			FORMAT='tar'
+			FILTER=''
+			;;
+		*.zip)
+			FORMAT='zip'
+			FILTER=''
+			;;
+		*)
+			echo 'unknown file format'
+			exit 3
+			;;
+	esac
+fi
+
 
 if [[ ${FORMAT} == 'zip' ]]; then
 	git archive ${BRANCH} --format=zip > ${OUTPUT}
+elif [[ -n ${FILTER} ]]; then
+	git archive ${BRANCH} --format=tar | ${FILTER} > ${OUTPUT}
 else
-	git archive ${BRANCH} --format=${FORMAT} | ${FILTER} > ${OUTPUT}
+	git archive ${BRANCH} --format=tar > ${OUTPUT}
 fi
