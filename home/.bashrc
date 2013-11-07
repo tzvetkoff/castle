@@ -30,9 +30,10 @@ prompt_command() {
 		pwd=\~${pwd#/home/}
 	fi
 
-	## git/svn status, python virtualenv
+	## git/svn status, ruby rvm gemset, python virtualenv
 	local git=
 	local svn=
+	local rgs=
 	local pve=
 	local dir=${PWD}
 
@@ -74,12 +75,16 @@ prompt_command() {
 			fi
 		fi
 
-		if [[ -n ${VIRTUAL_ENV} && -z ${BASHRC_DISABLE_VIRTUALENV} ]]; then
-			pve="${reset}{${cyan}${VIRTUAL_ENV##*/}${reset}}"
+		if [[ -z ${BASHRC_DISABLE_RVM_GEMSET} && -n ${GEM_HOME} && ${GEM_HOME} = *${rvm_gemset_separator:-'@'}* ]]; then
+			rgs="${reset}{${grey}env:${cyan}${GEM_HOME##*@}${reset}}"
+		fi
+
+		if [[ -z ${BASHRC_DISABLE_VIRTUALENV} && -n ${VIRTUAL_ENV} ]]; then
+			pve="${reset}{${grey}env:${cyan}${VIRTUAL_ENV##*/}${reset}}"
 		fi
 	fi
 
-	PS1="${reset}[${green}${USER}${reset}@${blue}${host}${reset}(${yellow}${pwd}${git}${svn}${pve}${reset})]\\$ "
+	PS1="${reset}[${green}${USER}${reset}@${blue}${host}${reset}(${yellow}${pwd}${git}${svn}${rgs}${pve}${reset})]\\$ "
 }
 
 PS1="\u@\h:\w\\$ "
