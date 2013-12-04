@@ -24,8 +24,14 @@ color brightblue "`[^`]*`" "%x\{[^}]*\}"
 ## Strings, double-quoted
 color green ""([^"]|(\\"))*"" "%[QW]?\{[^}]*\}" "%[QW]?\([^)]*\)" "%[QW]?<[^>]*>" "%[QW]?\[[^]]*\]" "%[QW]?\$[^$]*\$" "%[QW]?\^[^^]*\^" "%[QW]?![^!]*!"
 
+## "Here" docs, with interpolation
+color green start="<<-?[A-Z][A-Z]+" end="^[[:space:]]*[A-Z][A-Z]+"
+
 ## Expression substitution.  These go inside double-quoted strings, "like #{this}".
 color brightgreen "#\{[^}]*\}"
+
+## "Here" docs, no interpolation
+color green start="<<-?'[A-Z][A-Z]+'" end="^[[:space:]]*[A-Z][A-Z]+"
 
 ## Strings, single-quoted
 color green "'([^']|(\\'))*'" "%[qw]\{[^}]*\}" "%[qw]\([^)]*\)" "%[qw]<[^>]*>" "%[qw]\[[^]]*\]" "%[qw]\$[^$]*\$" "%[qw]\^[^^]*\^" "%[qw]![^!]*!"
@@ -33,9 +39,6 @@ color green "'([^']|(\\'))*'" "%[qw]\{[^}]*\}" "%[qw]\([^)]*\)" "%[qw]<[^>]*>" "
 ## Comments
 color cyan "#[^{].*$" "#$"
 color brightcyan "##[^{].*$" "##$"
-
-## "Here" docs
-color green start="<<-?'?EOT'?" end="^EOT"
 
 ## Some common markers
 color brightcyan "(XXX|TODO|FIXME|\?\?\?)"
