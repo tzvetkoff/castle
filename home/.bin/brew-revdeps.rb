@@ -29,13 +29,14 @@ module Homebrew extend self
       dependent_formulae = []
 
       installed_formulae.each do |installed_formula|
-        installed_formula.recursive_dependencies do |dependency, *whatever|
-          dependent_formulae << installed_formula if dependency == queried_formula
+        if installed_formula != queried_formula
+          installed_formula.recursive_dependencies.to_a.each do |dependency|
+            dependent_formulae << installed_formula if dependency.installed? && dependency.name == queried_formula.name
+          end
         end
       end
 
-      dependent_formulae = dependent_formulae.uniq - [queried_formula]
-      dependent_formulae = dependent_formulae.join(' ')
+      dependent_formulae = dependent_formulae.uniq.join(' ')
 
       STDOUT.write "#{Tty.white}#{queried_formula}#{Tty.reset}: #{dependent_formulae}\n" unless dependent_formulae.empty?
     end

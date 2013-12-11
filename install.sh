@@ -15,6 +15,7 @@ H=(\
 	.nano						\
 	.nanorc						\
 	.vimrc						\
+	.vim						\
 )
 
 #
