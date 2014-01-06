@@ -10,6 +10,7 @@ H=(\
 	.bashrc						\
 	.bin						\
 	.gemrc						\
+	.irbrc						\
 	.motd						\
 	.my.cnf						\
 	.nano						\
