@@ -131,13 +131,12 @@ alias cd..='cd ..'
 ## rails!
 alias r='rails'
 alias rc='rails console'
-alias brake='bundle exec rake'
+alias c='rails console'
+alias rs='rails server'
+alias s='rails server'
+alias rg='rails generate'
+alias g='rails generate'
 alias bundel='bundle'
-
-## pngcrush
-if [[ -x /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/pngcrush ]]; then
-	alias pngcrush='/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/pngcrush'
-fi
 
 ## some administrative ones
 alias su='sudo su'
