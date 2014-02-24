@@ -1,0 +1,30 @@
+#!/usr/bin/env ruby
+
+require 'uri'
+require 'cgi'
+
+if ARGV.empty?
+  puts "Usage: #{$0} <url>"
+  exit! 1
+end
+
+ARGV.each do |url|
+  uri = URI.parse(url)
+
+  puts "protocol => #{uri.scheme}"
+  puts "host     => #{uri.host}"
+  puts "path     => #{uri.path}"
+  puts "query    => #{uri.query}"
+
+  query = CGI.parse(uri.query)
+  len = 8
+  query.each_key do |key|
+    len = key.length if key.length > len
+  end
+  len = (len / 2 + len % 2) * 2
+
+
+  CGI.parse(uri.query).each do |key, value|
+    puts "  %-#{len}s => %s" % [key, value]
+  end
+end
