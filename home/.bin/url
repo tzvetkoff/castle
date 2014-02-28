@@ -16,15 +16,16 @@ ARGV.each do |url|
   puts "path     => #{uri.path}"
   puts "query    => #{uri.query}"
 
-  query = CGI.parse(uri.query)
-  len = 8
-  query.each_key do |key|
-    len = key.length if key.length > len
-  end
-  len = (len / 2 + len % 2) * 2
+  if uri.query
+    query = CGI.parse(uri.query)
+    len = 8
+    query.each_key do |key|
+      len = key.length if key.length > len
+    end
+    len = (len / 2 + len % 2) * 2
 
-
-  CGI.parse(uri.query).each do |key, value|
-    puts "  %-#{len}s => %s" % [key, value]
+    query.each do |key, value|
+      puts "  %-#{len}s => %s" % [key, value]
+    end
   end
 end

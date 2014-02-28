@@ -62,7 +62,7 @@ prompt_command() {
 			done
 
 			if [[ -n ${dir} ]]; then
-				local revision=`svn info 2>/dev/null|grep Revision:|awk '{ print $2 }'`
+				local revision=`svn info 2>/dev/null|grep Revision:|cut -d' ' -f2`
 				if [[ -n ${revision} ]]; then
 					#svn="${reset}(${grey}svn:${blue}r${revision}${reset})"
 					local status=`svn status 2>/dev/null|head -1`
@@ -95,7 +95,7 @@ PROMPT_COMMAND=prompt_command
 # aliases
 #
 ## ls aliases
-if [[ $OSTYPE = darwin* ]]; then
+if [[ ${OSTYPE} = darwin* && ${OSTYPE} != 'darwin9' ]]; then
 	export CLICOLOR=1
 	export LSCOLORS=gxBxhxDxfxhxhxhxhxcxcx
 	alias ls='ls -ACF'
