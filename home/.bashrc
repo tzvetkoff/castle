@@ -138,6 +138,10 @@ alias rg='rails generate'
 alias g='rails generate'
 alias bundel='bundle'
 
+## for the man
+alias fs='foreman start'
+alias fc='foreman run rails console'
+
 ## some administrative ones
 alias su='sudo su'
 alias chown='sudo chown'
