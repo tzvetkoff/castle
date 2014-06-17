@@ -15,6 +15,7 @@ H=(\
 	.my.cnf						\
 	.nano						\
 	.nanorc						\
+	.pythonrc					\
 	.vimrc						\
 	.vim						\
 )

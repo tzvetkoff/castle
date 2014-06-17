@@ -185,11 +185,10 @@ export LESSHSTFILE=/dev/null
 export SVN_EDITOR=vim
 export EDITOR=vim
 
-
 #
-# show message-of-the-day if script is installed
+# A bit nicer python
 #
-[[ ! -z `type -p motd` ]] && motd
+export PYTHONSTARTUP="${HOME}/.pythonrc"
 
 
 #
@@ -207,3 +206,9 @@ fi
 #
 [[ -s "${HOME}/.rvm/scripts/rvm" ]]			&& . "${HOME}/.rvm/scripts/rvm"
 [[ -r "${HOME}/.rvm/scripts/completion" ]]	&& . "${HOME}/.rvm/scripts/completion"
+
+
+#
+# show message-of-the-day if script is installed
+#
+[[ ! -z `type -p motd` ]] && motd
