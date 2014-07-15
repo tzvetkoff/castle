@@ -319,3 +319,6 @@ include "~/.nano/lua.nanorc"
 
 ## YAML files
 include "~/.nano/yml.nanorc"
+
+## SQL files
+include "~/.nano/sql.nanorc"

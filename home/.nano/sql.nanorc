@@ -1,0 +1,51 @@
+syntax "sql" "\.sql$" "sqliterc$"
+
+## Keywords
+icolor brightgreen "\<(ALL|ASC|AS|ALTER|AND|ADD|AUTO_INCREMENT)\>"
+icolor brightgreen "\<(BETWEEN|BINARY|BOTH|BY|BOOLEAN)\>"
+icolor brightgreen "\<(CHANGE|CHECK|COLUMNS|COLUMN|CROSS|CREATE)\>"
+icolor brightgreen "\<(DATABASES|DATABASE|DATA|DELAYED|DESCRIBE|DESC|DISTINCT|DELETE|DROP|DEFAULT)\>"
+icolor brightgreen "\<(ENCLOSED|ESCAPED|EXISTS|EXPLAIN)\>"
+icolor brightgreen "\<(FIELDS|FIELD|FLUSH|FOR|FOREIGN|FUNCTION|FROM)\>"
+icolor brightgreen "\<(GROUP|GRANT|HAVING)\>"
+icolor brightgreen "\<(IGNORE|INDEX|INFILE|INSERT|INNER|INTO|IDENTIFIED|IN|IS|IF)\>"
+icolor brightgreen "\<(JOIN|KEYS|KILL|KEY)\>"
+icolor brightgreen "\<(LEADING|LIKE|LIMIT|LINES|LOAD|LOCAL|LOCK|LOW_PRIORITY|LEFT|LANGUAGE)\>"
+icolor brightgreen "\<(MODIFY|NATURAL|NOT|NULL|NEXTVAL)\>"
+icolor brightgreen "\<(OPTIMIZE|OPTION|OPTIONALLY|ORDER|OUTFILE|OR|OUTER|ON)\>"
+icolor brightgreen "\<(PROCEDURE|PROCEDURAL|PRIMARY)\>"
+icolor brightgreen "\<(READ|REFERENCES|REGEXP|RENAME|REPLACE|RETURN|REVOKE|RLIKE|RIGHT)\>"
+icolor brightgreen "\<(SHOW|SONAME|STATUS|STRAIGHT_JOIN|SELECT|SETVAL|SET)\>"
+icolor brightgreen "\<(TABLES|TERMINATED|TO|TRAILING|TRUNCATE|TABLE|TEMPORARY|TRIGGER|TRUSTED)\>"
+icolor brightgreen "\<(UNIQUE|UNLOCK|USE|USING|UPDATE|VALUES|VARIABLES|VIEW)\>"
+icolor brightgreen "\<(WITH|WRITE|WHERE|ZEROFILL|TYPE|XOR)\>"
+
+## Types
+color brightred "\<(VARCHAR|TINYINT|TEXT|DATE|SMALLINT|MEDIUMINT|INT|INTEGER|BIGINT|FLOAT|DOUBLE|DECIMAL|DATETIME|TIMESTAMP|TIME|YEAR|UNSIGNED|CHAR|TINYBLOB|TINYTEXT|BLOB|MEDIUMBLOB|MEDIUMTEXT|LONGBLOB|LONGTEXT|ENUM|BOOL|BINARY|VARBINARY)\>"
+
+## Functions
+color green "[A-Z]+\("
+
+# Symbols
+color red "[(),=/*+-]"
+
+## SQLite meta commands
+icolor brightgreen "\.\<(databases|dump|echo|exit|explain|header(s)?|help)\>"
+icolor brightgreen "\.\<(import|indices|mode|nullvalue|output|prompt|quit|read)\>"
+icolor brightgreen "\.\<(schema|separator|show|tables|timeout|width)\>"
+
+## Pragmas
+color brightcyan "\<(ON|OFF)\>"
+
+## Numbers
+color brightblue "\<([0-9]+)\>"
+
+## Strings
+color yellow ""(\\.|[^"])*"|'(\\.|[^'])*'"
+color yellow "`(\\.|[^\\`])*`"
+
+## Comments
+color cyan "\-\-.*$"
+
+## Trailing spaces
+color ,green "[[:space:]]+$"
