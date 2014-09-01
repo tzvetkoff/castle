@@ -1,9 +1,11 @@
 #!/bin/bash
 
+PLIST=/usr/local/opt/postgresql/homebrew.mxcl.postgresql.plist
+
 if [[ ${1} = 'start' ]]; then
-	pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start
+	launchctl load ${PLIST}
 elif [[ ${1} = 'stop' ]]; then
-	pg_ctl -D /usr/local/var/postgres stop -s -m fast
+	launchctl unload ${PLIST}
 else
 	echo "usage: $0 start|stop"
 	exit 1
