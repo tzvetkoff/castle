@@ -6,6 +6,7 @@ if [[ ${1} = 'start' ]]; then
 	launchctl load ${PLIST}
 elif [[ ${1} = 'stop' ]]; then
 	launchctl unload ${PLIST}
+	rm /usr/local/var/postgres/postmaster.pid
 else
 	echo "usage: $0 start|stop"
 	exit 1
