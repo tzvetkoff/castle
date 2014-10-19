@@ -29,6 +29,18 @@ Q() {
 # go!
 #
 
+if Q 'Never go into computer sleep mode?'; then
+	systemsetup -setcomputersleep Off > /dev/null
+fi
+
+if Q 'Check for software updates daily, not just once per week?'; then
+	defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1
+fi
+
+if Q 'Disable compressed memory?'; then
+	sudo nvram boot-args='vm_compressor=1'
+fi
+
 if Q 'Expanding the save panel by default?'; then
 	defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true
 	defaults write NSGlobalDomain PMPrintingExpandedStateForPrint -bool true
@@ -43,14 +55,6 @@ if Q 'Reveal IP address, hostname, OS version, etc. when clicking the clock in t
 	sudo defaults write /Library/Preferences/com.apple.loginwindow AdminHostInfo HostName
 fi
 
-if Q 'Never go into computer sleep mode?'; then
-	systemsetup -setcomputersleep Off > /dev/null
-fi
-
-if Q 'Check for software updates daily, not just once per week?'; then
-	defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1
-fi
-
 if Q 'Disable smart quotes and smart dashes as they'"'"'re annoying when typing code?'; then
 	defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
 	defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
@@ -63,7 +67,7 @@ fi
 if Q 'Showing icons for hard drives, servers, and removable media on the desktop?'; then
 	defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool true
 fi
- 
+
 if Q 'Showing all filename extensions in Finder by default?'; then
 	defaults write NSGlobalDomain AppleShowAllExtensions -bool true
 fi
