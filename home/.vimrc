@@ -14,6 +14,15 @@ endif
 " This must be first, because it changes other options as a side effect.
 set nocompatible
 
+" Always show the status bar
+set laststatus=2
+
+" UTF-8 FTW
+set encoding=utf-8
+
+" Force 256 colors in terminals
+set t_Co=256
+
 " Allow backspacing over everything in insert mode
 set backspace=indent,eol,start
 
@@ -98,20 +107,23 @@ autocmd FileType * execute "setlocal complete+="."k/usr/share/vim/vim72/syntax/"
 set completeopt=longest,menuone
 
 " <C-S> completion (much like every other ide)
-"function! Completion_CtrlSpace()
-"  if pumvisible() || &omnifunc == ''
-"    return "\<C-n>"
-"  elseif col('.') > 1 && strpart(getline('.'), col('.') - 2, 3) =~ '^\w'
-"    return "\<C-p>"
-"  endif
-"endfunction
-"inoremap <Nul> <C-R>=Completion_CtrlSpace()<CR>
-inoremap <expr> <C-Space> pumvisible() \|\| &omnifunc == '' ?
-\ "\<lt>C-n>" :
-\ "\<lt>C-x>\<lt>C-o><c-r>=pumvisible() ?" .
-\ "\"\\<lt>c-n>\\<lt>c-p>\\<lt>c-n>\" :" .
-\ "\" \\<lt>bs>\\<lt>C-n>\"\<CR>"
-imap <C-@> <C-Space>
+function! Completion_CtrlSpace()
+  if pumvisible() || &omnifunc == ''
+    return "\<C-n>"
+  elseif col('.') > 1 && strpart(getline('.'), col('.') - 2, 3) =~ '^\w'
+    return "\<C-p>"
+  endif
+endfunction
+inoremap <Nul> <C-R>=Completion_CtrlSpace()<CR>
+"inoremap <expr> <C-Space> pumvisible() \|\| &omnifunc == '' ?
+"\ "\<lt>C-n>" :
+"\ "\<lt>C-x>\<lt>C-o><c-r>=pumvisible() ?" .
+"\ "\"\\<lt>c-n>\\<lt>c-p>\\<lt>c-n>\" :" .
+"\ "\" \\<lt>bs>\\<lt>C-n>\"\<CR>"
+"imap <C-@> <C-Space>
+
+" Search toggle
+nnoremap <silent> <C-s> :set hlsearch!<CR> 
 
 " Smart HOME key
 function! SmartHome()
