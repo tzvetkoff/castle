@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #
-# files to install in ${HOME}
+# files to install
 #
 
 H=(\
@@ -76,6 +76,6 @@ for z in ${H[@]}; do
 	fi
 
 	echo -e "${G}install${W} ${z}"
-	ln -s ${P}/home/${z} ./${z}
+	ln -s ${P}/${z} ./${z}
 done
 popd >/dev/null
