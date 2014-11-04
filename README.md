@@ -11,3 +11,7 @@ cd castle
 git submodule update --init
 ./install.sh
 ```
+
+## OSX
+
+If you're running OSX you can also run `osx.sh` and pick some of the system tweaks I use.
