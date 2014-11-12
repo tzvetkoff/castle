@@ -1,18 +1,13 @@
 #!/bin/bash
 
-while [[ -n "${1}" ]]; do
-	foo=${1}
-	shift
+foo=${*}
+foo=${foo//o/0}
+foo=${foo//l/1}
+foo=${foo//\+/-}
+foo=${foo//s/5}
+foo=${foo//t/7}
+foo=${foo//i/1}
+foo=${foo//a/4}
+foo=${foo//e/3}
 
-	foo=${foo//o/0}
-	foo=${foo//l/1}
-	foo=${foo//\+/-}
-	foo=${foo//s/5}
-	foo=${foo//t/7}
-	foo=${foo//i/1}
-	foo=${foo//a/4}
-	foo=${foo//e/3}
-
-	echo -n ${foo}
-done
-echo
+echo $foo

@@ -123,7 +123,7 @@ inoremap <Nul> <C-R>=Completion_CtrlSpace()<CR>
 "imap <C-@> <C-Space>
 
 " Search toggle
-nnoremap <silent> <C-s> :set hlsearch!<CR> 
+"nnoremap <silent> <C-s> :set hlsearch!<CR> 
 
 " Smart HOME key
 function! SmartHome()
@@ -163,6 +163,9 @@ set number
 
 " Disable .viminfo
 set viminfo=
+
+" NERDTree
+map <C-r> :NERDTreeToggle<CR>
 
 
 " Pathogen
