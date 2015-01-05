@@ -138,6 +138,11 @@ alias rg='rails generate'
 alias g='rails generate'
 alias bundel='bundle'
 
+# git
+alias push='git push'
+alias pull='git pull'
+alias pop='git pull'
+
 ## for the man
 alias fs='foreman start'
 alias fc='foreman run rails console'
