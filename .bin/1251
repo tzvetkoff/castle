@@ -1,0 +1,12 @@
+#!/bin/bash
+
+if [[ -z "${1}" ]]; then
+	echo "Usage: ${0} <files>"
+	exit 1
+fi
+
+while [[ -n "${1}" ]]; do
+	iconv --from-code=windows-1251 --to-code=utf-8 < "${1}" > "${1}".utf8
+	mv "${1}".utf8 "${1}"
+	shift
+done
