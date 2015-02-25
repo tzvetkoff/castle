@@ -12,7 +12,7 @@ ok="[  ${green}ok${none}  ]"
 fail="[ ${red}fail${none} ]"
 
 while [ ! -z "$1" ]; do
-    [ ! -f "$1" ] && echo -e "$fail $1 does not exist" || (sed -i 's/\x0D//' "$1" && echo -e "$ok $1" || echo -e "$fail $1")
+    [ ! -f "$1" ] && echo -e "$fail $1 does not exist" || (perl -pi -e 's/\r\n/\n/' "$1" && echo -e "$ok $1" || echo -e "$fail $1")
     shift
 done
 

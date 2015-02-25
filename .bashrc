@@ -126,6 +126,8 @@ alias vim='vim -i NONE'
 
 ## fix some other typos i make intensively
 alias CD='cd'
+alias cD='cd'
+alias Cd='cd'
 alias cd..='cd ..'
 
 ## rails!
@@ -145,6 +147,7 @@ alias xxl='bundle exec rake db:drop db:create db:migrate db:seed'
 alias push='git push'
 alias pull='git pull'
 alias pop='git pull'
+alias gdiff='git diff --ignore-all-space'
 
 ## for the man
 alias fs='foreman start'
