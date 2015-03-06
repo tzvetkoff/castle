@@ -12,7 +12,7 @@
 #
 prompt_command() {
 	## hostname
-	local host=${HOSTNAME%.local}
+	local host=${HOSTNAME%%.*}
 
 	## colors
 	local reset='\[\033[00m\]'
