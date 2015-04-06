@@ -157,6 +157,11 @@ alias fc='foreman run rails console'
 alias su='sudo su'
 alias chown='sudo chown'
 
+## macosx
+if [[ ${OSTYPE} = darwin* ]]; then
+	alias htop='sudo htop'
+fi
+
 
 #
 # for macosx - remove /usr/local/bin and /usr/local/sbin from path
