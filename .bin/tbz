@@ -9,16 +9,16 @@ if [[ -z "${2}" ]]; then
     set "${1}" "${1}"
 fi
 
-out=${1%/}
+out="${1%/}"
 shift
 
 case ${out} in
     *.tbz2 | *.tar.bz2)
-        tar -c -- "${*}" | bzip2 --best > ${out}
+        tar -c -- "${*}" | bzip2 --best > "${out}"
         ret=$?
         ;;
     *)
-        tar -c -- "${*}" | bzip2 --best > ${out}.tar.bz2
+        tar -c -- "${*}" | bzip2 --best > "${out}.tar.bz2"
         ret=$?
         ;;
 esac
