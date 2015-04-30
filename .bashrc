@@ -212,6 +212,8 @@ export PYTHONSTARTUP="${HOME}/.pythonrc"
 #
 if [[ -x /usr/local/bin/brew && -f `brew --prefix`/etc/bash_completion ]]; then
 	. `brew --prefix`/etc/bash_completion
+elif [[ -f /usr/local/share/bash-completion/bash_completion ]]; then
+	. /usr/local/share/bash-completion/bash_completion
 elif [[ -f /etc/bash_completion ]]; then
 	. /etc/bash_completion
 fi
