@@ -1,0 +1,7 @@
+#!/bin/bash
+
+if [[ -z "${1}" ]]; then
+	xxd -p -r
+else
+	cat ${1} | xxd -p -r
+fi
