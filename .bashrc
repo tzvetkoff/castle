@@ -130,7 +130,7 @@ alias cD='cd'
 alias Cd='cd'
 alias cd..='cd ..'
 
-## rails!
+## rails
 alias r='rails'
 alias rc='rails console'
 alias c='rails console'
@@ -164,7 +164,7 @@ fi
 
 
 #
-# for macosx - remove /usr/local/bin and /usr/local/sbin from path
+# remove /usr/local/bin and /usr/local/sbin from path
 #
 PATH=${PATH/\/usr\/local\/bin:}
 PATH=${PATH/:\/usr\/local\/bin}

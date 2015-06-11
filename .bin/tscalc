@@ -1,0 +1,95 @@
+#!/usr/bin/env ruby
+
+require 'optparse'
+require 'ostruct'
+
+class TsCalc
+  module VERSION
+    MAJOR = 0
+    MINOR = 1
+    PATCH = 0
+
+    def self.to_s
+      "#{MAJOR}.#{MINOR}.#{PATCH}"
+    end
+  end
+
+  def initialize(args)
+    parse_args(args)
+  end
+
+  def to_s
+    if @options.mode == :unix
+      unix_to_date
+    else
+      date_to_unix
+    end
+  end
+
+  private
+
+  def parse_args(args)
+    @options = OpenStruct.new
+
+    @options.mode = nil
+    @options.utc = true
+
+    parser = OptionParser.new do |o|
+      o.banner = "Usage: #{$PROGRAM_NAME} <options> <timestamp or date>"
+
+      o.separator ''
+      o.separator 'Specific options:'
+
+      o.on('-t', '--unix', 'Convert UNIX timestamp to date and time') do
+        @options.mode = :unix
+      end
+      o.on('-d', '--date', 'Convert date and time to UNIX timestamp') do
+        @options.mode = :date
+      end
+      o.on('-l', '--local', 'Treat timestamp as local time instead of UTC') do
+        @options.utc = false
+      end
+
+      o.separator ''
+      o.separator 'Common options:'
+
+      o.on_tail('-h', '--help', 'Show this message') do
+        puts o
+        exit!
+      end
+      o.on_tail('-v', '--version', 'Show version') do
+        puts TsCalc::VERSION
+        exit!
+      end
+    end
+
+    parser.parse!(args)
+
+    if ARGV.empty?
+      puts parser
+      exit!(1)
+    end
+
+    @options.arg = ARGV.join(' ')
+  end
+
+  def unix_to_date
+    time = Time.at(@options.arg.to_i)
+    time = time.gmtime if @options.utc
+    time
+  end
+
+  def date_to_unix
+    args = @options.arg.split(/\W/)
+    args[1] ||= '01'
+    args[2] ||= '01'
+    args[3] ||= '00'
+    args[4] ||= '00'
+    args[5] ||= '00'
+
+    time = @options.utc ? Time.gm(args) : Time.local(gm)
+    time.to_i
+  end
+end
+
+puts TsCalc.new(ARGV).to_s
