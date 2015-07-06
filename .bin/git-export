@@ -1,0 +1,68 @@
+#!/bin/bash
+
+REMOTE=''
+OUTPUT=''
+FORMAT='tar.gz'
+ARGS=()
+
+usage() {
+  echo "usage: git export [options] [tree-ish]" >&2
+  echo '' >&2
+  echo 'options:' >&2
+  echo '  -h, --help            print this message and exit' >&2
+  echo '  -r, --remote=remote   export from remote repo' >&2
+  echo '  -f, --format=format   set output format [tar.gz tgz tar zip]' >&2
+  echo '  -o, --output=file     set output file [stdout]' >&2
+  exit 1
+}
+
+PARSE=true
+while [[ -n "${1}" ]]; do
+  if ${PARSE}; then
+    case "${1}" in
+      -h)
+        usage;;
+      -r)
+        REMOTE="${2}"; shift;;
+      -r*)
+        REMOTE="${1:2}";;
+      -f)
+        FORMAT="${2}"; shift;;
+      -f*)
+        FORMAT="${1:2}";;
+      -o)
+        OUTPUT="${2}"; shift;;
+      -o*)
+        OUTPUT="${1:2}";;
+      --)
+        PARSE=false;;
+      -*)
+        echo "${0}: invalid option ${1:0:2}" >&2; echo >&2; usage; exit 1;;
+      *)
+        ARGS+=("${1}");;
+    esac
+  else
+    ARGS+=("${1}")
+  fi
+
+  shift
+done
+
+set -- "${ARGS[@]}"
+
+TREE="${1}"
+TREE="${TREE:-master}"
+
+if [[ -z "${REMOTE}" ]]; then
+  if [[ -z "${OUTPUT}" ]]; then
+    exec git archive --format="${FORMAT}" "${TREE}"
+  else
+    exec git archive --format="${FORMAT}" "${TREE}" > "${OUTPUT}"
+  fi
+else
+  if [[ -z "${OUTPUT}" ]]; then
+    exec git archive --format="${FORMAT}" --remote="${REMOTE}" "${TREE}"
+  else
+    exec git archive --format="${FORMAT}" --remote="${REMOTE}" "${TREE}" > "${OUTPUT}"
+  fi
+fi
