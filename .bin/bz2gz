@@ -1,30 +1,49 @@
 #!/bin/bash
 
-if [ -z "$1" ] || [ "$1" = "--keep" ] && [ -z "$2" ]; then
-    echo "Usage: `basename $0` [--keep] <files>"
-    exit 1
-fi
-
-keep=""
-if [ "$1" = "--keep" ]; then
-    keep="keep"
-    shift
-fi
-
 green="\033[01;32m"
 red="\033[01;31m"
 none="\033[00m"
 ok="[  ${green}ok${none}  ]"
 fail="[ ${red}fail${none} ]"
 
-while [ ! -z "$1" ]; do
-    ifile="$1"
-    ofile="`echo "$1" | sed 's/bz2$/gz/g'`"
-    if [ "$ifile" = "$ofile" ]; then
-        ofile="$ifile.gz"
-    fi
-    [ ! -f "$ifile" ] && echo -e "$fail $ifile does not exist!" || (bzip2 --test -- "$ifile" > /dev/null 2>&1 && (bzip2 -d < "$ifile" | gzip --best > "$ofile" && (echo -e "$ok $ifile -> $ofile"; [ -z "$keep" ] && rm -f -- "$ifile") || echo -e "$fail $ifile -> $ofile")) || echo -e "$fail $ifile is not bzip2 compressed"
-    shift
-done
+keep=false
 
-exit 0
+if [[ "${1}" = '--keep' ]]; then
+  keep=true
+  shift
+fi
+
+if [[ -z "${1}" ]]; then
+  echo "Usage: `basename ${0}` [--keep] <files>"
+  exit 1
+fi
+
+while [[ -n "${1}" ]]; do
+  ifile="${1}"
+  ofile="${1%gz}"bz2
+
+  if [[ "${ifile}" = "${ofile}" ]]; then
+    ofile="${ifile}.bz2"
+  fi
+
+  if [[ ! -f "${ifile}" ]]; then
+    echo -e "${fail} ${ifile} does not exist!"
+    continue
+  fi
+
+  if bzip2 --test -- "${ifile}" >/dev/null 2>&1; then
+    if bzip2 -d < "${ifile}" | gzip --best > "${ofile}"; then
+      echo -e "${ok} ${ifile} -> ${ofile}"
+
+      if ! ${keep}; then
+        rm -f -- "${ifile}"
+      fi
+    else
+      echo -e "${fail} ${ifile} -> ${ofile}"
+    fi
+  else
+    echo "${fail} ${ifile} is not bzip2 compressed!"
+  fi
+
+  shift
+done

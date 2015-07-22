@@ -1,8 +1,8 @@
 #!/bin/bash
 
-if [ -z "$1" ]; then
-    echo "Usage: `basename $0` <files>"
-    exit 1
+if [[ -z "${1}" ]]; then
+  echo "Usage: `basename ${0}` <files>"
+  exit 1
 fi
 
 green="\033[01;32m"
@@ -11,9 +11,18 @@ none="\033[00m"
 ok="[  ${green}ok${none}  ]"
 fail="[ ${red}fail${none} ]"
 
-while [ ! -z "$1" ]; do
-    [ ! -f "$1" ] && echo -e "$fail $1 does not exist" || (sed -i 's/$/'"`echo -e '\r'`/" "$1" && echo -e "$ok $1" || echo -e "$fail $1")
-    shift
+while [[ -n "${1}" ]]; do
+  if [[ ! -f "${1}" ]]; then
+    echo -e "${fail} ${1} does not exist"
+  else
+    if sed -i 's/$/'"`echo -e '\r'`/" "${1}"; then
+      echo -e "${ok} ${1}"
+    else
+      echo -e "${fail} ${1}"
+    fi
+  fi
+
+  shift
 done
 
 exit 0

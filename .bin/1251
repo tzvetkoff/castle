@@ -1,12 +1,23 @@
 #!/bin/bash
 
+keep=false
+
+if [[ ${1} = '--keep' ]]; then
+  keep=true
+  shift
+fi
+
 if [[ -z "${1}" ]]; then
-	echo "Usage: ${0} <files>"
-	exit 1
+  echo "Usage: `basename ${0}` <files>"
+  exit 1
 fi
 
 while [[ -n "${1}" ]]; do
-	iconv --from-code=windows-1251 --to-code=utf-8 < "${1}" > "${1}".utf8
-	mv "${1}".utf8 "${1}"
-	shift
+  iconv --from-code=windows-1251 --to-code=utf-8 < "${1}" > "${1}".utf8
+
+  if ! $keep; then
+    mv "${1}".utf8 "${1}"
+  fi
+
+  shift
 done

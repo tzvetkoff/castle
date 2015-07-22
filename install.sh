@@ -5,19 +5,19 @@
 #
 
 H=(\
-	.aprc						\
-	.bash_profile				\
-	.bashrc						\
-	.bin						\
-	.gemrc						\
-	.irbrc						\
-	.motd						\
-	.my.cnf						\
-	.nano						\
-	.nanorc						\
-	.pythonrc					\
-	.vimrc						\
-	.vim						\
+  .aprc           \
+  .bash_profile   \
+  .bashrc         \
+  .bin            \
+  .gemrc          \
+  .irbrc          \
+  .motd           \
+  .my.cnf         \
+  .nano           \
+  .nanorc         \
+  .pythonrc       \
+  .vimrc          \
+  .vim            \
 )
 
 #
@@ -40,9 +40,9 @@ P=$(cd $(dirname ${BASH_SOURCE[0]}) && pwd)
 # force?
 #
 if [[ "${1}" = "-f" || "${1}" = "--force" ]]; then
-	F="yes"
+  F="yes"
 else
-	F=""
+  F=""
 fi
 
 #
@@ -50,14 +50,14 @@ fi
 #
 
 Q() {
-	echo -ne "${Y}${*} ${B}[Y/n]${W} "
-	read -n 1 -r
-	echo
-	if [[ ${REPLY} =~ ^[Yy]$ ]]; then
-		return 0
-	else
-		return 1
-	fi
+  echo -ne "${Y}${*} ${B}[Y/n]${W} "
+  read -n 1 -r
+  echo
+  if [[ ${REPLY} =~ ^[Yy]$ ]]; then
+    return 0
+  else
+    return 1
+  fi
 }
 
 #
@@ -66,16 +66,16 @@ Q() {
 
 pushd ${HOME} >/dev/null
 for z in ${H[@]}; do
-	if [[ -e ./${z} ]]; then
-		if [[ -n ${F} ]] || Q "File ${W}${HOME}/${z}${Y} already exists. Overwrite?"; then
-			rm -rf -- ${z}
-		else
-			echo -e "${R}skip${W} ${z}"
-			continue
-		fi
-	fi
+  if [[ -e ./${z} ]]; then
+    if [[ -n ${F} ]] || Q "File ${W}${HOME}/${z}${Y} already exists. Overwrite?"; then
+      rm -rf -- ${z}
+    else
+      echo -e "${R}skip${W} ${z}"
+      continue
+    fi
+  fi
 
-	echo -e "${G}install${W} ${z}"
-	ln -s ${P}/${z} ./${z}
+  echo -e "${G}install${W} ${z}"
+  ln -s ${P}/${z} ./${z}
 done
 popd >/dev/null

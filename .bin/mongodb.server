@@ -1,5 +1,5 @@
 #!/bin/bash
 
 if [[ $1 == 'start' ]]; then
-	sudo mongod run --fork --logpath /var/log/mongod.log --config /usr/local/etc/mongod.conf
+  sudo mongod run --fork --logpath /var/log/mongod.log --config /usr/local/etc/mongod.conf
 fi

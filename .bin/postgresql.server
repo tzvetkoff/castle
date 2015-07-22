@@ -1,13 +1,13 @@
 #!/bin/bash
 
-PLIST=/usr/local/opt/postgresql/homebrew.mxcl.postgresql.plist
+PLIST='/usr/local/opt/postgresql/homebrew.mxcl.postgresql.plist'
 
 if [[ ${1} = 'start' ]]; then
-	launchctl load ${PLIST}
+  launchctl load ${PLIST}
 elif [[ ${1} = 'stop' ]]; then
-	launchctl unload ${PLIST}
-	rm /usr/local/var/postgres/postmaster.pid
+  launchctl unload ${PLIST}
+  rm /usr/local/var/postgres/postmaster.pid
 else
-	echo "usage: $0 start|stop"
-	exit 1
+  echo "usage: `basename ${0}` start|stop"
+  exit 1
 fi
