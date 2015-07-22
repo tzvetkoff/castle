@@ -171,11 +171,11 @@ PATH=${PATH/:\/usr\/local\/sbin}
 # prepend /usr/local/bin, /usr/local/sbin, ~/bin, ~/.bin and ~/.local/bin to path
 #
 
-[[ ! $PATH =~ "/usr/local/bin" ]] && PATH="/usr/local/bin:${PATH}"
+[[ ! $PATH =~ "/usr/local/bin" ]]   && PATH="/usr/local/bin:${PATH}"
 [[ ! $PATH =~ "/usr/local/sbin" ]]  && PATH="/usr/local/sbin:${PATH}"
-[[ -d "${HOME}/bin" ]]        && PATH="${HOME}/bin:${PATH}"
-[[ -d "${HOME}/.bin" ]]       && PATH="${HOME}/.bin:${PATH}"
-[[ -d "${HOME}/.local/bin" ]]   && PATH="${HOME}/.local/bin:${PATH}"
+[[ -d "${HOME}/bin" ]]              && PATH="${HOME}/bin:${PATH}"
+[[ -d "${HOME}/.bin" ]]             && PATH="${HOME}/.bin:${PATH}"
+[[ -d "${HOME}/.local/bin" ]]       && PATH="${HOME}/.local/bin:${PATH}"
 
 # homebrew paths here
 [[ -d "/usr/local/share/python" ]]  && PATH="/usr/local/share/python:${PATH}"
@@ -219,7 +219,7 @@ fi
 # rvm
 #
 
-[[ -s "${HOME}/.rvm/scripts/rvm" ]]     && . "${HOME}/.rvm/scripts/rvm"
+[[ -s "${HOME}/.rvm/scripts/rvm" ]]         && . "${HOME}/.rvm/scripts/rvm"
 [[ -r "${HOME}/.rvm/scripts/completion" ]]  && . "${HOME}/.rvm/scripts/completion"
 
 #
@@ -231,6 +231,7 @@ if [[ -d "${HOME}/.bashrc.d" ]]; then
   for file in ${HOME}/.bashrc.d/*; do
     . "${file}"
   done
+  shopt -u nullglob
 fi
 
 [[ -r "${HOME}/.bashrc.extra" ]] && . "${HOME}/.bashrc.extra"
