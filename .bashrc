@@ -38,19 +38,21 @@ prompt_command() {
   local dir=${PWD}
 
   if [[ ${dir} != ${HOME} ]]; then
-    while [[ ! -d ${dir}/.git && ${dir} != '/' && -n ${dir} ]]; do
-      dir=${dir%/*}
-    done
+    if [[ -z ${BASHRC_DISABLE_GIT} ]]; then
+      while [[ ! -e ${dir}/.git && ${dir} != '/' && -n ${dir} ]]; do
+        dir=${dir%/*}
+      done
 
-    if [[ -n ${dir} && -z ${BASHRC_DISABLE_GIT} ]]; then
-      local branch=`git symbolic-ref HEAD 2>/dev/null`
-      branch=${branch#refs/heads/}
-      if [[ -n ${branch} ]]; then
-        local status=`git status --porcelain 2>/dev/null`
-        if [[ -n ${status} ]]; then
-          git="${reset}(${grey}git:${red}${branch}${reset})"
-        else
-          git="${reset}(${grey}git:${green}${branch}${reset})"
+      if [[ -n ${dir} ]]; then
+        local branch=`git symbolic-ref HEAD 2>/dev/null`
+        branch=${branch#refs/heads/}
+        if [[ -n ${branch} ]]; then
+          local status=`git status --porcelain 2>/dev/null`
+          if [[ -n ${status} ]]; then
+            git="${reset}(${grey}git:${red}${branch}${reset})"
+          else
+            git="${reset}(${grey}git:${green}${branch}${reset})"
+          fi
         fi
       fi
     fi
