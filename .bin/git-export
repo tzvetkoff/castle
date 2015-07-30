@@ -22,18 +22,24 @@ while [[ -n "${1}" ]]; do
     case "${1}" in
       -h)
         usage;;
-      -r)
+      -r|--remote)
         REMOTE="${2}"; shift;;
       -r*)
         REMOTE="${1:2}";;
-      -f)
+      --remote=*)
+        REMOTE="${1:9}";;
+      -f|--format)
         FORMAT="${2}"; shift;;
       -f*)
         FORMAT="${1:2}";;
-      -o)
+      --format=*)
+        FORMAT="${1:9}";;
+      -o|--output)
         OUTPUT="${2}"; shift;;
       -o*)
         OUTPUT="${1:2}";;
+      --output=*)
+        OUTPUT="${1:9}";;
       --)
         PARSE=false;;
       -*)
