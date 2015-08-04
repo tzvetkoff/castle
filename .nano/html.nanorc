@@ -1,5 +1,11 @@
 ## Here is a short example for HTML.
 ##
 syntax "html" "\.html$"
+## Tags
 color brightblue start="<" end=">"
-color red "&[^;[[:space:]]]*;"
+## Entities
+color red "&[^;]*;"
+## Comments
+color yellow start="<!--" end="-->"
+## Trailing whitespaces
+color ,green "[[:space:]]+$"

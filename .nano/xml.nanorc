@@ -1,9 +1,15 @@
 ## Here is an example for xml files.
 ##
 syntax "xml" "\.([jrs]html?|sgml?|xml|xslt?)$"
+## Tags
 color green  start="<" end=">"
 color cyan   "<[^> ]+"
 color cyan   ">"
+## Doctype
 color yellow start="<!DOCTYPE" end="[/]?>"
+## Comments
 color yellow start="<!--" end="-->"
+## Entities
 color red    "&[^;]*;"
+## Trailing whitespaces
+color ,green "[[:space:]]+$"
