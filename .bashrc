@@ -101,6 +101,7 @@ if [[ ${OSTYPE} = darwin* && ${OSTYPE} != 'darwin9' ]]; then
   export CLICOLOR=1
   export LSCOLORS=gxBxhxDxfxhxhxhxhxcxcx
   alias ls='ls -ACF'
+  alias lo='ls -hAlFO'
 else
   alias ls='ls -ACF --color=auto'
 fi

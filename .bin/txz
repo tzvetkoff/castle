@@ -14,11 +14,11 @@ shift
 
 case ${out} in
   *.txz | *.tar.xz)
-    tar -c -- "${*}" | lzma --best > "${out}"
+    tar -c -- "${@}" | lzma --best > "${out}"
     ret=$?
     ;;
   *)
-    tar -c -- "${*}" | lzma --best > "${out}.tar.xz"
+    tar -c -- "${@}" | lzma --best > "${out}.tar.xz"
     ret=$?
     ;;
 esac

@@ -14,11 +14,11 @@ shift
 
 case ${out} in
   *.tgz | *.tar.gz)
-    tar -c -- "${*}" | gzip --best > "${out}"
+    tar -c -- "${@}" | gzip --best > "${out}"
     ret=$?
     ;;
   *)
-    tar -c -- "${*}" | gzip --best > "${out}.tar.gz"
+    tar -c -- "${@}" | gzip --best > "${out}.tar.gz"
     ret=$?
     ;;
 esac
