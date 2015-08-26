@@ -1,0 +1,143 @@
+#!/usr/bin/env ruby
+
+require 'json'
+require 'optparse'
+
+class JSONCommand
+  module VERSION
+    MAJOR = 0
+    MINOR = 1
+    PATCH = 0
+
+    def self.to_s
+      "#{MAJOR}.#{MINOR}.#{PATCH}"
+    end
+  end
+
+  def initialize(args)
+    parse_args(args)
+  end
+
+  def execute
+    json = @options.input.read
+    json = JSON.parse(json)
+
+    @options.args.each do |arg|
+      puts extract(json, to_keys(arg))
+    end
+  end
+
+  private
+
+  def extract(json, keys)
+    k = []
+
+    v = keys.inject(json) do |json, key|
+      k << (key.is_a?(Fixnum) ? "[#{key}]" : ".#{key}")
+
+      if key.is_a?(Fixnum)
+        if !json.is_a?(Array) || json.length <= key || key < 0
+          if @options.strict
+            STDERR.puts "ERROR: #{k.join('')[1..-1]} is undefined!"
+            exit!(1)
+          end
+
+          :undefined
+        else
+          json[key]
+        end
+      else
+        if !json.is_a?(Hash) || !json.key?(key)
+          if @options.strict
+            STDERR.puts "ERROR: #{k.join('')[1..-1]} is undefined!"
+            exit!(1)
+          end
+
+          :undefined
+        else
+          json[key]
+        end
+      end
+    end
+
+    v = @options.json && v != :undefined ? v.to_json : v
+    v = v.inspect if v.is_a?(Hash) || v.is_a?(Array)
+
+    s = ''
+    s << k.join('')[1..-1] unless @options.bare
+    s << ': ' unless @options.bare
+    s << "#{v}"
+
+    s
+  end
+
+  def to_keys(str)
+    x = str.split(/[.\[]/).map do |key|
+      if key.end_with?(']')
+        if key.start_with?('0x') || key.start_with?('0X')
+          key.to_i(16)
+        elsif key.start_with?('0')
+          result = key.to_i(8)
+          result = key.to_i(10) if result == 0
+          result
+        else
+          key.to_i(10)
+        end
+      else
+        key
+      end
+    end
+  end
+
+  def parse_args(args)
+    @options = OpenStruct.new
+
+    @options.input = STDIN
+    @options.bare = false
+    @options.strict = false
+    @options.json = false
+
+    parser = OptionParser.new do |o|
+      o.banner = "Usage: #{$PROGRAM_NAME} [options] <keys>"
+
+      o.separator ''
+      o.separator 'Specific options:'
+
+      o.on('-i', '--input FILENAME', 'Read JSON from file instead of STDIN') do |filename|
+        @options.input = open(filename, 'r')
+      end
+      o.on('-b', '--bare', 'Don\'t print key names, just values') do
+        @options.bare = true
+      end
+      o.on('-j', '--json', 'Print values in JSON syntax') do
+        @options.json = true
+      end
+      o.on('-s', '--strict', 'Raise error instead of printing `undefined\'') do
+        @options.strict = true
+      end
+
+      o.separator ''
+      o.separator 'Common options:'
+
+      o.on_tail('-h', '--help', 'Show this message') do
+        puts o
+        exit!
+      end
+      o.on_tail('-v', '--version', 'Show version') do
+        puts JSONCommand::VERSION
+        exit!
+      end
+    end
+
+    parser.parse!(args)
+
+    if ARGV.empty?
+      puts parser
+      exit!(1)
+    end
+
+    @options.args = Array(ARGV.slice(0))
+  end
+end
+
+JSONCommand.new(ARGV).execute

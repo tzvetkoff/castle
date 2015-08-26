@@ -194,6 +194,12 @@ export HISTFILE=/dev/null
 export LESSHSTFILE=/dev/null
 
 #
+# disable history expansion
+#
+
+set +H
+
+#
 # set some other handy stuff
 #
 
