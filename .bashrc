@@ -78,11 +78,11 @@ prompt_command() {
     fi
 
     if [[ -z ${BASHRC_DISABLE_RVM_GEMSET} && -n ${GEM_HOME} && ${GEM_HOME} = *${rvm_gemset_separator:-'@'}* ]]; then
-      rgs="${reset}{${grey}env:${cyan}${GEM_HOME##*@}${reset}}"
+      rgs="${reset}{${grey}rb:${cyan}${GEM_HOME##*@}${reset}}"
     fi
 
     if [[ -z ${BASHRC_DISABLE_VIRTUALENV} && -n ${VIRTUAL_ENV} ]]; then
-      pve="${reset}{${grey}env:${cyan}${VIRTUAL_ENV##*/}${reset}}"
+      pve="${reset}{${grey}py:${cyan}${VIRTUAL_ENV##*/}${reset}}"
     fi
   fi
 
