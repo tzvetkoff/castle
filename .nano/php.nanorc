@@ -1,65 +1,48 @@
-## php syntax highlighting
-syntax "php" "\.(php[2345s~]?|tpl)$"
-header "^<\?(php)?"
+## Here is an example for PHP.
 
-## php tags
+syntax "php" "\.php[2345s~]?$"
+magic "PHP script text"
+
+# PHP markings.
 color yellow "(<\?(php)?|\?>)"
 
-## outside php
+# Outside PHP.
 color white start="\?>" end="<\?(php)?"
 
-## numerics
+# Numbers.
 color yellow "\<-?[0-9]*[Ll]?\>"
 color yellow "\<-?0[Xx][0-9A-Fa-f]*[Ll]?\>"
 
-## constants
+# Functions.
+color white "\<[a-z_]*\("
+
+# Constants.
 color brightred "\<[A-Z_][0-9A-Z_]+\>"
 
-## variables
-color red "\$[a-zA-Z_0-9$]*"
+# Types.
+color green "\<(var|float|global|double|bool|char|int|enum|const)\>"
 
-## objects/properties
-#color red "->[a-zA-Z_0-9$]*[^\(]"
-#color red "->[a-zA-Z_0-9$]*->[a-zA-Z_0-9$]*[^\(]"
-#color red "->[a-zA-Z_0-9$]*->[a-zA-Z_0-9$]*->[a-zA-Z_0-9$]*[^\(]"
-#color red "->[a-zA-Z_0-9$]*->[a-zA-Z_0-9$]*->[a-zA-Z_0-9$]*->[a-zA-Z_0-9$]*[^\(]"
-#color red "->[a-zA-Z_0-9$]*->[a-zA-Z_0-9$]*->[a-zA-Z_0-9$]*->[a-zA-Z_0-9$]*->[a-zA-Z_0-9$]*[^\(]"
-#color red "->[a-zA-Z_0-9$]*->[a-zA-Z_0-9$]*->[a-zA-Z_0-9$]*->[a-zA-Z_0-9$]*->[a-zA-Z_0-9$]*->[a-zA-Z_0-9$]*[^\(]"
-#color red "->[a-zA-Z_0-9$]*->[a-zA-Z_0-9$]*->[a-zA-Z_0-9$]*->[a-zA-Z_0-9$]*->[a-zA-Z_0-9$]*->[a-zA-Z_0-9$]*->[a-zA-Z_0-9$]*[^\(]"
-#color red "->[a-zA-Z_0-9$]*->[a-zA-Z_0-9$]*->[a-zA-Z_0-9$]*->[a-zA-Z_0-9$]*->[a-zA-Z_0-9$]*->[a-zA-Z_0-9$]*->[a-zA-Z_0-9$]*->[a-zA-Z_0-9$]*[^\(]"
-#color red "->[a-zA-Z_0-9$]*->[a-zA-Z_0-9$]*->[a-zA-Z_0-9$]*->[a-zA-Z_0-9$]*->[a-zA-Z_0-9$]*->[a-zA-Z_0-9$]*->[a-zA-Z_0-9$]*->[a-zA-Z_0-9$]*->[a-zA-Z_0-9$]*[^\(]"
+# Structure.
+color brightyellow "\<(class|new|private|public|function|for|foreach|if|while|do|else|elseif|case|default|switch)\>"
 
-## function calls
-color brightgreen "[a-zA-Z_0-9]*[[:space:]]*\("
+# Control flow.
+color magenta "\<(goto|continue|break|return)\>"
 
-## method calls
-#color brightgreen "->[a-zA-Z_0-9]*[[:space:]]?*\("
-
-## method calls through variables
-#color brightgreen,blue "->\$[a-zA-Z_0-9]*[[:space:]]?*\("
-
-## functions returning objects
-#color red "[a-zA-Z_0-9]*[[:space:]]?*\(.*\)->"
-
-## punctuation
-color brightred "[|.,{}();:+=*&^%@!?<>\[-]"
-color brightred "]"
-
-## reserved words
+# Keywords.
 color green "\<(true|false|null|and|or|xor|not|include|include_once|require|require_once|array|const|var|global|abstract|final|namespace|class|interface|trait|use|uses|self|new|function|echo|print|case|break|continue|default|exit|die|switch|if|else|elseif|@|while|do|unset|isset|for|foreach|as|return|static|protected|private|public|extends|implements|instanceof|insteadof|try|catch|throw)\>"
 
-## strings
-color brightyellow "\"(\\.|[^\\\"])*\"|'(\\.|[^\\'])*'"
+# Strings.
+color brightyellow "<[^=       ]*>" ""(\.|[^"])*""
 
-## comments
+# Comments.
 color brightblue "[[:space:]]*//.*$"
 color brightblue "[[:space:]]*#.*$"
 color brightblue start="/\*" end="\*/"
 
-## phpdoc
-color brightblack	"^[[:space:]]*\*[[:space:]]+@[a-z]+.*"
-color cyan			"^[[:space:]]*\*[[:space:]]+@[a-z]+"
-color brightblue	"^[[:space:]]*\*[[:space:]]*"
+# PHPDoc.
+color brightblack      "^[[:space:]]*\*[[:space:]]+@[a-z]+.*"
+color cyan                     "^[[:space:]]*\*[[:space:]]+@[a-z]+"
+color brightblue       "^[[:space:]]*\*[[:space:]]*"
 
-## trailing whitespaces
+# Trailing whitespace.
 color ,green "[[:space:]]+$"

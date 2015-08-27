@@ -1,63 +1,59 @@
-## lua syntax highlighting
-syntax "lua" ".*\.(lua|moon?)$"
+## Syntax highlighting for Lua.
 
-## general
-color brightwhite ".+"
+syntax "lua" "\.lua$"
 
-## operators
-color brightyellow ":|\*\*|\*|/|%|\+|-|\^|>|>=|<|<=|~=|=|\.\.|\.\.\.|\<(not|and|or)\>"
+# Operators.
+color brightyellow ":|\*|/|%|\+|-|\^|>|>=|<|<=|~=|=|\.\.|\<(not|and|or)\>"
 
-## statements
-color brightblue "\<(break|continue|do|end|while|repeat|until|if|elseif|then|else|for|in|function|local|return)\>"
+# Statements.
+color brightblue "\<(break|continue;do|end|while|repeat|until|if|elseif|then|else|for|in|function|local|return)\>"
 
-## keywords
-color brightyellow "\<(debug|string|math|table|io|coroutine|os)\>\."
+# Keywords.
+color brightyellow "\<(io|math|os|string|table|coroutine|debug)\>\."
 color brightyellow "\<(_G|_VERSION|assert|collectgarbage|dofile|error|getfenv|getmetatable|ipairs|load|loadfile|module|next|pairs|pcall|print|rawequal|rawget|rawset|require|select|setfenv|setmetatable|tonumber|tostring|type|unpack|xpcall)\s*\("
 
-## standard library
-color brightyellow "io\.\<(close|flush|input|lines|open|output|popen|read|tmpfile|type|write)\>"
-color brightyellow "math\.\<(abs|acos|asin|atan2|atan|ceil|cosh|cos|deg|exp|floor|fmod|frexp|huge|ldexp|log10|log|max|min|modf|pi|pow|rad|random|randomseed|sinh|tan)\>"
-color brightyellow "os\.\<(clock|date|difftime|execute|exit|fork|getenv|getpid|remove|rename|setlocale|sleep|time|tmpname|usleep)\>"
+# Standard library.
+color brightyellow "io\.\<(close|flush|input|lines|open|output|popen|read|tmpfile|type|write|stdin|stdout|stderr)\>"
+color brightyellow "math\.\<(abs|acos|asin|atan2|atan|ceil|cosh|cos|deg|exp|floor|fmod|frexp|huge|ldexp|log10|log)\>"
+color brightyellow "math\.\<(max|min|mod|modf|pi|pow|rad|random|randomseed|sinh|tan)\>"
+color brightyellow "os\.\<(clock|date|difftime|execute|exit|getenv|remove|rename|setlocale|time|tmpname)\>"
 color brightyellow "package\.\<(cpath|loaded|loadlib|path|preload|seeall)\>"
-color brightyellow "string\.\<(byte|char|dump|find|format|gmatch|gsub|len|lower|match|rep|reverse|split|sub|upper)\>"
+color brightyellow "string\.\<(byte|char|dump|find|format|gmatch|gsub|len|lower|match|rep|reverse|sub|upper)\>"
 color brightyellow "table\.\<(concat|insert|maxn|remove|sort)\>"
 color brightyellow "coroutine\.\<(create|resume|running|status|wrap|yield)\>"
-color brightyellow "debug\.\<(debug|getfenv|gethook|getinfo|getlocal|getmetatable|getregistry|getupvalue|setfenv|sethook|setlocal|setmetatable|setupvalue|traceback)\>"
-color brightyellow "dns\.\<(host2ip|ip2host)\>"
-color brightyellow "socket\.\<(accept|close|listen|open|read|write)\>"
+color brightyellow "debug\.\<(debug|getfenv|gethook|getinfo|getlocal|getmetatable|getregistry|getupvalue)\>"
+color brightyellow "debug\.\<(setfenv|sethook|setlocal|setmetatable|setupvalue|traceback)\>"
 
-## file handle methods
+# File handle methods.
 color brightyellow "\:\<(close|flush|lines|read|seek|setvbuf|write)\>"
 
-## string methods
-color brightyellow "\:\<(find|gsub|lower|reverse|split|sub|upper)\>"
-
-## false, nil, true
+# false, nil, true.
 color brightmagenta "\<(false|nil|true)\>"
 
-## external files
-color brightgreen "(\<(dofile|require|include)|%q|%!|%Q|%r|%x)\>"
+# External files.
+color brightgreen "\<(dofile|require)\>"
 
-## numbers
+# Numbers.
 color red "\<([0-9]+)\>"
 
-## symbols
+# Symbols.
 color brightmagenta "(\(|\)|\[|\]|\{|\})"
 
-## strings
+# Shebang.
+color brightcyan "^#!.*"
+
+# Simple comments.
+color green "\-\-.*$"
+
+# Multiline comments.
+color green start="\-\-\[\[" end="\]\]"
+
+# Strings.
 color red "\"(\\.|[^\\\"])*\"|'(\\.|[^\\'])*'"
+color red start="\[\[" end="\]\]"
 
-## escapes
-color red "\\[0-7][0-7][0-7]|\\x[0-9a-fA-F][0-9a-fA-F]|\\[abefnrs]|(\\c|\\C-|\\M-|\\M-\\C-)."
+# Hex literals.
+color red "0x[0-9a-fA-F]*"
 
-## sh!bang
-color brightcyan   "^#!.*"
-
-## simple comments
-color green        "\-\-.*$"
-
-## multiline comments
-color green         start="--\[\[" end="--\]\]"
-
-## trailing whitespaces
+# Trailing whitespace.
 color ,green "[[:space:]]+$"

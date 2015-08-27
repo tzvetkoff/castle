@@ -1,11 +1,13 @@
 ## Here is a short example for HTML.
-##
-syntax "html" "\.html$"
-## Tags
+
+syntax "html" "\.html?$"
+magic "HTML document text"
+
+# Tags.
 color brightblue start="<" end=">"
-## Entities
-color red "&[^;]*;"
-## Comments
-color yellow start="<!--" end="-->"
-## Trailing whitespaces
+# Entities.
+color red "&[^;[:space:]]*;"
+# Attribute values.
+color green ""(\\.|[^"])*""
+# Trailing whitespace.
 color ,green "[[:space:]]+$"
