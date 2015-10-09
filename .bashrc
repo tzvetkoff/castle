@@ -180,10 +180,6 @@ PATH=${PATH/:\/usr\/local\/sbin}
 [[ -d "${HOME}/.bin" ]]             && PATH="${HOME}/.bin:${PATH}"
 [[ -d "${HOME}/.local/bin" ]]       && PATH="${HOME}/.local/bin:${PATH}"
 
-# homebrew paths here
-[[ -d "/usr/local/share/python" ]]  && PATH="/usr/local/share/python:${PATH}"
-[[ -d "/usr/local/share/python3" ]] && PATH="/usr/local/share/python3:${PATH}"
-
 export PATH
 
 #
@@ -249,4 +245,4 @@ fi
 # show message-of-the-day if script is installed
 #
 
-[[ ! -z `type -p motd` ]] && motd
+[[ -z ${BASHRC_DISABLE_MOTD} && -n `type -p motd` ]] && motd
