@@ -11,7 +11,6 @@ H=(\
   .bin            \
   .gemrc          \
   .irbrc          \
-  .motd           \
   .my.cnf         \
   .nano           \
   .nanorc         \
