@@ -24,11 +24,13 @@ prompt_command() {
   local pink='\[\033[01;35m\]'
   local cyan='\[\033[00;36m\]'
 
+  # colorized user
+  local user="${green}${USER}"
+  [[ ${UID} = 0 ]] && user="${red}${USER}"
+
   # nifty current directory
   local pwd=${PWD/$HOME/\~}
-  if [[ $pwd = /home/* ]]; then
-    pwd=\~${pwd#/home/}
-  fi
+  [[ $pwd = /home/* ]] && pwd=\~${pwd#/home/}
 
   # git/svn status, ruby rvm gemset, python virtualenv
   local git=
@@ -86,7 +88,7 @@ prompt_command() {
     fi
   fi
 
-  PS1="${reset}[${green}${USER}${reset}@${blue}${host}${reset}(${yellow}${pwd}${git}${svn}${rgs}${pve}${reset})]\\$ "
+  PS1="${reset}[${green}${user}${reset}@${blue}${host}${reset}(${yellow}${pwd}${git}${svn}${rgs}${pve}${reset})]\\$ "
 }
 
 PS1="\u@\h:\w\\$ "
