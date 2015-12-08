@@ -20,7 +20,7 @@ color brightgreen start="\"\"\"[^"),]" end="(^|[^(])\"\"\""
 color brightgreen    start="'''[^'),]" end="(^|[^(])'''"
 
 # Reminders.
-color ,yellow "(FIXME|TODO|XXX)"
+color red,yellow "(FIXME|TODO|XXX)"
 
 # Trailing whitespace.
 color ,green "[[:space:]]+$"

@@ -164,6 +164,7 @@ alias ssh-guest='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no
 # macosx
 if [[ ${OSTYPE} = darwin* ]]; then
   alias htop='sudo htop'
+  alias mtr='sudo mtr'
 fi
 
 #
@@ -251,3 +252,5 @@ fi
 #
 
 [[ -z ${BASHRC_DISABLE_MOTD} && -n `type -p motd` ]] && motd
+
+export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
