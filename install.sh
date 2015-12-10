@@ -78,3 +78,15 @@ for z in ${H[@]}; do
   ln -s ${P}/${z} ./${z}
 done
 popd >/dev/null
+
+#
+# configure git
+#
+
+git config --global user.name 'Latchezar Tzvetkoff'
+git config --global user.email 'latchezar'$'\100''tzvetkoff'$'\056''net'
+git config --global alias.st 'status'
+git config --global alias.ci 'commit'
+git config --global alias.co 'checkout'
+git config --global alias.dt 'difftool'
+git config --global alias.mt 'mergetool'
