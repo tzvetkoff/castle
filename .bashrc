@@ -95,7 +95,7 @@ PS1="\u@\h:\w\\$ "
 PROMPT_COMMAND=prompt_command
 
 #
-# aliases
+# aliases (and some function overrides)
 #
 
 # ls
@@ -134,6 +134,7 @@ alias CD='cd'
 alias cD='cd'
 alias Cd='cd'
 alias cd..='cd ..'
+cd.(){ cd ."${@}"; }
 
 # rails
 alias r='rails'
