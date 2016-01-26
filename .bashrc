@@ -95,6 +95,12 @@ PS1="\u@\h:\w\\$ "
 PROMPT_COMMAND=prompt_command
 
 #
+# umask !@#$
+#
+
+umask 0022
+
+#
 # aliases (and some function overrides)
 #
 
