@@ -71,6 +71,12 @@ class TsCalc
     end
 
     @options.arg = ARGV.join(' ')
+
+    if @options.arg =~ /^\d+$/
+      @options.mode = :unix
+    else
+      @options.mode = :date
+    end
   end
 
   def unix_to_date
@@ -87,7 +93,7 @@ class TsCalc
     args[4] ||= '00'
     args[5] ||= '00'
 
-    time = @options.utc ? Time.gm(args) : Time.local(gm)
+    time = @options.utc ? Time.gm(*args) : Time.local(*args)
     time.to_i
   end
 end
