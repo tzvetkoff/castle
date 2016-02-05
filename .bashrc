@@ -105,7 +105,7 @@ umask 0022
 #
 
 # ls
-if [[ ${OSTYPE} = darwin* && ${OSTYPE} != 'darwin9' ]]; then
+if [[ ${OSTYPE} = darwin* || ${OSTYPE} = freebsd* ]]; then
   export CLICOLOR=1
   export LSCOLORS=gxBxhxDxfxhxhxhxhxcxcx
   alias ls='ls -ACF'
