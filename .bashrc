@@ -259,5 +259,3 @@ fi
 #
 
 [[ -z ${BASHRC_DISABLE_MOTD} && -n `type -p motd` ]] && motd
-
-export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
