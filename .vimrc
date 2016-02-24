@@ -42,9 +42,9 @@ map Q gq
 " so that you can undo CTRL-U after inserting a line break.
 inoremap <C-U> <C-G>u<C-U>
 
-" In many terminal emulators the mouse works just fine, thus enable it.
+" Disable the mouse.
 if has('mouse')
-  set mouse=a
+  set mouse=
 endif
 
 " Switch syntax highlighting on, when the terminal has colors
