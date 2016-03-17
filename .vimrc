@@ -1,8 +1,7 @@
 "
-" My stupid vimrc
+" ~/.vimrc
 "
 " Author      : Latchezar "Polizei" Tzvetkoff <latchezar@tzvetkoff.net>
-" Last change : 2010-04-16
 "
 
 " Do nothing if started as `evim'
@@ -47,12 +46,12 @@ if has('mouse')
   set mouse=
 endif
 
-" Switch syntax highlighting on, when the terminal has colors
-" Also switch on highlighting the last used search pattern.
-if &t_Co > 2 || has("gui_running")
-  syntax on
-  set hlsearch
-endif
+" Switch syntax highlighting on and select color scheme.
+syntax on
+colorscheme Nimda
+
+" Highlight search.
+set hlsearch
 
 " Set color scheme on macvim
 if has("gui_macvim")
