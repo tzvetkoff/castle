@@ -2,11 +2,11 @@
 
 require 'formula'
 
-HOMEBREW_REVDEPS_USAGE = <<-EOS
-Usage: brew revdeps <formula>
-EOS
-
 module Homebrew extend self
+  HOMEBREW_REVDEPS_USAGE = <<-EOS.undent
+    Usage: brew revdeps <formula>
+  EOS
+
   def revdeps
     abort HOMEBREW_REVDEPS_USAGE if ARGV.empty?
 
