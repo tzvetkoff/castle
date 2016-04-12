@@ -1,0 +1,162 @@
+#!/bin/bash
+
+#
+# Usage
+#
+
+usage() {
+  echo 'Usage:'
+  echo "  ${0} [options] <archive.ext> <files...>"
+  echo
+  echo '  * Extension can be on of: tar tar.gz tgz tar.bz2 tbz2 tar.lzma tar.xz txz'
+  echo '  * For parallel compression either `pigz`, `pbzip2` or `xz >= 5.2` is required'
+  echo
+  echo 'Options:'
+  echo '  -c, --compression=C       Set compression to C (default: guess from extension)'
+  echo '  -p, --processes=N         Execute N parallel processes (default: 1)'
+  echo '  -1 .. -9                  Set compression level (default: 9)'
+  echo '  --fast                    Alias of -1'
+  echo '  --best                    Alias of -9'
+  exit ${1}
+}
+
+#
+# Default values
+#
+
+COMPRESSION=
+COMPRESSION_LEVEL=9
+PROCESSES=1
+ARGS=()
+PARSE=true
+
+#
+# Parse arguments
+#
+
+while [[ -n "${1}" ]]; do
+  if ${PARSE}; then
+    case "${1}" in
+      -h|--help)
+        usage 0;;
+      -c|--compression)
+        COMPRESSION="${2}"; shift;;
+      -c*)
+        COMPRESSION="${1:2}";;
+      --compression=*)
+        COMPRESSION="${1:14}";;
+      -p|--processes)
+        PROCESSES="${2}"; shift;;
+      -p*)
+        PROCESSES="${1:2}";;
+      --processes=*)
+        PROCESSES="${1:12}";;
+      -[1-9])
+        COMPRESSION_LEVEL="${1:1}";;
+      --fast)
+        COMPRESSION_LEVEL=1;;
+      --best)
+        COMPRESSION_LEVEL=9;;
+      --)
+        PARSE=false;;
+      -*)
+        echo "${0}: invalid option: ${1}" >&2; echo >&2; usage 1 >&2;;
+      *)
+        ARGS+=("${1}");;
+    esac
+  else
+    ARGS+=("${1}")
+  fi
+
+  shift
+done
+
+set -- "${ARGS[@]}"
+
+#
+# Check archive name
+#
+
+ARCHIVE="${1}"
+shift
+
+if [[ -z "${ARCHIVE}" ]]; then
+  echo "${0}: missing required argument" >&2
+  echo >&2
+  usage 1 >&2
+fi
+
+if [[ -z "${1}" ]]; then
+  echo "${0}: you should provide at least one more argument"
+  echo >&2
+  usage 1 >&2
+fi
+
+#
+# Check processes value
+#
+
+if [[ ! "${PROCESSES}" =~ ^[0-9]+$ ]]; then
+  echo "${0}: invalid processes value: ${PROCESSES}" >&2
+  echo >&2
+  exit 1
+fi
+
+#
+# Check compression
+#
+
+COMPRESSOR=
+COMPRESSOR_ARGS=
+
+if [[ -z "${COMPRESSION}" ]]; then
+  COMPRESSION="${ARCHIVE##*.}"
+fi
+
+case "${COMPRESSION}" in
+  gz|tgz)
+    if [[ ${PROCESSES} -gt 1 ]]; then
+      COMPRESSOR=pigz
+      COMPRESSOR_ARGS=("-p${PROCESSES}" "-${COMPRESSION_LEVEL}")
+    else
+      COMPRESSOR=gzip
+      COMPRESSOR_ARGS=("-${COMPRESSION_LEVEL}")
+    fi
+    ;;
+  bz2|tbz2)
+    if [[ ${PROCESSES} -gt 1 ]]; then
+      COMPRESSOR=pbzip2
+      COMPRESSOR_ARGS=("-p${PROCESSES}" "-${COMPRESSION_LEVEL}")
+    else
+      COMPRESSOR=bzip2
+      COMPRESSOR_ARGS=("-${COMPRESSION_LEVEL}")
+    fi
+    ;;
+  lzma|xz|txz)
+    if [[ ${PROCESSES} -gt 1 ]]; then
+      COMPRESSOR=xz
+      COMPRESSOR_ARGS=("-T${PROCESSES}" "-${COMPRESSION_LEVEL}")
+    else
+      COMPRESSOR=xz
+      COMPRESSOR_ARGS=("-${COMPRESSION_LEVEL}")
+    fi
+    ;;
+  tar)
+    :
+    ;;
+  *)
+    echo "${0}: unknown compression: ${COMPRESSION}" >&2
+    echo >&2
+    usage 1 >&2
+    ;;
+esac
+
+#
+# Do the actual work
+#
+
+if [[ -z "${COMPRESSOR}" ]]; then
+  tar cf "${ARCHIVE}" "${@}"
+else
+  tar c "${@}" | "${COMPRESSOR}" "${COMPRESSOR_ARGS[@]}" > "${ARCHIVE}"
+fi

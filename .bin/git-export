@@ -21,7 +21,7 @@ while [[ -n "${1}" ]]; do
   if ${PARSE}; then
     case "${1}" in
       -h)
-        usage;;
+        usage 0;;
       -r|--remote)
         REMOTE="${2}"; shift;;
       -r*)
