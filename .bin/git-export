@@ -1,49 +1,57 @@
 #!/bin/bash
 
+#
+# usage
+#
+
+usage() {
+  echo "Usage: git export [options] [tree-ish]"
+  echo ''
+  echo 'Options:'
+  echo '  -h, --help            Print this message and exit'
+  echo '  -r, --remote=remote   Export from remote repo'
+  echo '  -f, --format=format   Set output format [tar.gz tgz tar zip]'
+  echo '  -o, --output=file     Set output file [stdout]'
+  exit ${1}
+}
+
+#
+# parse command line arguments
+#
+
 REMOTE=''
 OUTPUT=''
 FORMAT='tar.gz'
 ARGS=()
 
-usage() {
-  echo "usage: git export [options] [tree-ish]" >&2
-  echo '' >&2
-  echo 'options:' >&2
-  echo '  -h, --help            print this message and exit' >&2
-  echo '  -r, --remote=remote   export from remote repo' >&2
-  echo '  -f, --format=format   set output format [tar.gz tgz tar zip]' >&2
-  echo '  -o, --output=file     set output file [stdout]' >&2
-  exit 1
-}
-
-PARSE=true
+PARSE='true'
 while [[ -n "${1}" ]]; do
   if ${PARSE}; then
     case "${1}" in
-      -h)
+      -h|--help)
         usage 0;;
-      -r|--remote)
-        REMOTE="${2}"; shift;;
       -r*)
         REMOTE="${1:2}";;
       --remote=*)
         REMOTE="${1:9}";;
-      -f|--format)
-        FORMAT="${2}"; shift;;
+      -r|--remote)
+        REMOTE="${2}"; shift;;
       -f*)
         FORMAT="${1:2}";;
       --format=*)
         FORMAT="${1:9}";;
-      -o|--output)
-        OUTPUT="${2}"; shift;;
+      -f|--format)
+        FORMAT="${2}"; shift;;
       -o*)
         OUTPUT="${1:2}";;
       --output=*)
         OUTPUT="${1:9}";;
+      -o|--output)
+        OUTPUT="${2}"; shift;;
       --)
-        PARSE=false;;
+        PARSE='false';;
       -*)
-        echo "${0}: invalid option ${1:0:2}" >&2; echo >&2; usage; exit 1;;
+        echo "${0}: invalid option: ${1}" >&2; echo >&2; usage 1 >&2;;
       *)
         ARGS+=("${1}");;
     esac
@@ -55,6 +63,10 @@ while [[ -n "${1}" ]]; do
 done
 
 set -- "${ARGS[@]}"
+
+#
+# Do some actual work
+#
 
 TREE="${1}"
 TREE="${TREE:-master}"

@@ -1,0 +1,186 @@
+#!/usr/bin/env ruby
+
+require 'optparse'
+
+#
+# https://github.com/aptinio/text-table { table.rb, row.rb, cell.rb }
+#
+
+module Text
+  class Table
+    attr_accessor :head
+    attr_accessor :rows
+    attr_accessor :foot
+    attr_accessor :vertical_boundary
+    attr_accessor :horizontal_boundary
+    attr_accessor :boundary_intersection
+    attr_accessor :horizontal_padding
+    def initialize(options = {})
+      @vertical_boundary     = options[:vertical_boundary    ] || '-'
+      @horizontal_boundary   = options[:horizontal_boundary  ] || '|'
+      @boundary_intersection = options[:boundary_intersection] || '+'
+      @horizontal_padding    = options[:horizontal_padding   ] || 1
+      @head = options[:head]
+      @rows = options[:rows] || []
+      @foot = options[:foot]
+      yield self if block_given?
+    end
+    def text_table_rows
+      rows.to_a.map {|row_input| Row.new(row_input, self)}
+    end
+    def text_table_head
+      Row.new(
+        head.map {|h| hashify(h, {:align => :center})},
+        self
+      ) if head
+    end
+    def text_table_foot
+      Row.new(foot, self) if foot
+    end
+    def all_text_table_rows
+      all = text_table_rows
+      all.unshift text_table_head if head
+      all << text_table_foot if foot
+      all
+    end
+    def column_widths
+      @column_widths ||= \
+      all_text_table_rows.reject {|row| row.cells == :separator}.map do |row|
+        row.cells.map {|cell| [(cell.value.length/cell.colspan.to_f).ceil] * cell.colspan}.flatten
+      end.transpose.map(&:max)
+    end
+    def separator
+      ([@boundary_intersection] * 2).join(
+        column_widths.map {|column_width| @vertical_boundary * (column_width + 2*@horizontal_padding)}.join(@boundary_intersection)
+      ) + "\n"
+    end
+    def to_s
+      rendered_rows = [separator] + text_table_rows.map(&:to_s) + [separator]
+      rendered_rows.unshift [separator, text_table_head.to_s] if head
+      rendered_rows << [text_table_foot.to_s, separator] if foot
+      rendered_rows.join
+    end
+    def align_column(column_number, alignment)
+      set_alignment = Proc.new do |row, column_number_block, alignment_block|
+        cell = row.find do |cell_row|
+          row[0...row.index(cell_row)].map {|c| c.is_a?(Hash) ? c[:colspan] || 1 : 1}.inject(0, &:+) == column_number_block - 1
+        end
+        row[row.index(cell)] = hashify(cell, {:align => alignment_block}) if cell and not(cell.is_a?(Hash) && cell[:colspan].to_i > 0)
+      end
+      rows.each do |row|
+        next if row == :separator
+        set_alignment.call(row, column_number, alignment)
+      end
+      set_alignment.call(foot, column_number, alignment) if foot
+      return self
+    end
+    def hashify(cell, defaults = {})
+      defaults.merge(cell.is_a?(Hash) ? cell : {:value => cell})
+    end
+    def inspect
+      "#<#{self.class}:0x#{self.__id__.to_s(16)}>"
+    end
+    class Row
+      attr_reader :table
+      attr_reader :cells
+      def initialize(row_input, table)
+        @table = table
+        row_input = [row_input].flatten
+        @cells = row_input.first == :separator ? :separator : row_input.map do |cell_input|
+          Cell.new(cell_input.is_a?(Hash) ? cell_input.merge(:row => self) : {:value => cell_input}.merge(:row => self))
+        end
+      end
+      def to_s
+        if cells == :separator
+          table.separator
+        else
+          ([table.horizontal_boundary] * 2).join(
+            cells.map(&:to_s).join(table.horizontal_boundary)
+          ) + "\n"
+        end
+      end
+    end
+    class Cell
+      attr_accessor :value
+      attr_accessor :align
+      attr_accessor :colspan
+      attr_reader :row
+      def initialize(options = {})
+        @value  = options[:value].to_s
+        @row     = options[:row]
+        @align   = options[:align  ] || :left
+        @colspan = options[:colspan] || 1
+      end
+      def to_s
+      ([' ' * table.horizontal_padding]*2).join case align
+        when :left
+          value.ljust cell_width
+        when :right
+          value.rjust cell_width
+        when :center
+          value.center cell_width
+        end
+      end
+      def table
+        row.table
+      end
+      def column_index
+        row.cells[0...row.cells.index(self)].map(&:colspan).inject(0, &:+)
+      end
+      def cell_width
+        (0...colspan).map {|i| table.column_widths[column_index + i]}.inject(&:+) + (colspan - 1)*(2*table.horizontal_padding + table.horizontal_boundary.length)
+      end
+    end
+  end
+end
+
+#
+# parse command line arguments
+#
+
+separator = '|'
+alignments = {}
+input = ARGF
+
+OptionParser.new do |opts|
+  opts.banner = 'Usage:'
+  opts.separator '  text-table [options]'
+  opts.separator ''
+  opts.separator 'Options:'
+
+  opts.on('-a', '--align COL:ALIGN', 'Align a column (default: left)') do |val|
+    col, align = val.split(':')
+    col = col.to_i
+    alignments[col] = align
+  end
+  opts.on('-s', '--separator SEP', 'Set separator (default: "|")') do |val|
+    separator = val
+  end
+  opts.on('-i', '--input FILE', 'Read input from file (default: stdin)') do |val|
+    input = File.open(val)
+  end
+end.parse!
+
+#
+# render the table
+#
+
+table = Text::Table.new
+
+input.each_line do |line|
+  line = line.strip
+
+  if [':sep', ':sep:', ':separator', ':separator:'].include?(line)
+    table.rows << :separator
+  else
+    row = line.split(separator)
+    table.rows << row
+  end
+end
+
+alignments.each do |col, align|
+  puts ">> align #{col} to #{align}"
+  table.align_column col, align.to_sym
+end
+
+puts table.to_s
