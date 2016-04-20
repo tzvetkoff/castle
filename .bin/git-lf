@@ -10,6 +10,7 @@ usage() {
   echo 'Options:'
   echo '  -h, --help            Print this message and exit'
   echo '  -t, --top=N           Take top N (default: 20)'
+  echo '  -u, --size-unit=U     Size unit (default: K)'
   exit ${1}
 }
 
@@ -18,6 +19,7 @@ usage() {
 #
 
 TOP='20'
+SIZE_UNIT=K
 ARGS=()
 
 PARSE='true'
@@ -30,8 +32,14 @@ while [[ -n "${1}" ]]; do
         TOP="${1:2}";;
       --top=*)
         TOP="${1:5}";;
-      -t|--top=)
+      -t|--top)
         TOP="${2}"; shift;;
+      -u*)
+        SIZE_UNIT="${1:2}";;
+      --size-unit=*)
+        SIZE_UNIT="${1:12}";;
+      -u|--size-unit)
+        SIZE_UNIT="${2}"; shift;;
       --)
         PARSE='false';;
       -*)
@@ -86,7 +94,19 @@ GIT_DIR="${GIT_DIR}/.git"
     SHA="${1}"
     UNPACKED_SIZE="${3}"
     PACKED_SIZE="${4}"
-    FILE=$(git --git-dir="${GIT_DIR}" rev-list --all --objects | grep "${SHA}" | cut -f2 -d' ')
+    FILE="$(git --git-dir="${GIT_DIR}" rev-list --all --objects | grep "${SHA}" | cut -f2- -d' ')"
+
+    if [[ "${SIZE_UNIT}" =~ ^[kK] ]]; then
+      UNPACKED_SIZE=$(echo "scale=2; ${UNPACKED_SIZE} / 1024" | bc | sed 's/^\./0./')k
+      PACKED_SIZE=$(echo "scale=2; ${PACKED_SIZE} / 1024" | bc | sed 's/^\./0./')k
+    elif [[ "${SIZE_UNIT}" =~ ^[mM] ]]; then
+      UNPACKED_SIZE=$(echo "scale=2; ${UNPACKED_SIZE} / 1024 / 1024" | bc | sed 's/^\./0./')m
+      PACKED_SIZE=$(echo "scale=2; ${PACKED_SIZE} / 1024 / 1024" | bc | sed 's/^\./0./')m
+    elif [[ "${SIZE_UNIT}" =~ ^[gG] ]]; then
+      UNPACKED_SIZE=$(echo "scale=2; ${UNPACKED_SIZE} / 1024 / 1024 / 1024" | bc | sed 's/^\./0./')g
+      PACKED_SIZE=$(echo "scale=2; ${PACKED_SIZE} / 1024 / 1024 / 1024" | bc | sed 's/^\./0./')g
+    fi
+
     echo "${SHA}|${UNPACKED_SIZE}|${PACKED_SIZE}|${FILE}"
   done
 } | text-table -s'|' -a'2:right' -a'3:right'
