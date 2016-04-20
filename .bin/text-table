@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'optparse'
+require 'csv'
 
 #
 # https://github.com/aptinio/text-table { table.rb, row.rb, cell.rb }
@@ -138,9 +139,11 @@ end
 # parse command line arguments
 #
 
-separator = '|'
-alignments = {}
 input = ARGF
+csv_opts = {}
+alignments = {}
+first_line_is_header = false
+last_line_is_footer = false
 
 OptionParser.new do |opts|
   opts.banner = 'Usage:'
@@ -148,18 +151,41 @@ OptionParser.new do |opts|
   opts.separator ''
   opts.separator 'Options:'
 
-  opts.on('-a', '--align COL:ALIGN', 'Align a column (default: left)') do |val|
-    col, align = val.split(':')
-    col = col.to_i
-    alignments[col] = align
-  end
-  opts.on('-s', '--separator SEP', 'Set separator (default: "|")') do |val|
-    separator = val
-  end
   opts.on('-i', '--input FILE', 'Read input from file (default: stdin)') do |val|
     input = File.open(val)
   end
+  opts.on('-s', '--csv-col-sep SEP', 'Set CSV column separator (default: auto)') do |val|
+    csv_opts[:col_sep] = val
+  end
+  opts.on('-r', '--csv-row-sep SEP', 'Set CSV row separator (default: auto)') do |val|
+    csv_opts[:row_sep] = val
+  end
+  opts.on('-q', '--csv-quote-char CH', 'Set CSV quote character (default: auto)') do |val|
+    csv_opts[:quote_char] = val
+  end
+  opts.on('-a', '--align COL:ALIGN', 'Align a column (default: left)') do |val|
+    col, align = val.split(':')
+    raise OptionParser::InvalidArgument, align unless ['left', 'right', 'center'].include?(align)
+    alignments[col.to_i] = align.to_sym
+  end
+  opts.on('-f', '--first-line-is-header', 'Treat first line as header row') do
+    first_line_is_header = true
+  end
+  opts.on('-l', '--last-line-is-footer', 'Treat last line as footer row') do
+    last_line_is_footer = true
+  end
+
+  opts.on_tail('-h', '--help', 'Print this message and exit') do
+    puts opts
+    exit!
+  end
 end.parse!
+
+#
+# handle ctrl-c
+#
+
+Signal.trap('INT') { puts; exit! }
 
 #
 # render the table
@@ -169,18 +195,24 @@ table = Text::Table.new
 
 input.each_line do |line|
   line = line.strip
-
   if [':sep', ':sep:', ':separator', ':separator:'].include?(line)
     table.rows << :separator
   else
-    row = line.split(separator)
+    row = CSV.parse_line(line, csv_opts)
     table.rows << row
   end
 end
 
+if first_line_is_header
+  table.head = table.rows.shift
+end
+
+if last_line_is_footer
+  table.foot = table.rows.pop
+end
+
 alignments.each do |col, align|
-  puts ">> align #{col} to #{align}"
-  table.align_column col, align.to_sym
+  table.align_column col, align
 end
 
 puts table.to_s

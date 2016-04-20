@@ -89,4 +89,4 @@ GIT_DIR="${GIT_DIR}/.git"
     FILE=$(git --git-dir="${GIT_DIR}" rev-list --all --objects | grep "${SHA}" | cut -f2 -d' ')
     echo "${SHA}|${UNPACKED_SIZE}|${PACKED_SIZE}|${FILE}"
   done
-} | text-table -a2:right -a3:right
+} | text-table -s'|' -a'2:right' -a'3:right'
