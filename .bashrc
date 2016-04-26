@@ -12,9 +12,6 @@
 #
 
 prompt_command() {
-  # hostname
-  local host=${HOSTNAME%%.*}
-
   # colors
   local reset='\[\033[00m\]'
   local grey='\[\033[01;30m\]'
@@ -25,71 +22,88 @@ prompt_command() {
   local pink='\[\033[01;35m\]'
   local cyan='\[\033[00;36m\]'
 
+  # hostname (without domain)
+  local host=${HOSTNAME%%.*}
+
   # colorized user
   local user="${green}${USER}"
   [[ ${UID} = 0 ]] && user="${red}${USER}"
 
   # nifty current directory
-  local pwd=${PWD/$HOME/\~}
-  [[ $pwd = /home/* ]] && pwd=\~${pwd#/home/}
+  local pwd="${PWD/$HOME/~}"
+  [[ "${pwd}" = /home/* ]] && pwd="~${pwd#/home/}"
 
-  # git/svn status, ruby rvm gemset, python virtualenv
-  local git=
-  local svn=
+  # git/svn/mercurial status, ruby rvm gemset, python virtualenv variables
+  local git_dir= git=
+  local svn_dir= svn=
+  local hg_dir= hg=
   local rgs=
   local pve=
-  local dir=${PWD}
+  local dir="${PWD}"
 
-  if [[ ${dir} != ${HOME} ]]; then
-    if [[ -z ${BASHRC_DISABLE_GIT} ]]; then
-      while [[ ! -e ${dir}/.git && ${dir} != '/' && -n ${dir} ]]; do
-        dir=${dir%/*}
-      done
+  # avoid tree scans on home directory and add an option to disable them (mainly for slow disks and/or large repos)
+  if [[ ( -z ${BASHRC_DISABLE_GIT} || -z ${BASHRC_DISABLE_SVN} || -z ${BASHRC_DISABLE_HG} ) && "${dir}" != "${HOME}" ]]; then
+    # search for first .git/.svn/.hg in the tree
+    while [[ "${dir}" != '/' && -n "${dir}" ]]; do
+      [[ -e "${dir}/.git" && -z ${git_dir} ]] && git_dir="${dir}/.git"
+      [[ -e "${dir}/.svn" && -z ${svn_dir} ]] && svn_dir="${dir}/.svn"
+      [[ -e "${dir}/.hg"  && -z ${hg_dir}  ]] && hg_dir="${dir}/.hg"
+      dir="${dir%/*}"
+    done
 
-      if [[ -n ${dir} ]]; then
-        local branch=`git symbolic-ref HEAD 2>/dev/null`
-        branch=${branch#refs/heads/}
-        if [[ -n ${branch} ]]; then
-          local status=`git status --porcelain 2>/dev/null`
-          if [[ -n ${status} ]]; then
-            git="${reset}(${grey}git:${red}${branch}${reset})"
-          else
-            git="${reset}(${grey}git:${green}${branch}${reset})"
-          fi
+    # git
+    if [[ -z ${BASHRC_DISABLE_GIT} && -n ${git_dir} ]]; then
+      local branch=`git --git-dir="${git_dir}" symbolic-ref HEAD 2>/dev/null`
+      branch="${branch#refs/heads/}"
+      if [[ -n ${branch} ]]; then
+        local status=`git status --porcelain 2>/dev/null | head -1`
+        if [[ -n ${status} ]]; then
+          git="${reset}(${grey}git:${red}${branch}${reset})"
+        else
+          git="${reset}(${grey}git:${green}${branch}${reset})"
         fi
       fi
     fi
 
-    if [[ -z ${git} && -z ${BASHRC_DISABLE_SVN} ]]; then
-      dir=${PWD}
-      while [[ ! -d ${dir}/.svn && ${dir} != '/' && -n ${dir} ]]; do
-        dir=${dir%/*}
-      done
-
-      if [[ -n ${dir} ]]; then
-        local revision=`svn info 2>/dev/null|grep Revision:|cut -d' ' -f2`
-        if [[ -n ${revision} ]]; then
-          #svn="${reset}(${grey}svn:${blue}r${revision}${reset})"
-          local status=`svn status 2>/dev/null|head -1`
-          if [[ -n ${status} ]]; then
-            svn="${reset}(${grey}svn:${red}r${revision}${reset})"
-          else
-            svn="${reset}(${grey}svn:${green}r${revision}${reset})"
-          fi
+    # svn
+    if [[ -z ${BASHRC_DISABLE_SVN} && -n ${svn_dir} ]]; then
+      local revision=`svn info 2>/dev/null | grep Revision: | cut -d' ' -f2`
+      if [[ -n ${revision} ]]; then
+        local status=`svn status 2>/dev/null | head -1`
+        if [[ -n ${status} ]]; then
+          svn="${reset}(${grey}svn:${red}r${revision}${reset})"
+        else
+          svn="${reset}(${grey}svn:${green}r${revision}${reset})"
         fi
       fi
     fi
 
-    if [[ -z ${BASHRC_DISABLE_RVM_GEMSET} && -n ${GEM_HOME} && ${GEM_HOME} = *${rvm_gemset_separator:-'@'}* ]]; then
-      rgs="${reset}{${grey}rb:${cyan}${GEM_HOME##*@}${reset}}"
-    fi
-
-    if [[ -z ${BASHRC_DISABLE_VIRTUALENV} && -n ${VIRTUAL_ENV} ]]; then
-      pve="${reset}{${grey}py:${cyan}${VIRTUAL_ENV##*/}${reset}}"
+    # mercurial
+    if [[ -z ${BASHRC_DISABLE_HG} && -n ${hg_dir} ]]; then
+      local branch=`hg branch 2>/dev/null`
+      if [[ -n ${branch} ]]; then
+        local status=`hg status 2>/dev/null | head -1`
+        if [[ -n ${status} ]]; then
+          hg="${reset}(${grey}hg:${red}${branch}${reset})"
+        else
+          hg="${reset}(${grey}hg:${green}${branch}${reset})"
+        fi
+      fi
     fi
   fi
 
-  PS1="${reset}[${green}${user}${reset}@${blue}${host}${reset}(${yellow}${pwd}${git}${svn}${rgs}${pve}${reset})]\\$ "
+  # rvm environment
+  if [[ -z ${BASHRC_DISABLE_RVM_GEMSET} && -n ${GEM_HOME} && ${GEM_HOME} = *${rvm_gemset_separator:-'@'}* ]]; then
+    rgs="${reset}{${grey}rb:${cyan}${GEM_HOME##*@}${reset}}"
+  fi
+
+  # python virtualenv
+  if [[ -z ${BASHRC_DISABLE_PYTHON_VIRTUALENV} && -n ${VIRTUAL_ENV} ]]; then
+    pve="${reset}{${grey}py:${cyan}${VIRTUAL_ENV##*/}${reset}}"
+  fi
+
+  # finally, set the variable
+  PS1="${reset}[${green}${user}${reset}@${blue}${host}${reset}(${yellow}${pwd}${git}${svn}${hg}${rgs}${pve}${reset})]\\$ "
 }
 
 PS1="\u@\h:\w\\$ "
