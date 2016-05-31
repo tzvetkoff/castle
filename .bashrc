@@ -30,8 +30,10 @@ prompt_command() {
   [[ ${UID} = 0 ]] && user="${red}${USER}"
 
   # nifty current directory
-  local pwd="${PWD/$HOME/~}"
-  [[ "${pwd}" = /home/* ]] && pwd="~${pwd#/home/}"
+  local pwd="${PWD}"
+  [[ "${pwd}" = ${HOME} || "${pwd}" = ${HOME}/* ]]  && pwd='~'"${PWD#$HOME}"
+  [[ "${pwd}" = /home/* ]]                          && pwd="~${pwd#/home/}"
+  [[ "${pwd}" = /Users/* ]]                         && pwd="~${pwd#/Users/}"
 
   # git/svn/mercurial status, ruby rvm gemset, python virtualenv variables
   local git_dir= git=
