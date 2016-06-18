@@ -184,6 +184,7 @@ alias chown='sudo chown'
 
 # ssh
 alias ssh-guest='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
+alias sshrc-guest='sshrc -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
 
 # macosx
 if [[ ${OSTYPE} = darwin* ]]; then
