@@ -1,0 +1,82 @@
+#!/bin/bash
+
+usage() {
+  echo 'Usage: sshpass <options> <ssh arguments>'
+  echo
+  echo 'Specific options:'
+  echo '  --ssh-command=COMMAND     Use different SSH command'
+  echo '  --password=PASSWORD       Provide password as argument'
+  echo '  --filename=FILENAME       Read password from file'
+  echo '  --env=VARNAME             Password is in environment variable'
+  echo
+  echo 'Common options:'
+  echo '  --help                    Show this message'
+  echo '  --version                 Show version'
+  exit ${1}
+}
+
+SSH_COMMAND=ssh
+PASSWORD=
+FILENAME=
+VARNAME=
+ARGS=()
+PARSE=true
+NON_OPTION=0
+
+while [[ -n "${1}" ]]; do
+  case "${1}" in
+    --help)
+      usage 0;;
+    --version)
+      echo '0.1.0'; exit;;
+    --ssh-command)
+      SSH_COMMAND="${2}"; shift;;
+    --ssh-command=*)
+      SSH_COMMAND="${1:14}";;
+    --password)
+      PASSWORD="${2}"; shift;;
+    --password=*)
+      PASSWORD="${1:11}";;
+    --filename)
+      FILENAME="${2}"; shift;;
+    --filename=*)
+      FILENAME="${1:11}";;
+    --env)
+      VARNAME="${2}"; shift;;
+    --env=*)
+      VARNAME="${1:6}";;
+    -*)
+      ARGS+=("${1}");;
+    *)
+      ARGS+=("${1}"); NON_OPTION=$(( NON_OPTION + 1 ));;
+  esac
+
+  shift
+done
+
+if [[ -z "${PASSWORD}" && -z "${FILENAME}" && -z "${VARNAME}" ]]; then
+  usage 1 >&2
+fi
+
+if [[ ${NON_OPTION} -eq 0 ]]; then
+  usage 1 >&2
+fi
+
+if [[ -n "${FILENAME}" ]]; then
+  PASSWORD="`cat ${FILENAME}`"
+elif [[ -n "${VARNAME}" ]]; then
+  PASSWORD="`eval echo "${VARNAME}"`"
+  unset "${VARNAME}"
+fi
+
+SCRIPT="
+spawn ${SSH_COMMAND} ${ARGS[@]};
+expect {
+  expect \"yes/no\" { send \"yes\\n\"; exp_continue }
+  expect \"password:\" { send \"${PASSWORD}\\n\" }
+  expect \"Last login:\" {  }
+}
+interact
+"
+
+/usr/bin/expect -c "${SCRIPT}"
