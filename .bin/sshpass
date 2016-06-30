@@ -20,7 +20,6 @@ PASSWORD=
 FILENAME=
 VARNAME=
 ARGS=()
-PARSE=true
 NON_OPTION=0
 
 while [[ -n "${1}" ]]; do
@@ -65,16 +64,15 @@ fi
 if [[ -n "${FILENAME}" ]]; then
   PASSWORD="`cat ${FILENAME}`"
 elif [[ -n "${VARNAME}" ]]; then
-  PASSWORD="`eval echo "${VARNAME}"`"
+  PASSWORD="${!VARNAME}"
   unset "${VARNAME}"
 fi
 
 SCRIPT="
 spawn ${SSH_COMMAND} ${ARGS[@]};
 expect {
-  expect \"yes/no\" { send \"yes\\n\"; exp_continue }
-  expect \"password:\" { send \"${PASSWORD}\\n\" }
-  expect \"Last login:\" {  }
+  \"yes/no\" { send \"yes\\n\"; exp_continue }
+  \"password\" { send \"${PASSWORD}\\n\" }
 }
 interact
 "
