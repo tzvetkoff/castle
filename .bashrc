@@ -161,7 +161,7 @@ cd.(){ cd ."${@}"; }
 
 # rails
 alias c='r console'
-alias s='r server'
+alias s='r server --binding=0.0.0.0'
 alias g='r generate'
 alias bundel='bundle'
 alias xxl='bundle exec rake db:drop db:create db:migrate db:seed'
