@@ -160,16 +160,10 @@ alias cd..='cd ..'
 cd.(){ cd ."${@}"; }
 
 # rails
-alias r='rails'
-alias rc='rails console'
-alias c='rails console'
-alias rs='rails server'
-alias s='rails server'
-alias rg='rails generate'
-alias g='rails generate'
+alias c='r console'
+alias s='r server'
+alias g='r generate'
 alias bundel='bundle'
-alias be='bundle exec'
-alias br='bundle exec rake'
 alias xxl='bundle exec rake db:drop db:create db:migrate db:seed'
 
 # git

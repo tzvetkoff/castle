@@ -1,0 +1,24 @@
+#!/bin/bash
+
+search=(./bin/rails
+        ../bin/rails
+        ../../bin/rails
+        ../../../bin/rails
+        ../../../../bin/rails
+        ../../../../../bin/rails
+        ../../../../../../bin/rails
+        ../../../../../../../bin/rails
+        ../../../../../../../../bin/rails
+        ../../../../../../../../../bin/rails
+        ../../../../../../../../../../bin/rails
+        ../../../../../../../../../../../bin/rails
+        ../../../../../../../../../../../../bin/rails
+        "`which rails`")
+
+for rails in "${search[@]}"; do
+  if [[ -x "${rails}" ]]; then
+    exec "${rails}" "${@}"
+  fi
+done
+
+echo "rails: command not found" >&2
