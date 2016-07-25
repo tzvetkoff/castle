@@ -8,7 +8,7 @@
 [[ -z "${PS1}" ]] && return
 
 #
-# prompt string made the nice way
+# the prompt string
 #
 
 prompt_command() {
@@ -228,7 +228,7 @@ export SVN_EDITOR=vim
 export EDITOR=vim
 
 #
-# A bit nicer python
+# nicer python
 #
 
 export PYTHONSTARTUP="${HOME}/.pythonrc"
@@ -236,6 +236,8 @@ export PYTHONSTARTUP="${HOME}/.pythonrc"
 #
 # bash completion
 #
+
+export BASH_COMPLETION_COMPAT_DIR="${HOME}/.bash_completion.d"
 
 if [[ -x /usr/local/bin/brew && -f `brew --prefix`/etc/bash_completion ]]; then
   . `brew --prefix`/etc/bash_completion
@@ -267,7 +269,7 @@ fi
 [[ -r "${HOME}/.bashrc.extra" ]] && . "${HOME}/.bashrc.extra"
 
 #
-# show message-of-the-day if script is installed
+# show message-of-the-day (not really)
 #
 
 [[ -z ${BASHRC_DISABLE_MOTD} && -n `type -p motd` ]] && motd
