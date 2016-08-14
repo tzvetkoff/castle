@@ -272,4 +272,4 @@ fi
 # show message-of-the-day (not really)
 #
 
-[[ -z ${BASHRC_DISABLE_MOTD} && -n `type -p motd` ]] && motd
+[[ -z ${BASHRC_DISABLE_MOTD} ]] && type -p motd >/dev/null && motd
