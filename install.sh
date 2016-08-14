@@ -128,6 +128,8 @@ EOF
 # do the actual job
 #
 
-create_home_symlinks
-create_home_gitconfig
-create_home_mycnf
+if [[ "${BASH_SOURCE[0]}" = "${0}" ]]; then
+  create_home_symlinks
+  create_home_gitconfig
+  create_home_mycnf
+fi
