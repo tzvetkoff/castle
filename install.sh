@@ -5,17 +5,18 @@
 #
 
 HOME_SYMLINKS=(\
-  .aprc           \
-  .bash_profile   \
-  .bashrc         \
-  .bin            \
-  .gemrc          \
-  .irbrc          \
-  .nano           \
-  .nanorc         \
-  .pythonrc       \
-  .vimrc          \
-  .vim            \
+  .aprc             \
+  .bash_profile     \
+  .bashrc           \
+  .bash_completion  \
+  .bin              \
+  .gemrc            \
+  .irbrc            \
+  .nano             \
+  .nanorc           \
+  .pythonrc         \
+  .vimrc            \
+  .vim              \
 )
 
 #

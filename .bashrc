@@ -237,8 +237,6 @@ export PYTHONSTARTUP="${HOME}/.pythonrc"
 # bash completion
 #
 
-export BASH_COMPLETION_COMPAT_DIR="${HOME}/.bash_completion.d"
-
 if [[ -x /usr/local/bin/brew && -f `brew --prefix`/etc/bash_completion ]]; then
   . `brew --prefix`/etc/bash_completion
 elif [[ -f /usr/local/share/bash-completion/bash_completion ]]; then

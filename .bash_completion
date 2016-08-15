@@ -1,0 +1,10 @@
+#!/bin/bash
+# ~/.bash_completion - user bash completions
+
+if [[ -d "${HOME}/.bash_completion.d" ]]; then
+  shopt -s nullglob
+  for file in ${HOME}/.bash_completion.d/*; do
+    . "${file}"
+  done
+  shopt -u nullglob
+fi
