@@ -12,7 +12,7 @@ module Homebrew extend self
 
     queried_formulae = ARGV.map do |formula_name|
       begin
-        queried_formula = Formula.factory(formula_name)
+        queried_formula = Formulary.factory(formula_name)
       rescue
         queried_formula = nil
       end
