@@ -238,19 +238,19 @@ export PYTHONSTARTUP="${HOME}/.pythonrc"
 #
 
 if [[ -x /usr/local/bin/brew && -f `brew --prefix`/etc/bash_completion ]]; then
-  . `brew --prefix`/etc/bash_completion
+  source `brew --prefix`/etc/bash_completion
 elif [[ -f /usr/local/share/bash-completion/bash_completion ]]; then
-  . /usr/local/share/bash-completion/bash_completion
+  source /usr/local/share/bash-completion/bash_completion
 elif [[ -f /etc/bash_completion ]]; then
-  . /etc/bash_completion
+  source /etc/bash_completion
 fi
 
 #
 # rvm
 #
 
-[[ -s "${HOME}/.rvm/scripts/rvm" ]]         && . "${HOME}/.rvm/scripts/rvm"
-[[ -r "${HOME}/.rvm/scripts/completion" ]]  && . "${HOME}/.rvm/scripts/completion"
+[[ -s "${HOME}/.rvm/scripts/rvm" ]]         && source "${HOME}/.rvm/scripts/rvm"
+[[ -r "${HOME}/.rvm/scripts/completion" ]]  && source "${HOME}/.rvm/scripts/completion"
 
 #
 # bashrc.d & bashrc.extra
@@ -259,12 +259,12 @@ fi
 if [[ -d "${HOME}/.bashrc.d" ]]; then
   shopt -s nullglob
   for file in ${HOME}/.bashrc.d/*; do
-    . "${file}"
+    source "${file}"
   done
   shopt -u nullglob
 fi
 
-[[ -r "${HOME}/.bashrc.extra" ]] && . "${HOME}/.bashrc.extra"
+[[ -r "${HOME}/.bashrc.extra" ]] && source "${HOME}/.bashrc.extra"
 
 #
 # show message-of-the-day (not really)
