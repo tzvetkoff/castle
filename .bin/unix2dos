@@ -5,24 +5,25 @@ if [[ -z "${1}" ]]; then
   exit 1
 fi
 
-green="\033[01;32m"
-red="\033[01;31m"
-none="\033[00m"
-ok="[  ${green}ok${none}  ]"
-fail="[ ${red}fail${none} ]"
+if [[ -n "${FORCE_COLOR}" || ( -t 1 && "`tput colors 2>/dev/null`" -gt 0 ) ]]; then
+  green="\033[01;32m"
+  red="\033[01;31m"
+  reset="\033[00m"
+else
+  green=
+  red=
+  reset=
+fi
+
+ok="${green}ok${reset}"
+fail="${red}fail${reset}"
 
 while [[ -n "${1}" ]]; do
-  if [[ ! -f "${1}" ]]; then
-    echo -e "${fail} ${1} does not exist"
+  if perl -pi -e 's/\n/\r\n/' "${1}"; then
+    echo -e "${1}: ${ok}"
   else
-    if sed -i 's/$/'"`echo -e '\r'`/" "${1}"; then
-      echo -e "${ok} ${1}"
-    else
-      echo -e "${fail} ${1}"
-    fi
+    echo -e "${1}: ${fail}"
   fi
 
   shift
 done
-
-exit 0
