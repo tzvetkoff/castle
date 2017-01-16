@@ -8,6 +8,13 @@
 [[ -z "${PS1}" ]] && return
 
 #
+# prevent bashrc from loading twice
+#
+
+[[ -n "${BASHRC}" ]] && return
+export BASHRC="${BASH_SOURCE[0]}"
+
+#
 # the prompt string
 #
 
