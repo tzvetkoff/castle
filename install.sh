@@ -33,7 +33,7 @@ COLOR_WHITE="\033[00;00m"
 # this script's path
 #
 
-ROOT=$(cd $(dirname ${BASH_SOURCE[0]}) && pwd)
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 #
 # force flag

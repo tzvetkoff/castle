@@ -46,9 +46,8 @@ if has('mouse')
   set mouse=
 endif
 
-" Switch syntax highlighting on and select color scheme.
+" Switch syntax highlighting on
 syntax on
-colorscheme Nimda
 
 " Highlight search.
 set hlsearch

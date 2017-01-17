@@ -1,0 +1,5 @@
+https://github.com/tpope/vim-pathogen.git               vim-pathogen
+https://github.com/scrooloose/nerdtree                  vim-nerdtree
+https://github.com/Lokaltog/vim-powerline.git           vim-powerline
+https://github.com/vim-syntastic/syntastic.git          vim-syntastic
+https://github.com/tzvetkoff/vim-numbertoggle.git       vim-numbertoggle
