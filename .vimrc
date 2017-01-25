@@ -167,6 +167,9 @@ map <C-r> :NERDTreeToggle<CR>
 
 
 " Pathogen
-runtime bundle/vim-pathogen/autoload/pathogen.vim
-call pathogen#infect()
-call pathogen#helptags()
+try
+  runtime bundle/vim-pathogen/autoload/pathogen.vim
+  call pathogen#infect()
+  call pathogen#helptags()
+catch
+endtry
