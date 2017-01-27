@@ -1,80 +1,94 @@
-#!/bin/bash
+#!/usr/bin/env expect --
 
-usage() {
-  echo 'Usage: sshpass <options> <ssh arguments>'
-  echo
-  echo 'Specific options:'
-  echo '  --ssh-command=COMMAND     Use different SSH command'
-  echo '  --password=PASSWORD       Provide password as argument'
-  echo '  --filename=FILENAME       Read password from file'
-  echo '  --env=VARNAME             Password is in environment variable'
-  echo
-  echo 'Common options:'
-  echo '  --help                    Show this message'
-  echo '  --version                 Show version'
-  exit ${1}
+# Command line usage
+proc usage {stream exit_code} {
+  global argv0
+  puts $stream "Usage:"
+  puts $stream "  $argv0 <options> <ssh arguments>"
+  puts $stream ""
+  puts $stream "Specific options:"
+  puts $stream "  --ssh-command=COMMAND     Use different SSH command"
+  puts $stream "  --password=PASSWORD       Provide password as argument"
+  puts $stream "  --filename=FILENAME       Read password from file"
+  puts $stream "  --env=VARNAME             Password is in environment variable"
+  puts $stream ""
+  puts $stream "Common options:"
+  puts $stream "  --help                    Show this message"
+  puts $stream "  --version                 Show version"
+  exit $exit_code
 }
 
-SSH_COMMAND=ssh
-PASSWORD=
-FILENAME=
-VARNAME=
-ARGS=()
-NON_OPTION=0
+# Defaults
+set ssh_command "ssh"
+set password ""
+set filename ""
+set varname ""
+set args {}
+set non_option 0
 
-while [[ -n "${1}" ]]; do
-  case "${1}" in
-    --help)
-      usage 0;;
-    --version)
-      echo '0.1.0'; exit;;
-    --ssh-command)
-      SSH_COMMAND="${2}"; shift;;
-    --ssh-command=*)
-      SSH_COMMAND="${1:14}";;
-    --password)
-      PASSWORD="${2}"; shift;;
-    --password=*)
-      PASSWORD="${1:11}";;
-    --filename)
-      FILENAME="${2}"; shift;;
-    --filename=*)
-      FILENAME="${1:11}";;
-    --env)
-      VARNAME="${2}"; shift;;
-    --env=*)
-      VARNAME="${1:6}";;
-    -*)
-      ARGS+=("${1}");;
-    *)
-      ARGS+=("${1}"); NON_OPTION=$(( NON_OPTION + 1 ));;
-  esac
+# Parse arguments
+for {set i 0} {$i < [llength $argv]} {incr i} {
+  set arg [lindex $argv $i]
+  switch -glob $arg {
+    "-h" -
+    "--help"          { usage stdout 0 }
+    "--version"       { puts "0.1.0"; exit 0 }
+    "--ssh-command"   { set ssh_command [lindex $argv $i+1]; incr i }
+    "--ssh-command=*" { set ssh_command [string range $arg 14 end] }
+    "--password"      { set password [lindex $argv $i+1]; incr i }
+    "--password=*"    { set password [string range $arg 11 end] }
+    "--filename"      { set filename [lindex $argv $i+1]; incr i }
+    "--filename=*"    { set filename [string range $arg 11 end] }
+    "--env"           { set varname [lindex $argv $i+1]; incr i }
+    "--env=*"         { set varname [string range $arg 6 end] }
+    "-*"              { lappend args $arg }
+    default           { lappend args $arg; incr non_option }
+  }
+}
 
-  shift
-done
+# Check SSH command
+if {$ssh_command == ""} {
+  puts stderr "$argv0: SSH command cannot be empty"
+  puts stderr ""
+  usage stderr 1
+}
 
-if [[ -z "${PASSWORD}" && -z "${FILENAME}" && -z "${VARNAME}" ]]; then
-  usage 1 >&2
-fi
+# Check password
+if {$filename != ""} {
+  if {![file readable $filename]} {
+    puts stderr "$argv0: File `$filename' not readable"
+    puts stderr ""
+    usage stderr 1
+  }
 
-if [[ ${NON_OPTION} -eq 0 ]]; then
-  usage 1 >&2
-fi
+  set f [open $filename r]
+  set password [string trim [read $f]]
+  close $f
+} elseif {$varname != ""} {
+  if {![info exists "env($varname)"]} {
+    puts stderr "$argv0: Environment variable `$varname' not set"
+    puts stderr ""
+    usage stderr 0
+  }
 
-if [[ -n "${FILENAME}" ]]; then
-  PASSWORD="`cat ${FILENAME}`"
-elif [[ -n "${VARNAME}" ]]; then
-  PASSWORD="${!VARNAME}"
-  unset "${VARNAME}"
-fi
+  set password $env($varname)
+}
 
-SCRIPT="
-spawn ${SSH_COMMAND} ${ARGS[@]};
+if {$password == ""} {
+  puts stderr "$argv0: Password cannot be empty"
+  puts stderr ""
+  usage stderr 1
+}
+
+# Check if we have at least 1 non-option argument
+if {$non_option == 0} {
+  usage stderr 1
+}
+
+# Go!
+spawn $ssh_command {*}$args
 expect {
-  \"yes/no\" { send \"yes\\n\"; exp_continue }
-  \"password\" { send \"${PASSWORD}\\n\" }
+  "yes/no"    { send "yes\n"; exp_continue }
+  "password"  { send "$password\n" }
 }
 interact
-"
-
-/usr/bin/expect -c "${SCRIPT}"
