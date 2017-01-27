@@ -1,19 +1,23 @@
 #!/bin/bash
 
 #
-# this script's path
+# This script's path
 #
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 #
-# walk modules.txt and install each module
+# Walk modules.txt and install/update each module
 #
 
 while read -r remote local branch; do
   if [[ -d "${ROOT}/${local}" && -d "${ROOT}/${local}/.git" ]]; then
     pushd "${ROOT}/${local}"
-    git checkout "${branch}" && git pull origin "${branch}"
+    if [[ -n "${branch}" ]]; then
+      git checkout "${branch}" && git pull origin "${branch}"
+    else
+      git pull origin
+    fi
     popd
   else
     if [[ -n "${branch}" ]]; then
