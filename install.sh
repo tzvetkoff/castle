@@ -94,11 +94,13 @@ create_home_gitconfig() {
 
   git config --global user.name 'Latchezar Tzvetkoff'
   git config --global user.email 'latchezar'$'\100''tzvetkoff'$'\056''net'
+  git config --global color.ui 'true'
   git config --global alias.st 'status'
   git config --global alias.ci 'commit'
   git config --global alias.co 'checkout'
   git config --global alias.dt 'difftool'
   git config --global alias.mt 'mergetool'
+  git config --global alias.df 'diff --ignore-all-space'
   echo -e "${COLOR_GREEN}create${COLOR_WHITE} ${HOME}/.gitconfig"
 }
 
