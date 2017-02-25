@@ -121,6 +121,7 @@ create_home_mycnf() {
 auto-rehash
 user=root
 local-infile=1
+loose-local-infile=1
 
 [mysqldump]
 user=root
