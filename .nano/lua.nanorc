@@ -1,18 +1,25 @@
 ## Syntax highlighting for Lua.
+#
+## Author:  Matthew Wild <mwild1 (at) gmail.com>
+## License: GPL 3 or later
+## Version: 2011-05-05
 
 syntax "lua" "\.lua$"
+comment "--"
 
-# Operators.
+color brightwhite "\[\[.*\]\]"
+
+# Operators
 color brightyellow ":|\*|/|%|\+|-|\^|>|>=|<|<=|~=|=|\.\.|\<(not|and|or)\>"
 
-# Statements.
-color brightblue "\<(break|continue;do|end|while|repeat|until|if|elseif|then|else|for|in|function|local|return)\>"
+# Statements
+color brightblue "\<(do|end|while|repeat|until|if|elseif|then|else|for|in|function|local|return|break)\>"
 
-# Keywords.
+# Keywords
 color brightyellow "\<(io|math|os|string|table|coroutine|debug)\>\."
 color brightyellow "\<(_G|_VERSION|assert|collectgarbage|dofile|error|getfenv|getmetatable|ipairs|load|loadfile|module|next|pairs|pcall|print|rawequal|rawget|rawset|require|select|setfenv|setmetatable|tonumber|tostring|type|unpack|xpcall)\s*\("
 
-# Standard library.
+# Standard library
 color brightyellow "io\.\<(close|flush|input|lines|open|output|popen|read|tmpfile|type|write|stdin|stdout|stderr)\>"
 color brightyellow "math\.\<(abs|acos|asin|atan2|atan|ceil|cosh|cos|deg|exp|floor|fmod|frexp|huge|ldexp|log10|log)\>"
 color brightyellow "math\.\<(max|min|mod|modf|pi|pow|rad|random|randomseed|sinh|tan)\>"
@@ -24,35 +31,35 @@ color brightyellow "coroutine\.\<(create|resume|running|status|wrap|yield)\>"
 color brightyellow "debug\.\<(debug|getfenv|gethook|getinfo|getlocal|getmetatable|getregistry|getupvalue)\>"
 color brightyellow "debug\.\<(setfenv|sethook|setlocal|setmetatable|setupvalue|traceback)\>"
 
-# File handle methods.
+# File handle methods
 color brightyellow "\:\<(close|flush|lines|read|seek|setvbuf|write)\>"
 
-# false, nil, true.
+# false, nil, true
 color brightmagenta "\<(false|nil|true)\>"
 
-# External files.
+# External files
 color brightgreen "\<(dofile|require)\>"
 
-# Numbers.
+# Numbers
 color red "\<([0-9]+)\>"
 
-# Symbols.
+# Symbols
 color brightmagenta "(\(|\)|\[|\]|\{|\})"
 
-# Shebang.
-color brightcyan "^#!.*"
+# Shebang
+color brightcyan   "^#!.*"
 
-# Simple comments.
-color green "\-\-.*$"
+# Simple comments
+color green        "\-\-.*$"
 
-# Multiline comments.
-color green start="\-\-\[\[" end="\]\]"
+# Multiline comments
+color green         start="\-\-\[\[" end="\]\]"
 
-# Strings.
+# Strings
 color red "\"(\\.|[^\\\"])*\"|'(\\.|[^\\'])*'"
-color red start="\[\[" end="\]\]"
+##color red         start="\[\[" end="\]\]"
 
-# Hex literals.
+# Hex literals
 color red "0x[0-9a-fA-F]*"
 
 # Trailing whitespace.

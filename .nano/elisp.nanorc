@@ -1,33 +1,34 @@
 ## Here is an example for Emacs Lisp.
 
 syntax "elisp" "\.el$"
+comment ";"
 
-# Basic functions/macros.
+# Basic functions/macros
 color brightcyan "\<(if|when|unless|cond|and|or|lambda|let|progn|while|dolist|dotimes)\>"
 color brightcyan "\<save-((window-)?excursion|restriction)\>"
 color brightcyan "\<eval-(and|when)-compile\>"
-# Defining functions.
+# Defining functions
 color brightcyan "\<def(un|macro|subst|generic|alias)\>"
 color brightcyan "\<cl-def(un|macro|subst|generic|struct|type)\>"
 color brightcyan "\<define-(derived|minor|generic)-mode\>"
-# Defining variables.
+# Defining variables
 color brightcyan "\<def(class|const|var(-local|alias)?)\>"
-# Customization functions.
+# Customization functions
 color brightcyan "\<def(custom|face|group|theme)\>"
-# Setting values.
+# Setting values
 color brightcyan "\<(setq(-default|-local)?|setf|push|pop|declare(-function)?)\>"
-# Feature functions.
+# Feature functions
 color brightcyan "\<(require|provide)\>"
-# Quoted symbols.
+# Quoted symbols
 color brightyellow "#?'\<(\w|-)+\>"
-# Booleans.
+# Booleans
 color brightred "\<(t|nil)\>"
-# Keywords.
+# Keywords
 color blue ":(\w|[?-])+"
-# Strings.
+# Strings
 color yellow start="^[[:blank:]]+\"" end="[^\]\""
 color yellow ""(\\.|[^"])*""
-# Comments.
+# Comments
 color cyan "(^|[[:space:]]);.*$"
-# Trailing whitespace.
+# Trailing whitespace
 color ,green "[[:space:]]+$"

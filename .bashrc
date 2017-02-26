@@ -38,7 +38,7 @@ prompt_command() {
 
   # nifty current directory
   local pwd="${PWD}"
-  [[ "${pwd}" = ${HOME} || "${pwd}" = ${HOME}/* ]]  && pwd='~'"${PWD#$HOME}"
+  [[ "${pwd}" = ${HOME} || "${pwd}" = ${HOME}/* ]]  && pwd='~'"${PWD#${HOME}}"
   [[ "${pwd}" = /home/* ]]                          && pwd="~${pwd#/home/}"
   [[ "${pwd}" = /Users/* ]]                         && pwd="~${pwd#/Users/}"
 
@@ -54,9 +54,10 @@ prompt_command() {
   if [[ ( -z ${BASHRC_DISABLE_GIT} || -z ${BASHRC_DISABLE_SVN} || -z ${BASHRC_DISABLE_HG} ) && "${dir}" != "${HOME}" ]]; then
     # search for first .git/.svn/.hg in the tree
     while [[ "${dir}" != '/' && -n "${dir}" ]]; do
-      [[ -e "${dir}/.git" && -z ${git_dir} ]] && git_dir="${dir}/.git"
-      [[ -e "${dir}/.svn" && -z ${svn_dir} ]] && svn_dir="${dir}/.svn"
-      [[ -e "${dir}/.hg"  && -z ${hg_dir}  ]] && hg_dir="${dir}/.hg"
+      [[ -z ${BASHRC_DISABLE_GIT} && -z ${git_dir} && -e "${dir}/.git" ]] && git_dir="${dir}/.git" && break
+      [[ -z ${BASHRC_DISABLE_SVN} && -z ${svn_dir} && -e "${dir}/.svn" ]] && svn_dir="${dir}/.svn" && break
+      [[ -z ${BASHRC_DISABLE_HG}  && -z ${hg_dir}  && -e "${dir}/.hg"  ]] && hg_dir="${dir}/.hg"   && break
+
       dir="${dir%/*}"
     done
 
@@ -115,7 +116,7 @@ prompt_command() {
   PS1="${reset}[${green}${user}${reset}@${blue}${host}${reset}(${yellow}${pwd}${git}${svn}${hg}${rgs}${pve}${reset})]\\$ "
 }
 
-PS1="\u@\h:\w\\$ "
+PS1='\u@\h:\w\$ '
 PROMPT_COMMAND=prompt_command
 
 #
@@ -173,12 +174,6 @@ alias g='r generate'
 alias bundel='bundle'
 alias xxl='bundle exec rake db:drop db:create db:migrate db:seed'
 
-# git
-alias push='git push'
-alias pull='git pull'
-alias pop='git pull'
-alias gdiff='git diff --ignore-all-space'
-
 # some administrative ones
 alias su='sudo su'
 alias chown='sudo chown'
@@ -194,23 +189,23 @@ if [[ ${OSTYPE} = darwin* ]]; then
 fi
 
 #
-# remove /usr/local/bin and /usr/local/sbin from path
+# remove /usr/local/sbin and /usr/local/bin from path
 #
 
-PATH=${PATH/\/usr\/local\/bin:}
-PATH=${PATH/:\/usr\/local\/bin}
-PATH=${PATH/\/usr\/local\/sbin:}
-PATH=${PATH/:\/usr\/local\/sbin}
+PATH="${PATH/\/usr\/local\/sbin:}"
+PATH="${PATH/:\/usr\/local\/sbin}"
+PATH="${PATH/\/usr\/local\/bin:}"
+PATH="${PATH/:\/usr\/local\/bin}"
 
 #
-# prepend /usr/local/bin, /usr/local/sbin, ~/bin, ~/.bin and ~/.local/bin to path
+# prepend /usr/local/sbin, /usr/local/bin, ~/bin, ~/.bin and ~/.local/bin to path
 #
 
-[[ ! $PATH =~ "/usr/local/bin" ]]   && PATH="/usr/local/bin:${PATH}"
-[[ ! $PATH =~ "/usr/local/sbin" ]]  && PATH="/usr/local/sbin:${PATH}"
-[[ -d "${HOME}/bin" ]]              && PATH="${HOME}/bin:${PATH}"
-[[ -d "${HOME}/.bin" ]]             && PATH="${HOME}/.bin:${PATH}"
-[[ -d "${HOME}/.local/bin" ]]       && PATH="${HOME}/.local/bin:${PATH}"
+[[ ! "${PATH}" = */usr/local/sbin* ]] && PATH="/usr/local/sbin:${PATH}"
+[[ ! "${PATH}" = */usr/local/bin* ]]  && PATH="/usr/local/bin:${PATH}"
+[[ -d "${HOME}/bin" ]]                && PATH="${HOME}/bin:${PATH}"
+[[ -d "${HOME}/.bin" ]]               && PATH="${HOME}/.bin:${PATH}"
+[[ -d "${HOME}/.local/bin" ]]         && PATH="${HOME}/.local/bin:${PATH}"
 
 export PATH
 
@@ -265,7 +260,7 @@ fi
 
 if [[ -d "${HOME}/.bashrc.d" ]]; then
   shopt -s nullglob
-  for file in ${HOME}/.bashrc.d/*; do
+  for file in "${HOME}/.bashrc.d"/*; do
     source "${file}"
   done
   shopt -u nullglob

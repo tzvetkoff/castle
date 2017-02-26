@@ -2,7 +2,9 @@
 
 syntax "tex" "\.tex$"
 linter chktex -v0 -q -I
+comment "%"
 
 icolor green "\\.|\\[A-Z]*"
 color magenta "[{}]"
 color blue "(^|[^\])%.*"
+color ,green "[[:space:]]+$"

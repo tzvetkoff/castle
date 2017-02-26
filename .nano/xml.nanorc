@@ -2,22 +2,23 @@
 
 syntax "xml" "\.([jrsx]html?|jnlp|mml|pom|rng|sgml?|svg|w[as]dl|wsdd|xjb|xml|xs(d|lt?)|xul)$"
 magic "(XML|SGML) (sub)?document text"
+comment "<!--|-->"
 
-# The entire content of the tag.
-color green start="<" end=">"
+# The entire content of the tag:
+color green  start="<" end=">"
 
-# The start and the end of the tag.
-color cyan "<[^> ]+" ">"
+# The start and the end of the tag:
+color cyan   "<[^> ]+" ">"
 
-# The strings inside the tag.
+# The strings inside the tag:
 color magenta "\"[^"]*\""
 
-# Comments.
+# Comments:
 color yellow start="<!DOCTYPE" end="[/]?>"
 color yellow start="<!--" end="-->"
 
-# Entities.
-color red "&[^;]*;"
+# Escapes:
+color red    "&[^;]*;"
 
-# Trailing whitespace.
+# Trailing whitespace:
 color ,green "[[:space:]]+$"
