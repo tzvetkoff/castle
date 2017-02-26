@@ -2,7 +2,7 @@
 
 require 'socket'
 
-module Extnum
+module NumExt
   def to_bin_s(len = 8)
     to_s(2).rjust(len, '0')
   end
@@ -16,7 +16,7 @@ module Extnum
   end
 end
 
-module Extarr
+module ArrExt
   def map_with_index
     idx = -1
 
@@ -31,10 +31,14 @@ module Extarr
   end
 end
 
-Fixnum.send(:include, Extnum)
-Bignum.send(:include, Extnum)
-Array.send(:include, Extarr)
+if RUBY_VERSION >= '2.4.0'
+  Integer.send(:include, NumExt)
+else
+  Fixnum.send(:include, NumExt) if RUBY_VERSION < '2.4.0'
+  Bignum.send(:include, NumExt) if RUBY_VERSION < '2.4.0'
+end
 
+Array.send(:include, ArrExt)
 
 class IPCalc
   attr_reader :ip
