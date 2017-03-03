@@ -48,16 +48,15 @@ prompt_command() {
   local hg_dir= hg=
   local rgs=
   local pve=
-  local dir="${PWD}"
 
   # avoid tree scans on home directory and add an option to disable them (mainly for slow disks and/or large repos)
   if [[ ( -z ${BASHRC_DISABLE_GIT} || -z ${BASHRC_DISABLE_SVN} || -z ${BASHRC_DISABLE_HG} ) && "${dir}" != "${HOME}" ]]; then
     # search for first .git/.svn/.hg in the tree
+    local dir="${PWD}"
     while [[ "${dir}" != '/' && -n "${dir}" ]]; do
       [[ -z ${BASHRC_DISABLE_GIT} && -z ${git_dir} && -e "${dir}/.git" ]] && git_dir="${dir}/.git" && break
       [[ -z ${BASHRC_DISABLE_SVN} && -z ${svn_dir} && -e "${dir}/.svn" ]] && svn_dir="${dir}/.svn" && break
       [[ -z ${BASHRC_DISABLE_HG}  && -z ${hg_dir}  && -e "${dir}/.hg"  ]] && hg_dir="${dir}/.hg"   && break
-
       dir="${dir%/*}"
     done
 
@@ -239,8 +238,8 @@ export PYTHONSTARTUP="${HOME}/.pythonrc"
 # bash completion
 #
 
-if [[ -x /usr/local/bin/brew && -f `brew --prefix`/etc/bash_completion ]]; then
-  source `brew --prefix`/etc/bash_completion
+if [[ -f /usr/local/etc/bash_completion ]]; then
+  source /usr/local/etc/bash_completion
 elif [[ -f /usr/local/share/bash-completion/bash_completion ]]; then
   source /usr/local/share/bash-completion/bash_completion
 elif [[ -f /etc/bash_completion ]]; then
