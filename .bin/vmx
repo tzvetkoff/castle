@@ -1,44 +1,71 @@
 #!/bin/bash
 
 #
+# find a vm path by name
+#
+
+vm_glob() {
+  if [[ "${1:0:1}" != '/' ]]; then
+    glob="${HOME}/Documents/Virtual Machines*/*/${1}"
+    if [[ "${glob}" != *vmx ]]; then
+      glob="${glob}*vmx"
+    fi
+    glob="${glob// /\ }"
+    shopt -s nullglob
+    eval "list=(${glob})"
+    shopt -u nullglob
+    echo "${list[0]}"
+  else
+    echo "${1}"
+  fi
+}
+
+#
 # print help
 #
 
 do_help() {
   echo "usage: ${0} <command> [args]"
-  echo ''
+  echo
   echo 'commands:'
-  echo '  help                      print this help and exit'
-  echo ''
-  echo '  raw <command> [args]      run a raw "vmrun" command'
-  echo ''
-  echo '  info [options] <vm>       show information about a virtual machine'
-  echo '    -p, --path                print path'
-  echo '    -i, --ip                  print ip address'
-  echo '    -a, --all                 print all of the above (default)'
-  echo ''
-  echo '  list [options]            list all virtual machines'
-  echo '    -a, --all                 list all virtual machines (default)'
-  echo '    -r, --running             list only running virtual machines'
-  echo ''
-  echo '  start [options] <vm>      start a virtual machine'
-  echo '    -g, --gui                 start virtual machine with gui (default)'
-  echo '    -n, --nogui               start virtual machine headless'
-  echo ''
-  echo '  stop [options] <vm>       shutdown a virtual machine'
-  echo '    -s, --soft                wait for virtual machine to shutdown (default)'
-  echo '    -h, --hard                force virtual machine power off'
-  echo ''
-  echo '  restart [options] <vm>    restart a virtual machine'
-  echo '    -s, --soft                wait for virtual machine to restart (default)'
-  echo '    -h, --hard                force virtual machine power reset'
-  echo ''
-  echo '  suspend [options] <vm>    suspend a virtual machine'
-  echo '    -s, --soft                wait for virtual machine to sleep (default)'
-  echo '    -h, --hard                save virtual machine state'
-  echo ''
-  echo '  pause <vm>                pause a virtual machine'
-  echo '  unpause <vm>              unpause a virtual machine'
+  echo '  help                        print this help and exit'
+  echo
+  echo '  raw <command> [args]        run a raw "vmrun" command'
+  echo
+  echo '  info [options] <vm>         show information about a virtual machine'
+  echo '    -a, --all                   print all of the following (default)'
+  echo '    -p, --path                  print path'
+  echo '    -i, --ip                    print ip address'
+  echo
+  echo '  path <vm>                   print the path to a virtual machine (like info -p)'
+  echo
+  echo '  ip <vm>                     print the ip address of a virtual machine (like info -i)'
+  echo
+  echo '  list [options]              list all virtual machines'
+  echo '    -a, --all                   list all virtual machines (default)'
+  echo '    -r, --running               list only running virtual machines'
+  echo
+  echo '  start [options] <vm>        start a virtual machine'
+  echo '    -g, --gui                   start virtual machine with gui (default)'
+  echo '    -n, --nogui                 start virtual machine headless'
+  echo
+  echo '  stop [options] <vm>         shutdown a virtual machine'
+  echo '    -s, --soft                  wait for virtual machine to shutdown (default)'
+  echo '    -h, --hard                  force virtual machine power off'
+  echo
+  echo '  restart [options] <vm>      restart a virtual machine'
+  echo '    -s, --soft                  wait for virtual machine to restart (default)'
+  echo '    -h, --hard                  force virtual machine power reset'
+  echo
+  echo '  suspend [options] <vm>      suspend a virtual machine'
+  echo '    -s, --soft                  wait for virtual machine to sleep (default)'
+  echo '    -h, --hard                  save virtual machine state'
+  echo
+  echo '  pause <vm>                  pause a virtual machine'
+  echo
+  echo '  unpause <vm>                unpause a virtual machine'
+  echo
+  echo '  enable-shared-folders <vm>  enable shared folders on a virtual machine'
   exit ${1}
 }
 
@@ -47,7 +74,13 @@ do_help() {
 #
 
 do_raw() {
-  do_vmrun "${@}"
+  vmrun=`type -p vmrun`
+
+  if [[ -z "${vmrun}" && -x '/Applications/VMware Fusion.app/Contents/Library/vmrun' ]]; then
+    vmrun='/Applications/VMware Fusion.app/Contents/Library/vmrun'
+  fi
+
+  "${vmrun}" "${@}"
 }
 
 #
@@ -73,7 +106,7 @@ do_info() {
         --)
           parse='false';;
         -*)
-          echo "info: invalid option: ${cmd}" >&2; echo '' >&2; do_help 1 >&2;;
+          echo "info: invalid option: ${cmd}" >&2; echo >&2; do_help 1 >&2;;
         *)
           args+=("${1}");;
       esac
@@ -106,7 +139,7 @@ do_info() {
   fi
 
   if $ip || $all; then
-    ip=`do_vmrun 'getGuestIPAddress' "${vm_path}"`
+    ip=`do_raw 'getGuestIPAddress' "${vm_path}"`
 
     if [[ -z "${ip}" || "${ip}" = Error:* ]]; then
       ip='unknown'
@@ -114,6 +147,22 @@ do_info() {
 
     echo "${ip}"
   fi
+}
+
+#
+# print the path to a virtual machine
+#
+
+do_path() {
+  do_info -p "${@}"
+}
+
+#
+# print the ip address of a virtual machine
+#
+
+do_ip() {
+  do_info -i "${@}"
 }
 
 #
@@ -135,7 +184,7 @@ do_list() {
         --)
           parse='false';;
         -*)
-          echo "list: invalid option: ${cmd}" >&2; echo '' >&2; do_help 1 >&2;;
+          echo "list: invalid option: ${cmd}" >&2; echo >&2; do_help 1 >&2;;
         *)
           args+=("${1}");;
       esac
@@ -149,7 +198,7 @@ do_list() {
   (if ${all}; then
     ls $HOME/Documents/Virtual\ Machines*/*/*.vmx
   else
-    do_vmrun 'list' | sed '1d'
+    do_raw 'list' | sed '1d'
   fi) | while read path; do
     echo "${path##*/}"
   done
@@ -174,7 +223,7 @@ do_start() {
         --)
           parse='false';;
         -*)
-          echo "start: invalid option: ${cmd}" >&2; echo '' >&2; do_help 1 >&2;;
+          echo "start: invalid option: ${cmd}" >&2; echo >&2; do_help 1 >&2;;
         *)
           args+=("${1}");;
       esac
@@ -198,7 +247,7 @@ do_start() {
     exit 1
   fi
 
-  do_vmrun 'start' "${vm_path}" "${gui}"
+  do_raw 'start' "${vm_path}" "${gui}"
 }
 
 #
@@ -220,7 +269,7 @@ do_stop() {
         --)
           parse='false';;
         -*)
-          echo "stop: invalid option: ${cmd}" >&2; echo '' >&2; do_help 1 >&2;;
+          echo "stop: invalid option: ${cmd}" >&2; echo >&2; do_help 1 >&2;;
         *)
           args+=("${1}");;
       esac
@@ -244,7 +293,7 @@ do_stop() {
     exit 1
   fi
 
-  do_vmrun 'stop' "${vm_path}" "${hard}"
+  do_raw 'stop' "${vm_path}" "${hard}"
 }
 
 #
@@ -266,7 +315,7 @@ do_restart() {
         --)
           parse='false';;
         -*)
-          echo "restart: invalid option: ${cmd}" >&2; echo '' >&2; do_help 1 >&2;;
+          echo "restart: invalid option: ${cmd}" >&2; echo >&2; do_help 1 >&2;;
         *)
           args+=("${1}");;
       esac
@@ -290,7 +339,7 @@ do_restart() {
     exit 1
   fi
 
-  do_vmrun 'reset' "${vm_path}" "${hard}"
+  do_raw 'reset' "${vm_path}" "${hard}"
 }
 
 #
@@ -312,7 +361,7 @@ do_suspend() {
         --)
           parse='false';;
         -*)
-          echo "suspend: invalid option: ${cmd}" >&2; echo '' >&2; do_help 1 >&2;;
+          echo "suspend: invalid option: ${cmd}" >&2; echo >&2; do_help 1 >&2;;
         *)
           args+=("${1}");;
       esac
@@ -336,7 +385,7 @@ do_suspend() {
     exit 1
   fi
 
-  do_vmrun 'suspend' "${vm_path}" "${hard}"
+  do_raw 'suspend' "${vm_path}" "${hard}"
 }
 
 #
@@ -355,7 +404,7 @@ do_pause() {
     exit 1
   fi
 
-  do_vmrun 'pause' "${vm_path}"
+  do_raw 'pause' "${vm_path}"
 }
 
 #
@@ -374,42 +423,28 @@ do_unpause() {
     exit 1
   fi
 
-  do_vmrun 'unpause' "${vm_path}"
+  do_raw 'unpause' "${vm_path}"
 }
 
 #
-# shorthand to call vmrun
+# enable shared folders on a virtual machine
 #
 
-do_vmrun() {
-  vmrun=`type -p vmrun`
-
-  if [[ -z "${vmrun}" && -x /Applications/VMware\ Fusion.app/Contents/Library/vmrun ]]; then
-    vmrun=/Applications/VMware\ Fusion.app/Contents/Library/vmrun
+do_enable_shared_folders() {
+  if [[ -z "${1}" ]]; then
+    do_help 1 >&2
   fi
 
-  "${vmrun}" "${@}"
-}
+  vm_path=`vm_glob "${1}"`
 
-#
-# find a vm path by name
-#
-
-vm_glob() {
-  if [[ "${1:0:1}" != '/' ]]; then
-    glob="${HOME}/Documents/Virtual Machines*/*/${1}"
-    if [[ "${glob}" != *vmx ]]; then
-      glob="${glob}*vmx"
-    fi
-    glob="${glob// /\ }"
-    shopt -s nullglob
-    eval "list=(${glob})"
-    shopt -u nullglob
-    echo "${list[0]}"
-  else
-    echo "${1}"
+  if [[ -z "${vm_path}" ]]; then
+    echo "error: vm glob '${1}' is ambibious"
+    exit 1
   fi
+
+  do_raw 'enableSharedFolders' "${vm_path}"
 }
+
 
 #
 # main
@@ -431,6 +466,12 @@ case "${cmd}" in
   # info
   info|-i|--info)
     do_info "${@}";;
+  # path
+  path|--path)
+    do_path "${@}";;
+  # ip
+  ip|--ip)
+    do_ip "${@}";;
 
   # list and aliases
   list|-l|--list)
@@ -458,10 +499,14 @@ case "${cmd}" in
   # unpause
   unpause|--unpause)
     do_unpause "${@}";;
+  # enable shared folders
+  enable-shared-folders|--esf|--enable-shared-folders)
+    do_enable_shared_folders "${@}";;
+
   # meh
   *)
     echo "invalid command: ${cmd}" >&2
-    echo '' >&2
+    echo >&2
     do_help 1 >&2
     ;;
 esac
