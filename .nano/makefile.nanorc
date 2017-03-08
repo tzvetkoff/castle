@@ -10,7 +10,7 @@ color red "[:=]"
 color magenta "\<(if|ifeq|else|endif)\>"
 
 ## Variables.
-color blue "\$+[{(][a-zA-Z0-9_-]+[})]"
+color cyan "\$+[{(][a-zA-Z0-9_-]+[})]"
 
 ## Targets.
 color brightblue "^[^ 	]+:"
