@@ -1,0 +1,4 @@
+#!/bin/bash
+[[ -z "${1}" ]] && echo "usage: ${0} <archive.tar.bz2> [files...]" && exit 1
+[[ -z "${2}" ]] && set -- "${1%%/}.tar.bz2" "${1}"
+exec tarball -cbz2 "${@}"
