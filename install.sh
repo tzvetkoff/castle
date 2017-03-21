@@ -19,6 +19,9 @@ HOME_SYMLINKS=(\
   .vim              \
 )
 
+# freebsd
+[[ ${OSTYPE} = freebsd* ]] && HOME_SYMLINKS=("${HOME_SYMLINKS[@]}" .termcap)
+
 #
 # colors
 #

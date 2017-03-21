@@ -1,0 +1,4 @@
+xterm-256color|xterm with 256 colors and clear:\
+	:Co#256:pa#32767:\
+	:AB=\E[48;5;%dm:AF=\E[38;5;%dm:\
+	:tc=xterm-new:tc=xterm-clear:
