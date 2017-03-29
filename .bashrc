@@ -130,11 +130,27 @@ umask 0022
 
 # ls
 if [[ ${OSTYPE} = darwin* || ${OSTYPE} = freebsd* ]]; then
-  export CLICOLOR=1
+  # freebsd & osx both have color support in `ls'
   export LSCOLORS=gxBxhxDxfxhxhxhxhxcxcx
-  alias ls='ls -ACF'
-  alias lo='ls -hAlFO'
+  alias ls='ls -ACFG'
+elif [[ ${OSTYPE} = openbsd* ]]; then
+  # on openbsd `colorls' is a different tool
+  if type -p colorls >/dev/null; then
+    export LSCOLORS=gxBxhxDxfxhxhxhxhxcxcx
+    alias ls='colorls -ACFG'
+  else
+    alias ls='ls -ACF'
+  fi
+elif [[ ${OSTYPE} = netbsd* ]]; then
+  # on netbsd `colorls' is generally crippled, but still better than nothing
+  if type -p colorls >/dev/null; then
+    export LSCOLORS=6x5x2x3x1x464301060203
+    alias ls='colorls -ACFG'
+  else
+    alias ls='ls -ACF'
+  fi
 else
+  # assume we have gnu coreutils
   alias ls='ls -ACF --color=auto'
 fi
 
@@ -197,13 +213,14 @@ PATH="${PATH/\/usr\/local\/bin:}"
 PATH="${PATH/:\/usr\/local\/bin}"
 
 #
-# prepend /usr/local/sbin, /usr/local/bin, ~/bin, ~/.bin and ~/.local/bin to path
+# prepend /usr/local/sbin, /usr/local/bin, ~/bin, ~/.bin, ~/local/bin, ~/.local/bin to path
 #
 
 [[ ! "${PATH}" = */usr/local/sbin* ]] && PATH="/usr/local/sbin:${PATH}"
 [[ ! "${PATH}" = */usr/local/bin* ]]  && PATH="/usr/local/bin:${PATH}"
 [[ -d "${HOME}/bin" ]]                && PATH="${HOME}/bin:${PATH}"
 [[ -d "${HOME}/.bin" ]]               && PATH="${HOME}/.bin:${PATH}"
+[[ -d "${HOME}/local/bin" ]]          && PATH="${HOME}/local/bin:${PATH}"
 [[ -d "${HOME}/.local/bin" ]]         && PATH="${HOME}/.local/bin:${PATH}"
 
 export PATH
