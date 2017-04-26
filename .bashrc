@@ -49,7 +49,7 @@ prompt_command() {
   local rgs=
   local pve=
 
-  # avoid tree scans on home directory and add an option to disable them (mainly for slow disks and/or large repos)
+  # avoid tree scans on home directory & add an option to disable them (mainly for slow disks &| large repos)
   if [[ ( -z ${BASHRC_DISABLE_GIT} || -z ${BASHRC_DISABLE_SVN} || -z ${BASHRC_DISABLE_HG} ) && "${dir}" != "${HOME}" ]]; then
     # search for first .git/.svn/.hg in the tree
     local dir="${PWD}"
@@ -119,6 +119,32 @@ PS1='\u@\h:\w\$ '
 PROMPT_COMMAND=prompt_command
 
 #
+# icon name & window title
+#
+
+icon_name_and_window_title() {
+  # hostname (without domain)
+  local host=${HOSTNAME%%.*}
+
+  # nifty current directory
+  local pwd="${PWD}"
+  [[ "${pwd}" = ${HOME} || "${pwd}" = ${HOME}/* ]]  && pwd='~'"${PWD#${HOME}}"
+  [[ "${pwd}" = /home/* ]]                          && pwd="~${pwd#/home/}"
+  [[ "${pwd}" = /Users/* ]]                         && pwd="~${pwd#/Users/}"
+
+  # set the icon name & window title
+  if [[ $BASH_COMMAND = prompt_command ]]; then
+    echo -ne "\033]1;bash\007"
+    echo -ne "\033]2;${USER}@${host}:${pwd}\007"
+  else
+    echo -ne "\033]1;${BASH_COMMAND%% *}\007"
+    echo -ne "\033]2;${USER}@${host}:${pwd} > $BASH_COMMAND\007"
+  fi
+}
+
+trap icon_name_and_window_title DEBUG
+
+#
 # umask !@#$
 #
 
@@ -169,7 +195,7 @@ alias df='df -h'
 alias du='du -h'
 alias dirsize='du -csh'
 
-# rename is lame, perl's one in ~/.bin is better and more dangerous
+# rename is lame, ~/.bin/prename is better & more dangerous
 alias rename='prename'
 
 # i hate the .viminfo
@@ -204,7 +230,7 @@ if [[ ${OSTYPE} = darwin* ]]; then
 fi
 
 #
-# remove /usr/local/sbin and /usr/local/bin from path
+# remove /usr/local/sbin & /usr/local/bin from path
 #
 
 PATH="${PATH/\/usr\/local\/sbin:}"
