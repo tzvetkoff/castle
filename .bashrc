@@ -256,7 +256,7 @@ export PATH
 #
 
 export HISTFILE=/dev/null
-export LESSHSTFILE=/dev/null
+export LESSHISTFILE=/dev/null
 
 #
 # disable history expansion
