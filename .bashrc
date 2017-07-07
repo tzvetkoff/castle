@@ -15,6 +15,12 @@
 export BASHRC="${BASH_SOURCE[0]}"
 
 #
+# bashrc.prepend
+#
+
+[[ -r "${HOME}/.bashrc.prepend" ]] && source "${HOME}/.bashrc.prepend"
+
+#
 # the prompt string
 #
 
@@ -321,7 +327,7 @@ fi
 [[ -r "${HOME}/.rvm/scripts/completion" ]]  && source "${HOME}/.rvm/scripts/completion"
 
 #
-# bashrc.d & bashrc.extra
+# bashrc.d
 #
 
 if [[ -d "${HOME}/.bashrc.d" ]]; then
@@ -332,7 +338,11 @@ if [[ -d "${HOME}/.bashrc.d" ]]; then
   shopt -u nullglob
 fi
 
-[[ -r "${HOME}/.bashrc.extra" ]] && source "${HOME}/.bashrc.extra"
+#
+# bashrc.append
+#
+
+[[ -r "${HOME}/.bashrc.append" ]] && source "${HOME}/.bashrc.append"
 
 #
 # show message-of-the-day (not really)
