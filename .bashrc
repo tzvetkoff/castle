@@ -243,6 +243,9 @@ alias c='r console'
 alias s='r server --binding=0.0.0.0'
 alias g='r generate'
 alias bundel='bundle'
+alias bruby='bundle exec ruby'
+alias brake='bundle exec rake'
+alias brails='bundle exec r'
 alias xxl='bundle exec rake db:drop db:create db:migrate db:seed'
 
 # some administrative ones
