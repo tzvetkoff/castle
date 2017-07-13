@@ -9,6 +9,14 @@ if v:progname =~? "evim"
   finish
 endif
 
+" Pathogen
+try
+  runtime bundle/vim-pathogen/autoload/pathogen.vim
+  call pathogen#infect()
+  call pathogen#helptags()
+catch
+endtry
+
 " Use Vim settings, rather then Vi settings (much better!)
 " This must be first, because it changes other options as a side effect.
 set nocompatible
@@ -46,19 +54,20 @@ if has('mouse')
   set mouse=
 endif
 
-" Switch syntax highlighting on
+" Switch syntax highlighting on.
 syntax on
 
-" Highlight search.
-set hlsearch
+" Dark background.
+set background=dark
 
-" Set color scheme on macvim
-if has("gui_macvim")
-  if !exists("colors_name")
-    " Use the macvim color scheme by default
-    colorscheme torte
-  endif
-endif
+" Use 256 colors for solarized.
+let g:solarized_termcolors=256
+
+" Set color scheme.
+colorscheme solarized
+
+" Also use solarized for airline.
+let g:airline_theme = 'solarized'
 
 " Only do this part when compiled with support for autocommands.
 if has("autocmd")
@@ -164,12 +173,3 @@ set viminfo=
 
 " NERDTree
 map <C-r> :NERDTreeToggle<CR>
-
-
-" Pathogen
-try
-  runtime bundle/vim-pathogen/autoload/pathogen.vim
-  call pathogen#infect()
-  call pathogen#helptags()
-catch
-endtry

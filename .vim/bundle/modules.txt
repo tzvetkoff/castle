@@ -1,6 +1,8 @@
 https://github.com/tpope/vim-pathogen.git               vim-pathogen
-https://github.com/scrooloose/nerdtree                  vim-nerdtree
-https://github.com/Lokaltog/vim-powerline.git           vim-powerline
+https://github.com/vim-airline/vim-airline.git          vim-airline
+https://github.com/vim-airline/vim-airline-themes.git   vim-airline-themes
+https://github.com/tzvetkoff/vim-colors-solarized.git   vim-colors-solarized
+https://github.com/scrooloose/nerdtree.git              vim-nerdtree
 https://github.com/vim-syntastic/syntastic.git          vim-syntastic
 https://github.com/tzvetkoff/vim-numbertoggle.git       vim-numbertoggle
 https://github.com/elixir-lang/vim-elixir.git           vim-elixir
