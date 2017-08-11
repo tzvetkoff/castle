@@ -115,8 +115,8 @@ prompt_command() {
       env="${env}{${grey}erl:${cyan}${ERLANG_PREFIX##*/}${reset}}"
     fi
     # elixir
-    if [[ -z ${BASHRC_DISABLE_ENVMGR_ELIXIR} && -n ${ELIXIR_PREFIX} ]]; then
-      env="${env}{${grey}ex:${cyan}${ELIXIR_PREFIX##*/}${reset}}"
+    if [[ -z ${BASHRC_DISABLE_ENVMGR_ELIXIR} && -n ${MIX_HOME} ]]; then
+      env="${env}{${grey}ex:${cyan}${MIX_HOME##*/}${reset}}"
     fi
   fi
 
