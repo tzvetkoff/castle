@@ -25,100 +25,103 @@ export BASHRC="${BASH_SOURCE[0]}"
 #
 
 prompt_command() {
+  # last command exit status
+  [[ ${?} -eq 0 ]] && local exc='\$' || local exc='\[\033[01;31m\]\$\[\033[0m\]'
+
   # colors
-  local reset='\[\033[00m\]'
-  local grey='\[\033[01;30m\]'
-  local red='\[\033[01;31m\]'
-  local green='\[\033[01;32m\]'
-  local yellow='\[\033[01;33m\]'
-  local blue='\[\033[01;34m\]'
-  local pink='\[\033[01;35m\]'
-  local cyan='\[\033[00;36m\]'
+  local reset='\[\033[0m\]'
+  local grey='\[\033[1;30m\]'
+  local red='\[\033[1;31m\]'
+  local green='\[\033[1;32m\]'
+  local yellow='\[\033[1;33m\]'
+  local blue='\[\033[1;34m\]'
+  local cyan='\[\033[0;36m\]'
 
-  # hostname (without domain)
-  local host=${HOSTNAME%%.*}
+  # hostname & user
+  local host="${blue}${HOSTNAME%%.*}${reset}"
+  [[ ${UID} -eq 0 ]] && local user="${red}${USER}${reset}" || local user="${green}${USER}${reset}"
 
-  # colorized user
-  local user="${green}${USER}"
-  [[ ${UID} = 0 ]] && user="${red}${USER}"
-
-  # nifty current directory
+  # current directory
   local pwd="${PWD}"
   [[ "${pwd}" = ${HOME} || "${pwd}" = ${HOME}/* ]]  && pwd='~'"${PWD#${HOME}}"
-  [[ "${pwd}" = /home/* ]]                          && pwd="~${pwd#/home/}"
-  [[ "${pwd}" = /Users/* ]]                         && pwd="~${pwd#/Users/}"
+  [[ "${pwd}" = /home/* ]]                          && pwd='~'"${pwd#/home/}"
+  [[ "${pwd}" = /Users/* ]]                         && pwd='~'"${pwd#/Users/}"
+  pwd="${yellow}${pwd}${reset}"
 
-  # git/svn/mercurial status, ruby rvm gemset, python virtualenv variables
-  local git_dir= git=
-  local svn_dir= svn=
-  local hg_dir= hg=
-  local rgs=
-  local pve=
+  # scm statuses, programming language environments
+  local scm= env=
 
   # avoid tree scans on home directory & add an option to disable them (mainly for slow disks &| large repos)
-  if [[ ( -z ${BASHRC_DISABLE_GIT} || -z ${BASHRC_DISABLE_SVN} || -z ${BASHRC_DISABLE_HG} ) && "${dir}" != "${HOME}" ]]; then
+  if [[ -z ${BASHRC_DISABLE_SCM} && "${dir}" != "${HOME}" ]]; then
     # search for first .git/.svn/.hg in the tree
-    local dir="${PWD}"
+    local dir="${PWD}" git_dir= svn_dir= hg_dir=
     while [[ "${dir}" != '/' && -n "${dir}" ]]; do
-      [[ -z ${BASHRC_DISABLE_GIT} && -z ${git_dir} && -e "${dir}/.git" ]] && git_dir="${dir}/.git" && break
-      [[ -z ${BASHRC_DISABLE_SVN} && -z ${svn_dir} && -e "${dir}/.svn" ]] && svn_dir="${dir}/.svn" && break
-      [[ -z ${BASHRC_DISABLE_HG}  && -z ${hg_dir}  && -e "${dir}/.hg"  ]] && hg_dir="${dir}/.hg"   && break
+      [[ -z ${BASHRC_DISABLE_SCM_GIT} && -z ${git_dir} && -e "${dir}/.git" ]] && git_dir="${dir}/.git" && break
+      [[ -z ${BASHRC_DISABLE_SCM_SVN} && -z ${svn_dir} && -e "${dir}/.svn" ]] && svn_dir="${dir}/.svn" && break
+      [[ -z ${BASHRC_DISABLE_SCM_HG}  && -z ${hg_dir}  && -e "${dir}/.hg"  ]] && hg_dir="${dir}/.hg"   && break
       dir="${dir%/*}"
     done
 
     # git
-    if [[ -z ${BASHRC_DISABLE_GIT} && -n ${git_dir} ]]; then
+    if [[ -n ${git_dir} ]]; then
       local branch=`git --git-dir="${git_dir}" symbolic-ref HEAD 2>/dev/null`
       branch="${branch#refs/heads/}"
       if [[ -n ${branch} ]]; then
         local status=`git status --porcelain 2>/dev/null | head -1`
         if [[ -n ${status} ]]; then
-          git="${reset}(${grey}git:${red}${branch}${reset})"
+          scm="${scm}${reset}(${grey}git:${red}${branch}${reset})"
         else
-          git="${reset}(${grey}git:${green}${branch}${reset})"
+          scm="${scm}${reset}(${grey}git:${green}${branch}${reset})"
         fi
       fi
     fi
 
     # svn
-    if [[ -z ${BASHRC_DISABLE_SVN} && -n ${svn_dir} ]]; then
+    if [[ -n ${svn_dir} ]]; then
       local revision=`svn info 2>/dev/null | grep Revision: | cut -d' ' -f2`
       if [[ -n ${revision} ]]; then
         local status=`svn status 2>/dev/null | head -1`
         if [[ -n ${status} ]]; then
-          svn="${reset}(${grey}svn:${red}r${revision}${reset})"
+          scm="${scm}${reset}(${grey}svn:${red}r${revision}${reset})"
         else
-          svn="${reset}(${grey}svn:${green}r${revision}${reset})"
+          scm="${scm}${reset}(${grey}svn:${green}r${revision}${reset})"
         fi
       fi
     fi
 
     # mercurial
-    if [[ -z ${BASHRC_DISABLE_HG} && -n ${hg_dir} ]]; then
+    if [[ -n ${hg_dir} ]]; then
       local branch=`hg branch 2>/dev/null`
       if [[ -n ${branch} ]]; then
         local status=`hg status 2>/dev/null | head -1`
         if [[ -n ${status} ]]; then
-          hg="${reset}(${grey}hg:${red}${branch}${reset})"
+          scm="${scm}${reset}(${grey}hg:${red}${branch}${reset})"
         else
-          hg="${reset}(${grey}hg:${green}${branch}${reset})"
+          scm="${scm}${reset}(${grey}hg:${green}${branch}${reset})"
         fi
       fi
     fi
   fi
 
-  # rvm environment
-  if [[ -z ${BASHRC_DISABLE_RVM_GEMSET} && -n ${GEM_HOME} && ${GEM_HOME} = *${rvm_gemset_separator:-'@'}* ]]; then
-    rgs="${reset}{${grey}rb:${cyan}${GEM_HOME##*@}${reset}}"
-  fi
-
-  # python virtualenv
-  if [[ -z ${BASHRC_DISABLE_PYTHON_VIRTUALENV} && -n ${VIRTUAL_ENV} ]]; then
-    pve="${reset}{${grey}py:${cyan}${VIRTUAL_ENV##*/}${reset}}"
+  # environments
+  if [[ -z ${BASHRC_DISABLE_ENVMGR} ]]; then
+    # ruby
+    if [[ -z ${BASHRC_DISABLE_ENVMGR_RUBY} && -n ${GEM_HOME} && ${GEM_HOME} != *@global ]]; then
+      local rb="${GEM_HOME##*/}"
+      env="${env}{${grey}rb:${cyan}${rb#ruby-}${reset}}"
+    fi
+    # erlang
+    if [[ -z ${BASHRC_DISABLE_ENVMGR_ERLANG} && -n ${ERLANG_PREFIX} ]]; then
+      env="${env}{${grey}erl:${cyan}${ERLANG_PREFIX##*/}${reset}}"
+    fi
+    # elixir
+    if [[ -z ${BASHRC_DISABLE_ENVMGR_ELIXIR} && -n ${ELIXIR_PREFIX} ]]; then
+      env="${env}{${grey}ex:${cyan}${ELIXIR_PREFIX##*/}${reset}}"
+    fi
   fi
 
   # finally, set the variable
-  PS1="${reset}[${green}${user}${reset}@${blue}${host}${reset}(${yellow}${pwd}${git}${svn}${hg}${rgs}${pve}${reset})]\\$ "
+  PS1="${reset}[${user}@${host}(${pwd}${scm}${env})]${exc} "
 }
 
 PS1='\u@\h:\w\$ '
@@ -129,19 +132,18 @@ PROMPT_COMMAND=prompt_command
 #
 
 icon_name_and_window_title() {
-  # hostname (without domain)
-  local host_icon_name=
-  ${BASHRC_SSH} && host_icon_name="${HOSTNAME%%.*}:"
+  # hostname
+  ${BASHRC_SSH} && local host_icon_name="${HOSTNAME%%.*}:" || local host_icon_name=
   local host_window_title="${HOSTNAME%%.*}"
 
-  # nifty current directory
+  # current directory
   local pwd="${PWD}"
   [[ "${pwd}" = ${HOME} || "${pwd}" = ${HOME}/* ]]  && pwd='~'"${PWD#${HOME}}"
-  [[ "${pwd}" = /home/* ]]                          && pwd="~${pwd#/home/}"
-  [[ "${pwd}" = /Users/* ]]                         && pwd="~${pwd#/Users/}"
+  [[ "${pwd}" = /home/* ]]                          && pwd='~'"${pwd#/home/}"
+  [[ "${pwd}" = /Users/* ]]                         && pwd='~'"${pwd#/Users/}"
 
   # set the icon name & window title
-  if [[ $BASH_COMMAND = prompt_command ]]; then
+  if [[ ${BASH_COMMAND} = prompt_command ]]; then
     echo -ne "\033]1;${host_icon_name}bash\007"
     echo -ne "\033]2;${USER}@${host_window_title}:${pwd}\007"
   else
@@ -162,17 +164,17 @@ umask 0022
 # detect ssh session
 #
 
-BASHRC_SSH=false
+BASHRC_SSH='false'
 if [[ -n ${SSH_CLIENT} || -n ${SSH_TTY} ]]; then
-  BASHRC_SSH=true
+  BASHRC_SSH='true'
 elif [[ -z ${BASHRC_DISABLE_SSH} ]]; then
   pid=$$
-  while [[ -n ${pid} && ${pid} != 1 ]]; do
+  while [[ -n ${pid} && ${pid} -ne 1 ]]; do
     pid_cmd="`ps -oppid= -ocomm= -p${pid}`"
     pid="${pid_cmd%% *}"
     cmd="${pid_cmd#* }"
     if [[ ${cmd} = *sshd ]]; then
-      BASHRC_SSH=true
+      BASHRC_SSH='true'
       break
     fi
   done
@@ -187,12 +189,12 @@ export BASHRC_SSH
 # ls
 if [[ ${OSTYPE} = darwin* || ${OSTYPE} = freebsd* ]]; then
   # freebsd & osx both have color support in `ls'
-  export LSCOLORS=gxBxhxDxfxhxhxhxhxcxcx
+  export LSCOLORS='gxBxhxDxfxhxhxhxhxcxcx'
   alias ls='ls -ACFG'
 elif [[ ${OSTYPE} = openbsd* ]]; then
   # on openbsd `colorls' is a different tool
   if type -p colorls >/dev/null; then
-    export LSCOLORS=gxBxhxDxfxhxhxhxhxcxcx
+    export LSCOLORS='gxBxhxDxfxhxhxhxhxcxcx'
     alias ls='colorls -ACFG'
   else
     alias ls='ls -ACF'
@@ -200,7 +202,7 @@ elif [[ ${OSTYPE} = openbsd* ]]; then
 elif [[ ${OSTYPE} = netbsd* ]]; then
   # on netbsd `colorls' is generally crippled, but still better than nothing
   if type -p colorls >/dev/null; then
-    export LSCOLORS=6x5x2x3x1x464301060203
+    export LSCOLORS='6x5x2x3x1x464301060203'
     alias ls='colorls -ACFG'
   else
     alias ls='ls -ACF'
@@ -246,7 +248,6 @@ alias bundel='bundle'
 alias bruby='bundle exec ruby'
 alias brake='bundle exec rake'
 alias brails='bundle exec r'
-alias xxl='bundle exec rake db:drop db:create db:migrate db:seed'
 
 # some administrative ones
 alias su='sudo su'
@@ -323,11 +324,11 @@ elif [[ -f /etc/bash_completion ]]; then
 fi
 
 #
-# rvm
+# envmgr
 #
 
-[[ -s "${HOME}/.rvm/scripts/rvm" ]]         && source "${HOME}/.rvm/scripts/rvm"
-[[ -r "${HOME}/.rvm/scripts/completion" ]]  && source "${HOME}/.rvm/scripts/completion"
+[[ -r "${HOME}/.envmgr/init" ]]       && source "${HOME}/.envmgr/init"
+[[ -r "${HOME}/.envmgr/completion" ]] && source "${HOME}/.envmgr/completion"
 
 #
 # bashrc.d
