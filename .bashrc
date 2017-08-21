@@ -190,26 +190,26 @@ export BASHRC_SSH
 if [[ ${OSTYPE} = darwin* || ${OSTYPE} = freebsd* ]]; then
   # freebsd & osx both have color support in `ls'
   export LSCOLORS='gxBxhxDxfxhxhxhxhxcxcx'
-  alias ls='ls -ACFG'
+  alias ls='ls -AFG'
 elif [[ ${OSTYPE} = openbsd* ]]; then
   # on openbsd `colorls' is a different tool
   if type -p colorls >/dev/null; then
     export LSCOLORS='gxBxhxDxfxhxhxhxhxcxcx'
-    alias ls='colorls -ACFG'
+    alias ls='colorls -AFG'
   else
-    alias ls='ls -ACF'
+    alias ls='ls -AF'
   fi
 elif [[ ${OSTYPE} = netbsd* ]]; then
   # on netbsd `colorls' is generally crippled, but still better than nothing
   if type -p colorls >/dev/null; then
     export LSCOLORS='6x5x2x3x1x464301060203'
-    alias ls='colorls -ACFG'
+    alias ls='colorls -AFG'
   else
-    alias ls='ls -ACF'
+    alias ls='ls -AF'
   fi
 else
   # assume we have gnu coreutils
-  alias ls='ls -ACF --color=auto'
+  alias ls='ls -AF --color=auto'
 fi
 
 alias ll='ls -hAlF'
