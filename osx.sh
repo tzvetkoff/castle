@@ -100,6 +100,17 @@ if Q 'Adding a context menu item for showing the Web Inspector in web views?'; t
   defaults write NSGlobalDomain WebKitDeveloperExtras -bool true
 fi
 
+if Q 'Rebind home/end keys to work properly?'; then
+  mkdir -p "${HOME}/Library/KeyBindings"
+  > "${HOME}/Library/KeyBindings/DefaultKeyBinding.dict"
+  echo '{' >> "${HOME}/Library/KeyBindings/DefaultKeyBinding.dict"
+  echo '    "\UF729"  = moveToBeginningOfLine:;                     // Home'        >> "${HOME}/Library/KeyBindings/DefaultKeyBinding.dict"
+  echo '    "\UF72B"  = moveToEndOfLine:;                           // End'         >> "${HOME}/Library/KeyBindings/DefaultKeyBinding.dict"
+  echo '    "$\UF729" = moveToBeginningOfLineAndModifySelection:;   // Shift+Home'  >> "${HOME}/Library/KeyBindings/DefaultKeyBinding.dict"
+  echo '    "$\UF72B" = moveToEndOfLineAndModifySelection:;         // Shift+End'   >> "${HOME}/Library/KeyBindings/DefaultKeyBinding.dict"
+  echo '}' >> "${HOME}/Library/KeyBindings/DefaultKeyBinding.dict"
+fi
+
 #
 # done
 #
