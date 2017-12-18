@@ -28,18 +28,21 @@ while [[ -n "${1}" ]]; do
     case "${1}" in
       -h|--help)
         usage 0;;
-      -t*)
-        TOP="${1:2}";;
-      --top=*)
-        TOP="${1:5}";;
+
       -t|--top)
         TOP="${2}"; shift;;
-      -u*)
-        SIZE_UNIT="${1:2}";;
-      --size-unit=*)
-        SIZE_UNIT="${1:12}";;
+      --top=*)
+        TOP="${1:5}";;
+      -t*)
+        TOP="${1:2}";;
+
       -u|--size-unit)
         SIZE_UNIT="${2}"; shift;;
+      --size-unit=*)
+        SIZE_UNIT="${1:12}";;
+      -u*)
+        SIZE_UNIT="${1:2}";;
+
       --)
         PARSE='false';;
       -*)

@@ -5,7 +5,7 @@
 #
 
 usage() {
-  echo "Usage: git export [options] [tree-ish]"
+  echo 'Usage: git export [options] [tree-ish]'
   echo ''
   echo 'Options:'
   echo '  -h, --help            Print this message and exit'
@@ -30,24 +30,28 @@ while [[ -n "${1}" ]]; do
     case "${1}" in
       -h|--help)
         usage 0;;
-      -r*)
-        REMOTE="${1:2}";;
-      --remote=*)
-        REMOTE="${1:9}";;
+
       -r|--remote)
         REMOTE="${2}"; shift;;
-      -f*)
-        FORMAT="${1:2}";;
-      --format=*)
-        FORMAT="${1:9}";;
+      --remote=*)
+        REMOTE="${1:9}";;
+      -r*)
+        REMOTE="${1:2}";;
+
       -f|--format)
         FORMAT="${2}"; shift;;
-      -o*)
-        OUTPUT="${1:2}";;
-      --output=*)
-        OUTPUT="${1:9}";;
+      --format=*)
+        FORMAT="${1:9}";;
+      -f*)
+        FORMAT="${1:2}";;
+
       -o|--output)
         OUTPUT="${2}"; shift;;
+      --output=*)
+        OUTPUT="${1:9}";;
+      -o*)
+        OUTPUT="${1:2}";;
+
       --)
         PARSE='false';;
       -*)
@@ -65,7 +69,7 @@ done
 set -- "${ARGS[@]}"
 
 #
-# Do some actual work
+# do some actual work
 #
 
 TREE="${1}"

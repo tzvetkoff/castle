@@ -39,24 +39,28 @@ while [[ -n "${1}" ]]; do
     case "${1}" in
       -h|--help)
         usage 0;;
+
       -c|--compression)
         COMPRESSION="${2}"; shift;;
-      -c*)
-        COMPRESSION="${1:2}";;
       --compression=*)
         COMPRESSION="${1:14}";;
+      -c*)
+        COMPRESSION="${1:2}";;
+
       -t|--threads)
         THREADS="${2}"; shift;;
-      -t*)
-        THREADS="${1:2}";;
       --threads=*)
         THREADS="${1:10}";;
+      -t*)
+        THREADS="${1:2}";;
+
       -[1-9])
         COMPRESSION_LEVEL="${1:1}";;
       --fast)
         COMPRESSION_LEVEL=1;;
       --best)
         COMPRESSION_LEVEL=9;;
+
       --)
         PARSE=false;;
       -*)

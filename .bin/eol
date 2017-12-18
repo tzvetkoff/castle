@@ -1,0 +1,69 @@
+#!/bin/bash
+
+#
+# usage
+#
+
+usage() {
+  echo "Usage: ${0} [options] [dir]"
+  echo ''
+  echo 'Options:'
+  echo '  -h, --help            Print this message and exit'
+  echo '  -e, --exclude=glob    Exclude glob'
+  exit ${1}
+}
+
+#
+# parse command line arguments
+#
+
+exclude=('*/.git/*' '*/.keep' '*/.gitkeep' '*/.DS_Store' '*.png' '*.jpg' '*.gif' '*.a' '*.so' '*.cache')
+args=()
+
+parse='true'
+while [[ -n "${1}" ]]; do
+  if ${parse}; then
+    case "${1}" in
+      -h|--help)
+        usage 0;;
+
+      -e|--exclude)
+        exclude+=("${2}"); shift;;
+      --exclude=*)
+        exclude+=("${1:9}");;
+      -e*)
+        exclude+=("${1:2}");;
+
+      --)
+        parse='false';;
+      -*)
+        echo "${0}: invalid option: ${1}" >&2; echo >&2; usage 1 >&2;;
+      *)
+        args+=("${1}");;
+    esac
+  else
+    args+=("${1}")
+  fi
+
+  shift
+done
+
+set -- "${args[@]}"
+
+#
+# do some actual work
+#
+
+dir="${1}"
+dir="${dir:-.}"
+
+# prepare exclude params
+exclude_params=()
+for glob in "${exclude[@]}"; do
+  [[ -n "${glob}" ]] && exclude_params+=('!' '-wholename' "${glob}")
+done
+
+# do the rambo
+find "${dir}" -type 'f' "${exclude_params[@]}" | while read filename; do
+  test "$(tail -c 1 "${filename}")" && echo "${filename}"
+done
