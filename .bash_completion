@@ -1,8 +1,8 @@
 #!/bin/bash
 # ~/.bash_completion - user bash completions
 
-# Use SSH completions for `sshpass' & `sshrc`
-complete -F _ssh sshpass sshrc
+# Use SSH completions for `sshpass', `sshrc', `ssh-guest' & `sshrc-guest'
+complete -F _ssh sshpass sshrc ssh-guest sshrc-guest
 # Use SCP completions for `scppass'
 complete -F _scp -o nospace scppass
 
