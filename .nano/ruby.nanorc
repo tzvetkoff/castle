@@ -1,7 +1,8 @@
 ## Here is an example for Ruby.
 
-syntax "ruby" "\.rb|\.rake|\.gemspec|(Gem|Rake|Vagrant)file$"
+syntax ruby "\.rb$"
 header "^#!.*ruby[-0-9._]*"
+magic "Ruby script"
 linter ruby -w -c
 comment "#"
 

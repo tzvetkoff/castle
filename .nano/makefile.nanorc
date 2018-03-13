@@ -1,22 +1,14 @@
 ## Here is an example for Makefiles.
 
-syntax "makefile" "Makefile[^/]*$" "\.(make|mk)$"
+syntax makefile "Makefile[^/]*$" "\.(make|mk)$"
+magic "makefile script"
 comment "#"
 
-## Assignments.
 color red "[:=]"
-
-## Conditionals.
 color magenta "\<(if|ifeq|else|endif)\>"
-
-## Variables.
-color cyan "\$+[{(][a-zA-Z0-9_-]+[})]"
-
-## Targets.
+color blue "\$+[{(][a-zA-Z0-9_-]+[})]"
 color brightblue "^[^ 	]+:"
-
-## Comments.
-color green "#.*$"
+color green "(^|[[:space:]]+)#.*"
 
 ## Trailing whitespace.
 color ,green "[[:space:]]+$"

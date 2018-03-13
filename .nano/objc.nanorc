@@ -1,9 +1,10 @@
 ## Here is an example for C/C++/Obj-C.
 
-syntax "m" "\.m$"
+syntax m "\.m$"
+magic "Objective-C source"
 comment "//"
 
-# Stuffs.
+# Stuffs,
 color brightwhite "\<[A-Z_][0-9A-Z_]+\>"
 color green "\<(float|double|BOOL|bool|char|int|short|long|id|sizeof|enum|void|static|const|struct|union|typedef|extern|(un)?signed|inline)\>"
 color green "\<[[:alpha:]_][[:alnum:]_]*_t\>"
@@ -11,7 +12,7 @@ color green "\<(class|namespace|template|public|protected|private|typename|this|
 color brightgreen "\<(for|if|while|do|else|case|default|switch)\>"
 color brightgreen "\<(try|throw|catch|operator|new|delete)\>"
 color brightgreen "\<(goto|continue|break|return)\>"
-color brightgreen "@\<(en(code|d)|i(mplementation|nterface)|selector)\>"
+color brightgreen "@(encode|end|implementation|interface)|selector)\>"
 
 # GCC builtins.
 color cyan "__attribute__[[:space:]]*\(\([^)]*\)\)" "__(aligned|asm|builtin|hidden|inline|packed|restrict|section|typeof|weak)__"
@@ -37,5 +38,5 @@ color brightblue "^[[:space:]]*#[[:space:]]*(define|include|import|(un|ifn?)def|
 color yellow "//.*"
 color yellow start="/\*" end="\*/"
 
-# Trailing whitespace.
+# Trailing whitespace.                                                                                                       
 color ,green "[[:space:]]+$"

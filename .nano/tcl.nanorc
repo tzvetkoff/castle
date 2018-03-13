@@ -1,6 +1,7 @@
 ## Syntax highlighting for Tcl files.
 
-syntax "tcl" "\.tcl$"
+syntax tcl "\.tcl$"
+magic "Tcl(/Tk)? script"
 comment "#"
 
 # Standard Tcl [info commands]:
@@ -16,3 +17,4 @@ color green "(\(|\)|\;|`|\\|\$|<|>|!|=|&|\|)"
 color brightyellow ""(\\.|[^"])*"" "'(\\.|[^'])*'"
 icolor brightred "\$\{?[0-9A-Z_!@#$*?-]+\}?"
 color ,green "[[:space:]]+$"
+color ,magenta "^[[:space:]]*#.*"
