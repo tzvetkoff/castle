@@ -6,3 +6,4 @@ https://github.com/scrooloose/nerdtree.git              vim-nerdtree
 https://github.com/vim-syntastic/syntastic.git          vim-syntastic
 https://github.com/tzvetkoff/vim-numbertoggle.git       vim-numbertoggle
 https://github.com/elixir-lang/vim-elixir.git           vim-elixir
+https://github.com/rust-lang/rust.vim                   vim-rust
