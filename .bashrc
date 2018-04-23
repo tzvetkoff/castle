@@ -253,9 +253,10 @@ alias brails='bundle exec r'
 alias su='sudo su'
 alias chown='sudo chown'
 
-# ssh
+# ssh & scp
 alias ssh-guest='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
 alias sshrc-guest='sshrc -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
+alias scp-guest='scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
 
 # macosx
 if [[ ${OSTYPE} = darwin* ]]; then
