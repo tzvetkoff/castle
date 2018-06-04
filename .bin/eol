@@ -17,7 +17,7 @@ usage() {
 # parse command line arguments
 #
 
-exclude=('*/.git/*' '*/.keep' '*/.gitkeep' '*/.DS_Store' '*.png' '*.jpg' '*.gif' '*.a' '*.so' '*.cache')
+exclude=('*/.git/*' '*/.keep' '*/.gitkeep' '*/.DS_Store' '*.png' '*.jpg' '*.gif' '*.a' '*.so' '*.cache' '*/.idea/*')
 args=()
 
 parse='true'

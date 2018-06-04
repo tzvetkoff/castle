@@ -64,14 +64,45 @@ prompt_command() {
 
     # git
     if [[ -n ${git_dir} ]]; then
-      local branch=`git --git-dir="${git_dir}" symbolic-ref HEAD 2>/dev/null`
+      local branch= extra=
+
+      if [[ -d "${git_dir}/rebase-apply" ]]; then
+        if [[ -f "${git_dir}/rebase-apply/rebasing" ]]; then
+          extra="|${yellow}rebase${reset}"
+        elif [[ -f "${git_dir}/rebase-apply/applying" ]]; then
+          extra="|${yellow}am${reset}"
+        else
+          extra="|${yellow}am/rebase${reset}"
+        fi
+        branch="$(< "${git_dir}/rebase-apply/head-name")"
+      elif [[ -f "${git_dir}/rebase-merge/interactive" ]]; then
+        extra="|${yellow}rebase-i${reset}"
+        branch="$(< "${git_dir}/rebase-merge/head-name")"
+      elif [[ -d "${git_dir}/rebase-merge" ]]; then
+        extra="|${yellow}rebase-m${reset}"
+        branch="$(< "${git_dir}/rebase-merge/head-name")"
+      elif [[ -f "${git_dir}/MERGE_HEAD" ]]; then
+        extra="|${yellow}merge${reset}"
+        branch=`git --git-dir="${git_dir}" symbolic-ref HEAD 2>/dev/null`
+      else
+        if ! branch=`git --git-dir="${git_dir}" symbolic-ref HEAD 2>/dev/null`; then
+          if branch=`git --git-dir="${git_dir}" describe --exact-match HEAD 2>/dev/null`; then
+            branch="${blue}${branch}"
+          elif branch=`git --git-dir="${git_dir}" describe --tags HEAD 2>/dev/null`; then
+            branch="${blue}${branch}"
+          else
+            branch="${blue}`cut -c1-8 "${git_dir}/HEAD"`"
+          fi
+        fi
+      fi
+
       branch="${branch#refs/heads/}"
       if [[ -n ${branch} ]]; then
         local status=`git status --porcelain 2>/dev/null | head -1`
         if [[ -n ${status} ]]; then
-          scm="${scm}${reset}(${grey}git:${red}${branch}${reset})"
+          scm="${scm}${reset}(${grey}git:${red}${branch}${reset}${extra})"
         else
-          scm="${scm}${reset}(${grey}git:${green}${branch}${reset})"
+          scm="${scm}${reset}(${grey}git:${green}${branch}${reset}${extra})"
         fi
       fi
     fi
