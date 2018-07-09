@@ -103,6 +103,7 @@ create_home_gitconfig() {
   git config --global alias.co 'checkout'
   git config --global alias.dt 'difftool'
   git config --global alias.mt 'mergetool'
+  git config --global alias.rb 'rubocop'
   git config --global alias.df 'diff --ignore-all-space'
   git config --global alias.lg 'log --color --graph --pretty=format:"%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset" --abbrev-commit'
   echo -e "${COLOR_GREEN}create${COLOR_WHITE} ${HOME}/.gitconfig"
