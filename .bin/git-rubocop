@@ -1,0 +1,3 @@
+#!/bin/bash
+
+bundle exec rubocop -SD $(git status --porcelain | grep -v '^D ' | awk '{print $NF}' | grep '\(Gemfile\|Rakefile\|\.rb\|\.rake\|\.god\)$')
