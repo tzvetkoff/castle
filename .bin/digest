@@ -1,0 +1,203 @@
+#!/bin/bash
+
+#
+# usage
+#
+
+usage() {
+  echo "Usage: $0 [options] <file>"
+  echo
+  echo 'Specific options:'
+  echo '  -a, --all         Calculate all digests in the order below (default)'
+  echo '  -q, --quiet       Do not print filename (only when specific algorithms are selected)'
+  echo
+  echo '  --crc32           Calculate CRC32'
+  echo '  --md5             Calculate MD5'
+  echo '  --sha1            Calculate SHA1'
+  echo '  --sha256          Calculate SHA256'
+  echo '  --sha384          Calculate SHA384'
+  echo '  --sha512          Calculate SHA512'
+  echo '  --rmd160          Calculate RMD160'
+  echo
+  echo 'Common options:'
+  echo '  -h, --help        Print this message and exit'
+  echo '  -v, --version     Print version information and exit'
+  exit ${1}
+}
+
+#
+# message digest helpers
+#
+
+_crc32() {
+  ${QUIET} || (${ALL} && echo -n 'crc32: ' || echo -n "${@}: ")
+
+  if type -p crc32 >/dev/null 2>&1; then
+    crc32 "${@}"
+  elif man cksum | grep -q 'Use historic algorithms'; then
+    cksum -o3 "${@}" | awk '{ printf "%08x\n", $1 }'
+  else
+    cat "$@" | gzip -c | tail -c8 | hexdump -n4 -e '"%08x\n"'
+  fi
+}
+
+_md5() {
+  ${QUIET} || (${ALL} && echo -n 'md5: ' || echo -n "${@}: ")
+
+  if type -p md5sum >/dev/null 2>&1; then
+    md5sum "${@}" | cut -d' ' -f1
+  elif type -p md5 >/dev/null 2>&1; then
+    md5 -q "${@}"
+  else
+    echo '(error)'
+  fi
+}
+
+_sha1() {
+  ${QUIET} || (${ALL} && echo -n 'sha1: ' || echo -n "${@}: ")
+
+  if type -p sha1sum >/dev/null 2>&1; then
+    sha1sum "${@}" | cut -d' ' -f1
+  elif type -p shasum >/dev/null 2>&1; then
+    shasum -a1 "${@}" | cut -d' ' -f1
+  elif type -p openssl >/dev/null 2>&1; then
+    openssl dgst -r -sha1 "${@}" | cut -d' ' -f1
+  else
+    echo '(error)'
+  fi
+}
+
+_sha256() {
+  ${QUIET} || (${ALL} && echo -n 'sha256: ' || echo -n "${@}: ")
+
+  if type -p sha256sum >/dev/null 2>&1; then
+    sha256sum "${@}" | cut -d' ' -f1
+  elif type -p shasum >/dev/null 2>&1; then
+    shasum -a256 "${@}" | cut -d' ' -f1
+  elif type -p openssl >/dev/null 2>&1; then
+    openssl dgst -r -sha256 "${@}" | cut -d' ' -f1
+  else
+    echo '(error)'
+  fi
+}
+
+_sha384() {
+  ${QUIET} || (${ALL} && echo -n 'sha384: ' || echo -n "${@}: ")
+
+  if type -p sha384sum >/dev/null 2>&1; then
+    sha384sum "${@}" | cut -d' ' -f1
+  elif type -p shasum >/dev/null 2>&1; then
+    shasum -a384 "${@}" | cut -d' ' -f1
+  elif type -p openssl >/dev/null 2>&1; then
+    openssl dgst -r -sha384 "${@}" | cut -d' ' -f1
+  else
+    echo '(error)'
+  fi
+}
+
+_sha512() {
+  ${QUIET} || (${ALL} && echo -n 'sha512: ' || echo -n "${@}: ")
+
+  if type -p sha512sum >/dev/null 2>&1; then
+    sha512sum "${@}" | cut -d' ' -f1
+  elif type -p shasum >/dev/null 2>&1; then
+    shasum -a512 "${@}" | cut -d' ' -f1
+  elif type -p openssl >/dev/null 2>&1; then
+    openssl dgst -r -sha512 "${@}" | cut -d' ' -f1
+  else
+    echo '(error)'
+  fi
+}
+
+_rmd160() {
+  ${QUIET} || (${ALL} && echo -n 'rmd160: ' || echo -n "${@}: ")
+
+  if type -p rmd160 >/dev/null 2>&1; then
+    rmd160 -q "${@}"
+  elif type -p openssl >/dev/null 2>&1; then
+    openssl dgst -r -rmd160 "${@}" | cut -d' ' -f1
+  else
+    echo '(error)'
+  fi
+}
+
+#
+# parse command line arguments
+#
+
+ALL='true'
+QUIET='false'
+CRC32='false'
+MD5='false'
+SHA1='false'
+SHA256='false'
+SHA384='false'
+SHA512='false'
+RMD160='false'
+
+PARSE='true'
+while [[ -n "${1}" ]]; do
+  if ${PARSE}; then
+    case "${1}" in
+      -h|--help)
+        usage 0;;
+      -v|--version)
+        echo '0.1.0'; exit;;
+
+      -a|--all)
+        ALL='true';;
+      -q|--quiet)
+        QUIET='true';;
+
+      --crc32)
+        ALL='false'; CRC32='true';;
+      --md5)
+        ALL='false'; MD5='true';;
+      --sha1)
+        ALL='false'; SHA1='true';;
+      --sha256)
+        ALL='false'; SHA256='true';;
+      --sha384)
+        ALL='false'; SHA384='true';;
+      --sha512)
+        ALL='false'; SHA512='true';;
+      --rmd160)
+        ALL='false'; RMD160='true';;
+
+      --)
+        PARSE='false';;
+      -*)
+        echo "${0}: invalid option: ${1}" >&2; echo >&2; usage 1 >&2;;
+      *)
+        ARGS+=("${1}");;
+    esac
+  else
+    ARGS+=("${1}")
+  fi
+
+  shift
+done
+
+set -- "${ARGS[@]}"
+
+#
+# check args
+#
+
+if [[ $# != 1 ]]; then
+  echo "$0: wrong number of arguments (given $#, expected 1)" >&2
+  echo >&2
+  usage 1 >&2
+fi
+
+#
+# do a run run
+#
+
+${ALL} || ${CRC32}  && _crc32  "${1}"
+${ALL} || ${MD5}    && _md5    "${1}"
+${ALL} || ${SHA1}   && _sha1   "${1}"
+${ALL} || ${SHA256} && _sha256 "${1}"
+${ALL} || ${SHA384} && _sha384 "${1}"
+${ALL} || ${SHA512} && _sha512 "${1}"
+${ALL} || ${RMD160} && _rmd160 "${1}"
