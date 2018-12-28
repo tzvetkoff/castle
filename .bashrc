@@ -142,12 +142,20 @@ prompt_command() {
       env="${env}{${grey}rb:${cyan}${rb#ruby-}${reset}}"
     fi
     # erlang
-    if [[ -z ${BASHRC_DISABLE_ENVMGR_ERLANG} && -n ${ERLANG_PREFIX} ]]; then
-      env="${env}{${grey}erl:${cyan}${ERLANG_PREFIX##*/}${reset}}"
+    if [[ -z ${BASHRC_DISABLE_ENVMGR_ERLANG} && -n ${ENVMGR_ERLANG_PREFIX} ]]; then
+      env="${env}{${grey}erl:${cyan}${ENVMGR_ERLANG_PREFIX##*/}${reset}}"
     fi
     # elixir
     if [[ -z ${BASHRC_DISABLE_ENVMGR_ELIXIR} && -n ${MIX_HOME} ]]; then
       env="${env}{${grey}ex:${cyan}${MIX_HOME##*/}${reset}}"
+    fi
+    # go
+    if [[ -z ${BASHRC_DISABLE_ENVMGR_GO} && -n ${ENVMGR_GO_PREFIX} ]]; then
+      env="${env}{${grey}go:${cyan}${ENVMGR_GO_PREFIX##*/}${reset}}"
+    fi
+    # node
+    if [[ -z ${BASHRC_DISABLE_ENVMGR_NODE} && -n ${NPM_CONFIG_PREFIX} ]]; then
+      env="${env}{${grey}node:${cyan}${NPM_CONFIG_PREFIX##*/}${reset}}"
     fi
   fi
 
