@@ -13,7 +13,7 @@ usage() {
   echo
   echo 'Options:'
   echo '  -c, --compression=C       Set compression to C (default: guess from extension)'
-  echo '  -t, --threads=N           Execute N parallel threads or processes (default: 4)'
+  echo '  -t, --threads=N           Execute N parallel threads or processes (default: 1)'
   echo '  -1 .. -9                  Set compression level (default: 9)'
   echo '  --fast                    Alias of -1'
   echo '  --best                    Alias of -9'

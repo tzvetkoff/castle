@@ -11,7 +11,7 @@ if [[ -z "${base}" ]]; then
   base="server"
 fi
 
-openssl genrsa -out ${base}.key 1024                                              || exit
+openssl genrsa -out ${base}.key 4096                                              || exit
 openssl rsa -in ${base}.key -out ${base}.pem                                      || exit
 openssl req -new -key ${base}.key -out ${base}.csr                                || exit
 openssl x509 -req -days 60 -in ${base}.csr -signkey ${base}.key -out ${base}.crt  || exit
