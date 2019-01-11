@@ -1,0 +1,64 @@
+#!/bin/bash
+
+#
+# usage
+#
+
+usage() {
+  echo "Usage: $0 [options] <file> [[options] file...]"
+  echo
+  echo 'Specific options:'
+  echo '  -a, --add         Add BOM'
+  echo '  -r, --remove      Remove BOM'
+  echo
+  echo 'Common options:'
+  echo '  -h, --help        Print this message and exit'
+  echo '  -v, --version     Print version information and exit'
+  exit ${1}
+}
+
+#
+# parse command line arguments
+#
+
+operation() {
+  echo "${0}: please set operation to one of -a/-r"
+  echo
+  usage 1
+}
+ARGS='false'
+
+PARSE='true'
+while [[ -n "${1}" ]]; do
+  if ${PARSE}; then
+    case "${1}" in
+      -h|--help)
+        usage 0;;
+      -v|--version)
+        echo '0.1.0'; exit;;
+
+      -a|--add)
+        operation() { ex -s -c 'set bomb' -c 'wq' "${1}"; };;
+      -r|--remove)
+        operation() { ex -s -c 'set nobomb' -c 'wq' "${1}"; };;
+
+      --)
+        PARSE='false';;
+      -*)
+        echo "${0}: invalid option: ${1}" >&2; echo >&2; usage 1 >&2;;
+
+      *)
+        ARGS='true'; operation "${1}";;
+    esac
+  else
+    ARGS='true'; operation "${1}"
+  fi
+
+  shift
+done
+
+if ! ${ARGS}; then
+  echo "${0}: wrong number of arguments (given 0, expected >= 1)" >&2
+  echo >&2
+  usage 1 >&2
+fi
