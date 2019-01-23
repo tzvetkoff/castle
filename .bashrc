@@ -24,46 +24,66 @@ export BASHRC="${BASH_SOURCE[0]}"
 # the prompt string
 #
 
+prompt_command_hooks=()
+
 prompt_command() {
-  # last command exit status
-  [[ ${?} -eq 0 ]] && local exc='\$' || local exc='\[\033[01;31m\]\$\[\033[0m\]'
+  for __prompt_command_hook in prompt_command_head prompt_command_user_host_pwd_hook "${prompt_command_hooks[@]}" prompt_command_tail; do
+    "${__prompt_command_hook}"
+  done
 
-  # colors
-  local reset='\[\033[0m\]'
-  local grey='\[\033[1;30m\]'
-  local red='\[\033[1;31m\]'
-  local green='\[\033[1;32m\]'
-  local yellow='\[\033[1;33m\]'
-  local blue='\[\033[1;34m\]'
-  local cyan='\[\033[0;36m\]'
+  PS1="${__prompt_string}"
+  unset __prompt_string __prompt_command_hook __prompt_string_head __prompt_string_tail
+}
 
-  # hostname & user
-  local host="${blue}${HOSTNAME%%.*}${reset}"
+#
+# head
+#
+
+prompt_command_head() {
+  [[ ${?} -eq 0 ]] && __prompt_string_tail='\$' || __prompt_string_tail='\[\033[01;31m\]\$\[\033[0m\]'
+}
+
+#
+# tail
+#
+
+prompt_command_tail() {
+  __prompt_string="${__prompt_string_head}[${__prompt_string})]${__prompt_string_tail} "
+}
+
+#
+# user@host(pwd) with some colors
+#
+
+prompt_command_user_host_pwd_hook() {
+  local reset='\[\033[0m\]' red='\[\033[1;31m\]' green='\[\033[1;32m\]' yellow='\[\033[1;33m\]' blue='\[\033[1;34m\]'
+
   [[ ${UID} -eq 0 ]] && local user="${red}${USER}${reset}" || local user="${green}${USER}${reset}"
+  local host="${blue}${HOSTNAME%%.*}${reset}"
 
-  # current directory
   local pwd="${PWD}"
   [[ "${pwd}" = ${HOME} || "${pwd}" = ${HOME}/* ]]  && pwd='~'"${PWD#${HOME}}"
   [[ "${pwd}" = /home/* ]]                          && pwd='~'"${pwd#/home/}"
   [[ "${pwd}" = /Users/* ]]                         && pwd='~'"${pwd#/Users/}"
   pwd="${yellow}${pwd}${reset}"
 
-  # scm statuses, programming language environments
-  local scm= env=
+  __prompt_string="${user}@${host}(${pwd}"    # hack: the missing ")" is added in the `tail`
+}
 
-  # avoid tree scans on home directory & add an option to disable them (mainly for slow disks &| large repos)
-  if [[ -z ${BASHRC_DISABLE_SCM} && "${dir}" != "${HOME}" ]]; then
-    # search for first .git/.svn/.hg in the tree
-    local dir="${PWD}" git_dir= svn_dir= hg_dir=
+#
+# git
+#
+
+prompt_command_git_hook() {
+  if [[ "${PWD}" != "${HOME}" ]]; then
+    local dir="${PWD}" git_dir=
     while [[ "${dir}" != '/' && -n "${dir}" ]]; do
-      [[ -z ${BASHRC_DISABLE_SCM_GIT} && -z ${git_dir} && -e "${dir}/.git" ]] && git_dir="${dir}/.git" && break
-      [[ -z ${BASHRC_DISABLE_SCM_SVN} && -z ${svn_dir} && -e "${dir}/.svn" ]] && svn_dir="${dir}/.svn" && break
-      [[ -z ${BASHRC_DISABLE_SCM_HG}  && -z ${hg_dir}  && -e "${dir}/.hg"  ]] && hg_dir="${dir}/.hg"   && break
+      [[ -z ${git_dir} && -e "${dir}/.git" ]] && git_dir="${dir}/.git" && break
       dir="${dir%/*}"
     done
 
-    # git
     if [[ -n ${git_dir} ]]; then
+      local reset='\[\033[0m\]' grey='\[\033[1;30m\]' red='\[\033[1;31m\]' green='\[\033[1;32m\]' yellow='\[\033[1;33m\]' blue='\[\033[1;34m\]'
       local branch= extra=
 
       if [[ -d "${git_dir}/rebase-apply" ]]; then
@@ -100,68 +120,116 @@ prompt_command() {
       if [[ -n ${branch} ]]; then
         local status=`git status --porcelain 2>/dev/null | head -1`
         if [[ -n ${status} ]]; then
-          scm="${scm}${reset}(${grey}git:${red}${branch}${reset}${extra})"
+          local git="${reset}(${grey}git:${red}${branch}${reset}${extra})"
         else
-          scm="${scm}${reset}(${grey}git:${green}${branch}${reset}${extra})"
+          local git="${reset}(${grey}git:${green}${branch}${reset}${extra})"
         fi
       fi
-    fi
 
-    # svn
+      __prompt_string="${__prompt_string}${git}"
+    fi
+  fi
+}
+
+[[ -z ${BASHRC_DISABLE_GIT} ]] && prompt_command_hooks+=('prompt_command_git_hook')
+
+#
+# svn
+#
+
+prompt_command_svn_hook() {
+  if [[ "${PWD}" != "${HOME}" ]]; then
+    local dir="${PWD}" svn_dir=
+    while [[ "${dir}" != '/' && -n "${dir}" ]]; do
+      [[ -z ${svn_dir} && -e "${dir}/.svn" ]] && svn_dir="${dir}/.svn" && break
+      dir="${dir%/*}"
+    done
+
     if [[ -n ${svn_dir} ]]; then
+      local reset='\[\033[0m\]' grey='\[\033[1;30m\]' red='\[\033[1;31m\]' green='\[\033[1;32m\]'
+
       local revision=`svn info 2>/dev/null | grep Revision: | cut -d' ' -f2`
       if [[ -n ${revision} ]]; then
         local status=`svn status 2>/dev/null | head -1`
         if [[ -n ${status} ]]; then
-          scm="${scm}${reset}(${grey}svn:${red}r${revision}${reset})"
+          local svn="${reset}(${grey}svn:${red}r${revision}${reset})"
         else
-          scm="${scm}${reset}(${grey}svn:${green}r${revision}${reset})"
+          local svn="${reset}(${grey}svn:${green}r${revision}${reset})"
         fi
       fi
-    fi
 
-    # mercurial
+      __prompt_string="${__prompt_string}${svn}"
+    fi
+  fi
+}
+
+[[ -z ${BASHRC_DISABLE_SVN} ]] && prompt_command_hooks+=('prompt_command_svn_hook')
+
+#
+# mercurial
+#
+
+prompt_command_hg_hook() {
+  if [[ "${PWD}" != "${HOME}" ]]; then
+    local dir="${PWD}" hg_dir=
+    while [[ "${dir}" != '/' && -n "${dir}" ]]; do
+      [[ -z ${hg_dir} && -e "${dir}/.hg"  ]] && hg_dir="${dir}/.hg" && break
+      dir="${dir%/*}"
+    done
+
     if [[ -n ${hg_dir} ]]; then
+      local reset='\[\033[0m\]' grey='\[\033[1;30m\]' red='\[\033[1;31m\]' green='\[\033[1;32m\]'
+
       local branch=`hg branch 2>/dev/null`
       if [[ -n ${branch} ]]; then
         local status=`hg status 2>/dev/null | head -1`
         if [[ -n ${status} ]]; then
-          scm="${scm}${reset}(${grey}hg:${red}${branch}${reset})"
+          local hg="${reset}(${grey}hg:${red}${branch}${reset})"
         else
-          scm="${scm}${reset}(${grey}hg:${green}${branch}${reset})"
+          local hg="${reset}(${grey}hg:${green}${branch}${reset})"
         fi
       fi
+
+      __prompt_string="${__prompt_string}${hg}"
     fi
   fi
-
-  # environments
-  if [[ -z ${BASHRC_DISABLE_ENVMGR} ]]; then
-    # ruby
-    if [[ -z ${BASHRC_DISABLE_ENVMGR_RUBY} && -n ${GEM_HOME} && ${GEM_HOME} != *@global ]]; then
-      local rb="${GEM_HOME##*/}"
-      env="${env}{${grey}rb:${cyan}${rb#ruby-}${reset}}"
-    fi
-    # erlang
-    if [[ -z ${BASHRC_DISABLE_ENVMGR_ERLANG} && -n ${ENVMGR_ERLANG_PREFIX} ]]; then
-      env="${env}{${grey}erl:${cyan}${ENVMGR_ERLANG_PREFIX##*/}${reset}}"
-    fi
-    # elixir
-    if [[ -z ${BASHRC_DISABLE_ENVMGR_ELIXIR} && -n ${MIX_HOME} ]]; then
-      env="${env}{${grey}ex:${cyan}${MIX_HOME##*/}${reset}}"
-    fi
-    # go
-    if [[ -z ${BASHRC_DISABLE_ENVMGR_GO} && -n ${ENVMGR_GO_PREFIX} ]]; then
-      env="${env}{${grey}go:${cyan}${ENVMGR_GO_PREFIX##*/}${reset}}"
-    fi
-    # node
-    if [[ -z ${BASHRC_DISABLE_ENVMGR_NODE} && -n ${NPM_CONFIG_PREFIX} ]]; then
-      env="${env}{${grey}node:${cyan}${NPM_CONFIG_PREFIX##*/}${reset}}"
-    fi
-  fi
-
-  # finally, set the variable
-  PS1="${reset}[${user}@${host}(${pwd}${scm}${env})]${exc} "
 }
+
+[[ -z ${BASHRC_DISABLE_HG} ]] && prompt_command_hooks+=('prompt_command_hg_hook')
+
+#
+# envmgr
+#
+
+prompt_command_envmgr_hook() {
+  local reset='\[\033[0m\]' grey='\[\033[1;30m\]' cyan='\[\033[0;36m\]'
+  local env=
+
+  if [[ -z ${BASHRC_DISABLE_ENVMGR_RUBY} && -n ${GEM_HOME} && ${GEM_HOME} != *@global ]]; then
+    local rb="${GEM_HOME##*/}"
+    env="${env}{${grey}rb:${cyan}${rb#ruby-}${reset}}"
+  fi
+
+  if [[ -z ${BASHRC_DISABLE_ENVMGR_ERLANG} && -n ${ENVMGR_ERLANG_PREFIX} ]]; then
+    env="${env}{${grey}erl:${cyan}${ENVMGR_ERLANG_PREFIX##*/}${reset}}"
+  fi
+
+  if [[ -z ${BASHRC_DISABLE_ENVMGR_ELIXIR} && -n ${MIX_HOME} ]]; then
+    env="${env}{${grey}ex:${cyan}${MIX_HOME##*/}${reset}}"
+  fi
+
+  if [[ -z ${BASHRC_DISABLE_ENVMGR_GO} && -n ${ENVMGR_GO_PREFIX} ]]; then
+    env="${env}{${grey}go:${cyan}${ENVMGR_GO_PREFIX##*/}${reset}}"
+  fi
+
+  if [[ -z ${BASHRC_DISABLE_ENVMGR_NODE} && -n ${NPM_CONFIG_PREFIX} ]]; then
+    env="${env}{${grey}node:${cyan}${NPM_CONFIG_PREFIX##*/}${reset}}"
+  fi
+
+  __prompt_string="${__prompt_string}${env}"
+}
+
+[[ -z ${BASHRC_DISABLE_ENVMGR} ]] && prompt_command_hooks+=('prompt_command_envmgr_hook')
 
 PS1='\u@\h:\w\$ '
 PROMPT_COMMAND=prompt_command
