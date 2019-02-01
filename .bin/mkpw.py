@@ -13,7 +13,7 @@ if __name__ == '__main__':
 	args = parser.parse_args()
 
 	if args.strong:
-		args.charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*+-'
+		args.charset = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*+-'
 
 	for x in range(0, args.count):
 		print ''.join( [args.charset[ randint(0, len(args.charset)-1) ] for x in range(0, args.length)] )
