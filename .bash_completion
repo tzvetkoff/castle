@@ -5,12 +5,3 @@
 complete -F _ssh sshpass sshrc ssh-guest sshrc-guest
 # Use SCP completions for `scppass' & `scp-guest`
 complete -F _scp -o nospace scppass scp-guest
-
-# Even more completions
-if [[ -d "${HOME}/.bash_completion.d" ]]; then
-  shopt -s nullglob
-  for file in "${HOME}/.bash_completion.d"/*; do
-    source "${file}"
-  done
-  shopt -u nullglob
-fi

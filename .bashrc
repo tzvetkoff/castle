@@ -423,12 +423,26 @@ export PYTHONSTARTUP="${HOME}/.pythonrc"
 # bash completion
 #
 
-if [[ -f /usr/local/etc/bash_completion ]]; then
-  source /usr/local/etc/bash_completion
-elif [[ -f /usr/local/share/bash-completion/bash_completion ]]; then
-  source /usr/local/share/bash-completion/bash_completion
-elif [[ -f /etc/bash_completion ]]; then
-  source /etc/bash_completion
+if [[ -z "${BASH_COMPLETION_VERSINFO}" ]]; then
+  if [[ -f /usr/local/etc/bash_completion ]]; then
+    source /usr/local/etc/bash_completion
+  elif [[ -f /usr/local/share/bash-completion/bash_completion ]]; then
+    source /usr/local/share/bash-completion/bash_completion
+  elif [[ -f /etc/bash_completion ]]; then
+    source /etc/bash_completion
+  fi
+fi
+
+#
+# local completions
+#
+
+if [[ -d "${HOME}/.bash_completion.d" ]]; then
+  shopt -s nullglob
+  for file in "${HOME}/.bash_completion.d"/*; do
+    source "${file}"
+  done
+  shopt -u nullglob
 fi
 
 #
