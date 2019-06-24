@@ -437,12 +437,14 @@ fi
 # local completions
 #
 
-if [[ -d "${HOME}/.bash_completion.d" ]]; then
-  shopt -s nullglob
-  for file in "${HOME}/.bash_completion.d"/*; do
-    source "${file}"
-  done
-  shopt -u nullglob
+if [[ -n "${BASH_COMPLETION_VERSINFO}" ]]; then
+  if [[ -d "${HOME}/.bash_completion.d" ]]; then
+    shopt -s nullglob
+    for file in "${HOME}/.bash_completion.d"/*; do
+      source "${file}"
+    done
+    shopt -u nullglob
+  fi
 fi
 
 #
