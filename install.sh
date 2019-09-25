@@ -95,7 +95,7 @@ create_home_gitconfig() {
     fi
   fi
 
-  git config --global core.hooksPath "\$GIT_DIR/hooks-$(cat /dev/urandom | tr -dc '0-9a-f' | fold -w 64 | head -n 1)"
+  git config --global core.hooksPath "\$GIT_DIR/hooks-$(od -An -N32 -tx -w64 /dev/urandom | tr -d '\n ')"
   git config --global user.name 'Latchezar Tzvetkoff'
   git config --global user.email 'latchezar'$'\100''tzvetkoff'$'\056''net'
   git config --global color.ui 'true'
