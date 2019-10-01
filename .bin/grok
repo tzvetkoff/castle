@@ -1,0 +1,106 @@
+#!/bin/bash
+
+#
+# Usage
+#
+
+usage() {
+  echo 'Usage:'
+  echo "  ${0} [options]"
+  echo
+  echo 'Options:'
+  echo '  -h, --help            Print this message'
+  echo '  --server=S            SSH server (required if default is not set)'
+  echo '  --local-port=P        Set local port (required)'
+  echo '  --remote-port=P       Set remote port (optional)'
+  echo '  --save-default        Save server option to ~/.grok/server'
+  exit ${1}
+}
+
+#
+# Default values
+#
+
+SERVER=''
+[[ -f "${HOME}/.grok/server" ]] && SERVER="$(<"${HOME}/.grok/server")"
+LOCAL_PORT=''
+REMOTE_PORT=''
+SAVE_DEFAULT='false'
+
+ARGS=()
+PARSE='true'
+
+#
+# Parse arguments
+#
+
+while [[ -n "${1}" ]]; do
+  if ${PARSE}; then
+    case "${1}" in
+      -h|--help)
+        usage 0;;
+
+      --server)
+        SERVER="${2}"; shift;;
+      --server=*)
+        SERVER="${1:9}";;
+
+      --local-port)
+        LOCAL_PORT="${2}"; shift;;
+      --local-port=*)
+        LOCAL_PORT="${1:13}";;
+
+      --remote-port)
+        REMOTE_PORT="${2}"; shift;;
+      --remote-port=*)
+        REMOTE_PORT="${1:14}";;
+
+      --save-default)
+        SAVE_DEFAULT='true';;
+
+      --)
+        PARSE='false';;
+      -*)
+        echo "${0}: invalid option: ${1}" >&2; echo >&2; usage 1 >&2;;
+      *)
+        ARGS+=("${1}");;
+    esac
+  else
+    ARGS+=("${1}")
+  fi
+
+  shift
+done
+
+#
+# Check options.
+#
+
+if [[ -z "${LOCAL_PORT}" ]]; then
+  echo "${0}: missing required option --local-port" >&2
+  echo >&2
+  usage 1
+fi
+
+[[ -z "${REMOTE_PORT}" ]] && REMOTE_PORT="${LOCAL_PORT}"
+
+if [[ -z "${SERVER}" ]]; then
+  echo "${0}: missing required option --server" >&2
+  echo >&2
+  usage 1
+fi
+
+#
+# Store default.
+#
+
+if ${SAVE_DEFAULT}; then
+  mkdir -p "${HOME}/.grok"
+  echo -n "${SERVER}" > "${HOME}/.grok/server"
+fi
+
+#
+# Do the magic.
+#
+
+ssh -TnNqR "${REMOTE_PORT}:localhost:${LOCAL_PORT}" "${ARGS[@]}" "${SERVER}"
