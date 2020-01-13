@@ -73,6 +73,4 @@ create_home_symlinks() {
 
 if [[ "${BASH_SOURCE[0]}" = "${0}" ]]; then
   create_home_symlinks
-  create_home_gitconfig
-  create_home_mycnf
 fi
