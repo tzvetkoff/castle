@@ -1,5 +1,5 @@
 xterm-256color|xterm with 256 colors and clear:\
 	:Co#256:pa#32767:\
 	:AB=\E[48;5;%dm:AF=\E[38;5;%dm:\
-	:clear=\E[H\E[2J\E[3J,
+	:clear=\E[H\E[2J\E[3J:\
 	:tc=xterm-new:tc=xterm-clear:
