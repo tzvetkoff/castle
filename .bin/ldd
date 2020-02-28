@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-
-if [[ -x /usr/bin/ldd ]]; then
-	exec /usr/bin/ldd $*
-else
-	otool -L $*
-fi

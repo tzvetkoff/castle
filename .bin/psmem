@@ -1,0 +1,13 @@
+#!/bin/bash
+
+psmem_command(){
+  ps -eo size,pid,user,command --sort -size |\
+    awk '{ hr=$1/1024 ; printf("%13.2fmb ",hr) } { for ( x=4 ; x<=NF ; x++ ) { printf("%s ",$x) } print "" }' |\
+    grep -v '0.00 Mb \['
+}
+
+if [[ -n "${1}" ]]; then
+  psmem_command | grep "${1}" | grep -v "grep ${1}" | awk '{ sum += $1 } END { print sum }'
+else
+  psmem_command
+fi

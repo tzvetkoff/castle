@@ -18,13 +18,24 @@ usage() {
 }
 
 #
+# find stream editor
+#
+if type -p vim >/dev/null; then
+  ex='vim -E'
+elif type -p ex >/dev/null; then
+  ex='ex'
+else
+  echo "${0}: could not find vim/ex" >&2
+fi
+
+#
 # parse command line arguments
 #
 
 operation() {
-  echo "${0}: please set operation to one of -a/-r"
-  echo
-  usage 1
+  echo "${0}: please set operation to one of -a/-r" >&2
+  echo >&2
+  usage 1 >&2
 }
 ARGS='false'
 
@@ -38,9 +49,9 @@ while [[ -n "${1}" ]]; do
         echo '0.1.0'; exit;;
 
       -a|--add)
-        operation() { ex -s -c 'set bomb' -c 'wq' "${1}"; };;
+        operation() { ${ex} -s -c 'set bomb' -c 'wq' "${1}"; };;
       -r|--remove)
-        operation() { ex -s -c 'set nobomb' -c 'wq' "${1}"; };;
+        operation() { ${ex} -s -c 'set nobomb' -c 'wq' "${1}"; };;
 
       --)
         PARSE='false';;
