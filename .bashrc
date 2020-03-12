@@ -75,6 +75,8 @@ prompt_command_user_host_pwd_hook() {
 #
 
 prompt_command_git_hook() {
+  [[ -n ${BASHRC_DISABLE_GIT} ]] && return
+
   if [[ "${PWD}" != "${HOME}" ]]; then
     local dir="${PWD}" git_dir=
     while [[ "${dir}" != '/' && -n "${dir}" ]]; do
@@ -138,6 +140,8 @@ prompt_command_git_hook() {
 #
 
 prompt_command_svn_hook() {
+  [[ -n ${BASHRC_DISABLE_SVN} ]] && return
+
   if [[ "${PWD}" != "${HOME}" ]]; then
     local dir="${PWD}" svn_dir=
     while [[ "${dir}" != '/' && -n "${dir}" ]]; do
@@ -170,6 +174,8 @@ prompt_command_svn_hook() {
 #
 
 prompt_command_hg_hook() {
+  [[ -n ${BASHRC_DISABLE_HG} ]] && return
+
   if [[ "${PWD}" != "${HOME}" ]]; then
     local dir="${PWD}" hg_dir=
     while [[ "${dir}" != '/' && -n "${dir}" ]]; do
@@ -202,6 +208,8 @@ prompt_command_hg_hook() {
 #
 
 prompt_command_envmgr_hook() {
+  [[ -n ${BASHRC_DISABLE_ENVMGR} ]] && return
+
   local reset='\[\033[0m\]' grey='\[\033[1;30m\]' cyan='\[\033[0;36m\]'
   local env=
 
