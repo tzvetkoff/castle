@@ -1,4 +1,5 @@
 #!/usr/bin/env -S expect --
+# vim: ft=tcl ts=2 et
 
 # Command line usage
 proc usage {stream exit_code} {
