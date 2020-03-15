@@ -373,6 +373,9 @@ alias ssh-guest='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no
 alias sshrc-guest='sshrc -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
 alias scp-guest='scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
 
+# misc
+alias screen='unset BASHRC; screen'
+
 # macosx
 if [[ ${OSTYPE} = darwin* ]]; then
   alias htop='sudo htop'
