@@ -7,7 +7,7 @@ psmem_command(){
 }
 
 if [[ -n "${1}" ]]; then
-  psmem_command | grep "${1}" | grep -v "grep ${1}" | awk '{ sum += $1 } END { print sum }'
+  psmem_command | grep -E "${1}" | grep -v 'grep ' | awk '{ sum += $1 } END { print sum }'
 else
   psmem_command
 fi
