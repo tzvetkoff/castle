@@ -1,9 +1,9 @@
 #!/bin/bash
 
-psmem_command(){
+psmem_command() {
   ps -eo size,pid,user,command --sort -size |\
     awk '{ hr=$1/1024 ; printf("%13.2fmb ",hr) } { for ( x=4 ; x<=NF ; x++ ) { printf("%s ",$x) } print "" }' |\
-    grep -v '0.00 Mb \['
+    grep -v '0.00mb \['
 }
 
 if [[ -n "${1}" ]]; then
