@@ -8,15 +8,10 @@ usage() {
   echo 'Usage:'
   echo "  ${0} [options] <archive.ext> <files...>"
   echo
-  echo '  * Extension can be on of: tar tar.gz tgz tar.bz2 tbz2 tar.lzma tar.xz txz'
-  echo '  * For parallel compression either `pigz`, `pbzip2` or `xz >= 5.2` is required'
+  echo '  * Extension can be on of: tar tar.gz tgz tar.bz2 tbz2 tar.lzma tar.xz txz .tar.zst tzst'
   echo
   echo 'Options:'
-  echo '  -c, --compression=C       Set compression to C (default: guess from extension)'
   echo '  -t, --threads=N           Execute N parallel threads or processes (default: 1)'
-  echo '  -1 .. -9                  Set compression level (default: 9)'
-  echo '  --fast                    Alias of -1'
-  echo '  --best                    Alias of -9'
   exit ${1}
 }
 
@@ -24,8 +19,6 @@ usage() {
 # Default values
 #
 
-COMPRESSION=
-COMPRESSION_LEVEL=9
 THREADS=1
 ARGS=()
 PARSE=true
@@ -40,26 +33,12 @@ while [[ -n "${1}" ]]; do
       -h|--help)
         usage 0;;
 
-      -c|--compression)
-        COMPRESSION="${2}"; shift;;
-      --compression=*)
-        COMPRESSION="${1:14}";;
-      -c*)
-        COMPRESSION="${1:2}";;
-
-      -t|--threads)
+      -t|-T|--threads)
         THREADS="${2}"; shift;;
       --threads=*)
         THREADS="${1:10}";;
-      -t*)
+      -t*|-T*)
         THREADS="${1:2}";;
-
-      -[1-9])
-        COMPRESSION_LEVEL="${1:1}";;
-      --fast)
-        COMPRESSION_LEVEL=1;;
-      --best)
-        COMPRESSION_LEVEL=9;;
 
       --)
         PARSE=false;;
@@ -90,6 +69,10 @@ if [[ -z "${ARCHIVE}" ]]; then
   usage 1 >&2
 fi
 
+#
+# Check file names
+#
+
 if [[ -z "${1}" ]]; then
   echo "${0}: you should provide at least one more argument"
   echo >&2
@@ -107,42 +90,48 @@ if [[ ! "${THREADS}" =~ ^[0-9]+$ ]]; then
 fi
 
 #
-# Check compression
+# Check compression & level
 #
 
 COMPRESSOR=
 COMPRESSOR_ARGS=
 
-if [[ -z "${COMPRESSION}" ]]; then
-  COMPRESSION="${ARCHIVE##*.}"
-fi
-
+COMPRESSION="${ARCHIVE##*.}"
 case "${COMPRESSION}" in
   gz|tgz)
     if [[ ${THREADS} -gt 1 ]]; then
       COMPRESSOR=pigz
-      COMPRESSOR_ARGS=("-p${THREADS}" "-${COMPRESSION_LEVEL}")
+      COMPRESSOR_ARGS=("-p${THREADS}" '-9')
     else
       COMPRESSOR=gzip
-      COMPRESSOR_ARGS=("-${COMPRESSION_LEVEL}")
+      COMPRESSOR_ARGS=('-9')
     fi
     ;;
   bz2|tbz2)
     if [[ ${THREADS} -gt 1 ]]; then
       COMPRESSOR=pbzip2
-      COMPRESSOR_ARGS=("-p${THREADS}" "-${COMPRESSION_LEVEL}")
+      COMPRESSOR_ARGS=("-p${THREADS}" '-9')
     else
       COMPRESSOR=bzip2
-      COMPRESSOR_ARGS=("-${COMPRESSION_LEVEL}")
+      COMPRESSOR_ARGS=('-9')
     fi
     ;;
   lzma|xz|txz)
     if [[ ${THREADS} -gt 1 ]]; then
       COMPRESSOR=xz
-      COMPRESSOR_ARGS=("-T${THREADS}" "-${COMPRESSION_LEVEL}")
+      COMPRESSOR_ARGS=("-T${THREADS}" '-9')
     else
       COMPRESSOR=xz
-      COMPRESSOR_ARGS=("-${COMPRESSION_LEVEL}")
+      COMPRESSOR_ARGS=('-9')
+    fi
+    ;;
+  zst|tzst)
+    if [[ ${THREADS} -gt 1 ]]; then
+      COMPRESSOR=zstd
+      COMPRESSOR_ARGS=("-T${THREADS}" '-19')
+    else
+      COMPRESSOR=zstd
+      COMPRESSOR_ARGS=('-19')
     fi
     ;;
   tar)
