@@ -1,6 +1,6 @@
 ## Colouring for PO files.
 
-syntax "po" "\.pot?$"
+syntax po "\.pot?$"
 comment "#"
 
 # Comments.
@@ -12,7 +12,7 @@ color brightmagenta "\<(Project\-Id\-Version|Report\-Msgid\-Bugs\-To|Last\-Trans
 color cyan "\<(POT\-Creation\-Date|PO\-Revision\-Date|MIME\-Version|Content\-Type|Content\-Transfer\-Encoding)\>"
 # Encodings and numbers.
 color yellow "\<(UTF|ISO|Windows|Mac|IBM)-[0-9]+"
-color yellow "[0-9]|pre[0-9]|[0-9]bit"
+color yellow "\<((pre|rc)?[0-9]+|[0-9]bit)\>"
 # Msgids.
 color brightblue "^(msgid|msgid_plural|msgstr)\>"
 # Tags.
@@ -20,12 +20,12 @@ color red " fuzzy(,|$)"
 color yellow " (no-)?[-[:alpha:]]+-format(,|$)"
 # Format specifiers.
 color brightmagenta "%([1-9]\$)?[a-z]*"
-# Quotes and newlines.
+# Quotes and escaped characters.
 color yellow "\""
-color cyan "\\n"
+color cyan "\\([abcefnrtv"\]|x[0-9abcdefABCDEF]{2}|[0-7]{3})"
 # Reminders.
-color brightwhite,white "(FIXME|TODO|XXX)"
+color brightwhite,yellow "(FIXME|TODO|XXX)"
 # Obsolete strings.
-color red "#~.*$"
+color red "#~.*"
 # Trailing whitespace.
 color ,green "[[:space:]]+$"

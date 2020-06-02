@@ -1,6 +1,6 @@
 ## Here is an example for Groovy.
 
-syntax "groovy" "\.groovy$"
+syntax groovy "\.groovy$"
 header "^#!.*groovy"
 
 # Keywords.

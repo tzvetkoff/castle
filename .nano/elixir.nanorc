@@ -1,6 +1,6 @@
 ## Here's an example for Elixir
 
-syntax "elixir" "\.ex|\.exs$"
+syntax elixir "\.ex|\.exs$"
 header "^#!.*elixir[-0-9._]*"
 linter mix dogma
 comment "#"

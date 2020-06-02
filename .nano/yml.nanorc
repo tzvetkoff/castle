@@ -1,4 +1,4 @@
-syntax "yml" "\.ya?ml$"
+syntax yml "\.ya?ml$"
 
 ## default
 color brightyellow ".*"
