@@ -1,7 +1,8 @@
 "
 " ~/.vimrc
 "
-" Author      : Latchezar "Polizei" Tzvetkoff <latchezar@tzvetkoff.net>
+" Author: Latchezar "Polizei" Tzvetkoff <latchezar@tzvetkoff.net>
+" vim: ft=vim ts=2 et
 "
 
 " Do nothing if started as `evim'
@@ -39,8 +40,10 @@ set ruler           " show the cursor position all the time
 set showcmd         " display incomplete commands
 set incsearch       " do incremental searching
 set tabstop=4       " set hard tab to 4 spaces
-set softtabstop=4	" and soft tab too
+set softtabstop=4   " and soft tab too
 set noexpandtab     " never expand tabs (hence the spaces in this vimrc)
+set textwidth=0     " don't enforce text width
+set wrapmargin=0    " don't enforce text wrap
 
 " Don't use Ex mode, use Q for formatting
 map Q gq
@@ -81,9 +84,6 @@ if has("autocmd")
   augroup vimrcEx
   au!
 
-  " For all text files set 'textwidth' to 78 characters.
-  autocmd FileType text setlocal textwidth=78
-
   " When editing a file, always jump to the last known cursor position.
   " Don't do it when the position is invalid or when inside an event handler
   " (happens when dropping a file on gvim).
@@ -94,21 +94,22 @@ if has("autocmd")
     \   exe "normal! g`\"" |
     \ endif
 
+  " Load autocomplete stuff
+  autocmd FileType *
+    \ execute "setlocal complete+=k/usr/share/vim/".
+    \   "vim".v:version[0].v:version[2]."/syntax/".getbufvar("%", "current_syntax").".vim"
+
   augroup END
 else
   set autoindent        " always set autoindenting on
-endif " has("autocmd")
+endif
 
 " Convenient command to see the difference between the current buffer and the
 " file it was loaded from, thus the changes you made.
 " Only define it when not defined already.
 if !exists(":DiffOrig")
-  command DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis
-		  \ | wincmd p | diffthis
+  command DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis | wincmd p | diffthis
 endif
-
-" Load all autocomplete stuff
-autocmd FileType * execute "setlocal complete+="."k/usr/share/vim/vim72/syntax/".getbufvar("%","current_syntax").".vim"
 
 " Make it behave like most ides out there
 set completeopt=longest,menuone
@@ -130,7 +131,7 @@ inoremap <Nul> <C-R>=Completion_CtrlSpace()<CR>
 "imap <C-@> <C-Space>
 
 " Search toggle
-"nnoremap <silent> <C-s> :set hlsearch!<CR> 
+"nnoremap <silent> <C-s> :set hlsearch!<CR>
 
 " Smart HOME key
 function! SmartHome()
