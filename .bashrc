@@ -327,6 +327,8 @@ else
   alias ls='ls -AF --color=auto'
 fi
 
+export QUOTING_STYLE='literal'
+
 alias ll='ls -hAlF'
 alias li='ls -hAlFi'
 

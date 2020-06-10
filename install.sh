@@ -1,6 +1,14 @@
 #!/bin/bash
 
 #
+# dirs to create @ ~/
+#
+
+HOME_DIRS=(\
+  .bashrc.d         \
+)
+
+#
 # files to symlink @ ~/
 #
 
@@ -8,6 +16,8 @@ HOME_SYMLINKS=(\
   .aprc             \
   .bash_profile     \
   .bashrc           \
+  .bashrc.d/go      \
+  .bashrc.d/k8s     \
   .bash_completion  \
   .bin              \
   .gemrc            \
@@ -58,6 +68,17 @@ QUESTION() {
   else
     return 1
   fi
+}
+
+#
+# create dirs @ ~/
+#
+
+create_home_dirs() {
+  for dir in "${HOME_DIRS[@]}"; do
+    echo -e "${COLOR_GREEN}mkdir${COLOR_WHITE} ${HOME}/${dir}"
+    mkdir -p "${HOME}/${dir}"
+  done
 }
 
 #
@@ -138,6 +159,7 @@ EOF
 #
 
 if [[ "${BASH_SOURCE[0]}" = "${0}" ]]; then
+  create_home_dirs
   create_home_symlinks
   create_home_gitconfig
   create_home_mycnf
