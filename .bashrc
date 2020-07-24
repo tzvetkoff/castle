@@ -27,6 +27,7 @@ export BASHRC="${BASH_SOURCE[0]}"
 prompt_command_hooks=()
 
 prompt_command() {
+  unset __prompt_string __prompt_command_hook __prompt_string_head __prompt_string_tail
   for __prompt_command_hook in prompt_command_head prompt_command_user_host_pwd_hook "${prompt_command_hooks[@]}" prompt_command_tail; do
     "${__prompt_command_hook}"
   done
@@ -41,6 +42,7 @@ prompt_command() {
 
 prompt_command_head() {
   [[ ${?} -eq 0 ]] && __prompt_string_tail='\$' || __prompt_string_tail='\[\033[01;31m\]\$\[\033[0m\]'
+  __prompt_string_head='\[\033[0m\]'
 }
 
 #
