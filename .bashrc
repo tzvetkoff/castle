@@ -262,8 +262,9 @@ icon_name_and_window_title() {
     echo -ne "\033]1;${host_icon_name}bash\007"
     echo -ne "\033]2;${USER}@${host_window_title}:${pwd}\007"
   else
-    echo -ne "\033]1;${host_icon_name}${BASH_COMMAND%% *}\007"
-    echo -ne "\033]2;${USER}@${host_window_title}:${pwd} > $BASH_COMMAND\007"
+    local bash_command="${BASH_COMMAND//\\/\\\\}"
+    echo -ne "\033]1;${host_icon_name}${bash_command%% *}\007"
+    echo -ne "\033]2;${USER}@${host_window_title}:${pwd} > ${bash_command}\007"
   fi
 }
 
