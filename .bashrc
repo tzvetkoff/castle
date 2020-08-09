@@ -379,6 +379,7 @@ alias scp-guest='scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no
 
 # misc
 alias screen='unset BASHRC; screen'
+alias tmux='unset BASHRC; tmux'
 
 # macosx
 if [[ ${OSTYPE} = darwin* ]]; then

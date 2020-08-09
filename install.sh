@@ -27,6 +27,7 @@ HOME_SYMLINKS=(\
   .pythonrc         \
   .vimrc            \
   .vim              \
+  .tmux.conf        \
 )
 
 #
