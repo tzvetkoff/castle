@@ -27,7 +27,6 @@ export BASHRC="${BASH_SOURCE[0]}"
 prompt_command_hooks=()
 
 prompt_command() {
-  unset __prompt_string __prompt_command_hook __prompt_string_head __prompt_string_tail
   for __prompt_command_hook in prompt_command_head prompt_command_user_host_pwd_hook "${prompt_command_hooks[@]}" prompt_command_tail; do
     "${__prompt_command_hook}"
   done
