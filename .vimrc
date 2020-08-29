@@ -44,6 +44,8 @@ set softtabstop=4   " and soft tab too
 set noexpandtab     " never expand tabs (hence the spaces in this vimrc)
 set textwidth=0     " don't enforce text width
 set wrapmargin=0    " don't enforce text wrap
+set cursorline      " highlight current line
+set nofoldenable    " disable code folding
 
 " Don't use Ex mode, use Q for formatting
 map Q gq
@@ -71,9 +73,6 @@ colorscheme solarized
 
 " Also use solarized for airline.
 let g:airline_theme = 'solarized'
-
-" Fix solarized just a little bit.
-hi LineNr ctermbg=234
 
 " Only do this part when compiled with support for autocommands.
 if has("autocmd")
