@@ -8,9 +8,10 @@ usage() {
   echo 'Usage:'
   echo "  ${0} [options] <archive.ext> <files...>"
   echo
-  echo '  * Extension can be on of: tar tar.gz tgz tar.bz2 tbz2 tar.lzma tar.xz txz .tar.zst tzst'
+  echo '  * Known extensions: [tar tar.gz tgz tar.bz2 tbz2 tar.lzma tar.xz txz tar.zst tzst]'
   echo
   echo 'Options:'
+  echo '  -c, --compression=C       Set compression to C (default: guess from extension)'
   echo '  -t, --threads=N           Execute N parallel threads or processes (default: 1)'
   exit ${1}
 }
@@ -19,19 +20,27 @@ usage() {
 # Default values
 #
 
+COMPRESSION=
 THREADS=1
 ARGS=()
-PARSE=true
 
 #
 # Parse arguments
 #
 
+PARSE=true
 while [[ -n "${1}" ]]; do
   if ${PARSE}; then
     case "${1}" in
       -h|--help)
         usage 0;;
+
+      -c|--compression)
+        COMPRESSION="${2}"; shift;;
+      --compression=*)
+        COMPRESSION="${1:14}";;
+      -c*)
+        COMPRESSION="${1:2}";;
 
       -t|-T|--threads)
         THREADS="${2}"; shift;;
@@ -57,37 +66,17 @@ done
 set -- "${ARGS[@]}"
 
 #
-# Check archive name
+# Check positional arguments
 #
+
+if [[ ${#} -lt 2 ]]; then
+  echo "${0}: wrong number of arguments (given ${#}, expected >= 2)" >&2
+  echo >&2
+  usage 1 >&2
+fi
 
 ARCHIVE="${1}"
 shift
-
-if [[ -z "${ARCHIVE}" ]]; then
-  echo "${0}: missing required argument" >&2
-  echo >&2
-  usage 1 >&2
-fi
-
-#
-# Check file names
-#
-
-if [[ -z "${1}" ]]; then
-  echo "${0}: you should provide at least one more argument"
-  echo >&2
-  usage 1 >&2
-fi
-
-#
-# Check threads value
-#
-
-if [[ ! "${THREADS}" =~ ^[0-9]+$ ]]; then
-  echo "${0}: invalid threads value: ${THREADS}" >&2
-  echo >&2
-  exit 1
-fi
 
 #
 # Check compression & level
@@ -96,7 +85,8 @@ fi
 COMPRESSOR=
 COMPRESSOR_ARGS=
 
-COMPRESSION="${ARCHIVE##*.}"
+[[ -z "${COMPRESSION}" ]] && COMPRESSION="${ARCHIVE##*.}"
+
 case "${COMPRESSION}" in
   gz|tgz)
     if [[ ${THREADS} -gt 1 ]]; then

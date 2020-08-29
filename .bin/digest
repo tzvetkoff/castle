@@ -186,8 +186,8 @@ set -- "${ARGS[@]}"
 # check args
 #
 
-if [[ $# != 1 ]]; then
-  echo "$0: wrong number of arguments (given $#, expected 1)" >&2
+if [[ ${#} != 1 ]]; then
+  echo "$0: wrong number of arguments (given ${#}, expected 1)" >&2
   echo >&2
   usage 1 >&2
 fi
