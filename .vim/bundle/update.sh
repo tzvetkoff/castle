@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 #
 # This script's path
 #

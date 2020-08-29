@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 root="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 reset="\033[0m"
 red="\033[1;31m"
