@@ -51,48 +51,26 @@ let g:solarized_termcolors = 256
 let g:airline_theme = "solarized"
 colorscheme solarized
 
-" Only do this part when compiled with support for autocommands.
-if has("autocmd")
-  " Enable file type detection.
-  " Use the default filetype settings, so that mail gets 'tw' set to 72,
-  " 'cindent' is on in C files, etc.
-  " Also load indent files, to automatically do language-dependent indenting.
-  filetype plugin indent on
+" Enable file type detection.
+filetype plugin indent on
 
-  " Put these in an autocmd group, so that we can delete them easily.
-  augroup vimrcEx
-    au!
+" Load autocomplete stuff.
+autocmd FileType *
+  \ execute "setlocal complete+=k/usr/share/vim/".
+  \   "vim".v:version[0].v:version[2]."/syntax/".getbufvar("%", "current_syntax").".vim"
 
-    " When editing a file, always jump to the last known cursor position.
-    " Don't do it when the position is invalid or when inside an event handler
-    " (happens when dropping a file on gvim).
-    " Also don't do it when the mark is in the first line, that is the default
-    " position when opening a file.
-    autocmd BufReadPost *
-      \ if line("'\"") > 1 && line("'\"") <= line("$") |
-      \   exe "normal! g`\"" |
-      \ endif
-
-    " Load autocomplete stuff.
-    autocmd FileType *
-      \ execute "setlocal complete+=k/usr/share/vim/".
-      \   "vim".v:version[0].v:version[2]."/syntax/".getbufvar("%", "current_syntax").".vim"
-  augroup END
-else
-  set autoindent        " always set autoindenting on
-endif
-
-" Convenient command to see the difference between the current buffer and the
-" file it was loaded from, thus the changes you made.
-" Only define it when not defined already.
+" Diff against the original contents.
 if !exists(":DiffOrig")
   command DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis | wincmd p | diffthis
 endif
 
+" Open help in tabs.
+cabbrev help tab help
+
 " Make it behave like most ides out there.
 set completeopt=longest,menuone
 
-" <C-S> completion (much like every other ide.)
+" <C-S> completion, much like every other ide.
 function! Completion_CtrlSpace()
   if pumvisible() || &omnifunc == ""
     return "\<C-n>"
@@ -114,7 +92,7 @@ nnoremap <silent> <Home> :call SmartHome()<CR>
 inoremap <silent> <Home> <C-O>:call SmartHome()<CR>
 
 " Write as root.
-function WriteAsRoot()
+function! WriteAsRoot()
   if bufname("%") != ""
     silent execute "write !sudo tee >/dev/null ".bufname("%")
     edit!
