@@ -123,6 +123,22 @@ endfunction
 command W call WriteAsRoot()
 cmap w!! w !sudo tee >/dev/null %
 
+" GitGutter.
+let g:gitgutter_enabled = 1
+let g:gitgutter_sign_allow_clobber = 1
+
+" Syntastic
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
 " NERDTree.
 map <C-r> :NERDTreeToggle<CR>
-let NERDTreeMapOpenInTab='<ENTER>'
+let NERDTreeMapOpenInTab = '<ENTER>'
+
+" CtrlP.
+let g:ctrlp_dotfiles = 1
+let g:ctrlp_prompt_mappings = {
+  \ 'AcceptSelection("e")': ['<2-LeftMouse>'],
+  \ 'AcceptSelection("t")': ['<cr>'],
+  \ }

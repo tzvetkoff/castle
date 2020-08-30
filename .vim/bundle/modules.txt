@@ -5,5 +5,9 @@ https://github.com/tzvetkoff/vim-colors-solarized.git   vim-colors-solarized
 https://github.com/scrooloose/nerdtree.git              vim-nerdtree
 https://github.com/vim-syntastic/syntastic.git          vim-syntastic
 https://github.com/tzvetkoff/vim-numbertoggle.git       vim-numbertoggle
+https://github.com/airblade/vim-gitgutter.git           vim-gitgutter
+https://github.com/ctrlpvim/ctrlp.vim                   vim-ctrlp
+https://github.com/dense-analysis/ale.git               vim-ale
+https://github.com/editorconfig/editorconfig-vim.git    vim-editorconfig
 https://github.com/elixir-lang/vim-elixir.git           vim-elixir
 https://github.com/rust-lang/rust.vim                   vim-rust
