@@ -1,16 +1,11 @@
 "
 " ~/.vimrc
 "
-" Author: Latchezar "Polizei" Tzvetkoff <latchezar@tzvetkoff.net>
-" vim: ft=vim ts=2 et
+" Author: Latchezar Tzvetkoff <latchezar@tzvetkoff.net>
+" vim: filetype=vim tabstop=2 softtabstop=2 shiftwidth=2 expandtab
 "
 
-" Do nothing if started as `evim'
-if v:progname =~? "evim"
-  finish
-endif
-
-" Pathogen
+" Pathogen.
 try
   runtime bundle/vim-pathogen/autoload/pathogen.vim
   call pathogen#infect()
@@ -18,61 +13,43 @@ try
 catch
 endtry
 
-" Use Vim settings, rather then Vi settings (much better!)
-" This must be first, because it changes other options as a side effect.
-set nocompatible
-
-" Always show the status bar
-set laststatus=2
-
-" UTF-8 FTW
-set encoding=utf-8
-
-" Force 256 colors in terminals
-set t_Co=256
-
-" Allow backspacing over everything in insert mode
-set backspace=indent,eol,start
-
-set nobackup        " do not keep a backup file, use versions instead
-set history=50      " keep 50 lines of command line history
-set ruler           " show the cursor position all the time
-set showcmd         " display incomplete commands
-set incsearch       " do incremental searching
-set tabstop=4       " set hard tab to 4 spaces
-set softtabstop=4   " and soft tab too
-set noexpandtab     " never expand tabs (hence the spaces in this vimrc)
-set textwidth=0     " don't enforce text width
-set wrapmargin=0    " don't enforce text wrap
-set cursorline      " highlight current line
-set nofoldenable    " disable code folding
-
-" Don't use Ex mode, use Q for formatting
-map Q gq
-
-" CTRL-U in insert mode deletes a lot.  Use CTRL-G u to first break undo,
-" so that you can undo CTRL-U after inserting a line break.
-inoremap <C-U> <C-G>u<C-U>
+" Options.
+set nocompatible                " force vim mode
+set laststatus=2                " always show the status bar
+set encoding=utf-8              " default to utf-8
+set t_Co=256                    " force 256 colors
+set backspace=indent,eol,start  " allow backspacing over everything
+set nobackup                    " do not keep a backup file, use versions instead
+set history=50                  " keep 50 lines of command line history
+set ruler                       " show the cursor position all the time
+set showcmd                     " display incomplete commands
+set incsearch                   " do incremental searching
+set tabstop=4                   " set hard tab to 4 spaces
+set softtabstop=4               " and soft tab to 4 spaces
+set shiftwidth=4                " and shift width too
+set noexpandtab                 " default to tabs instead of spaces
+set textwidth=0                 " don't enforce text width
+set wrapmargin=0                " don't enforce text wrap
+set number                      " show line numbers
+set cursorline                  " highlight current line
+set nofoldenable                " disable code folding
+set viminfo=                    " disable .viminfo
 
 " Disable the mouse.
-if has('mouse')
+if has("mouse")
   set mouse=
 endif
 
-" Switch syntax highlighting on.
+" Syntax highlighting.
 syntax on
 
-" Dark background.
+" Color scheme.
 set background=dark
-
-" Use 256 colors for solarized.
-let g:solarized_termcolors=256
-
-" Set color scheme.
+let g:solarized_transparent = 1
+let g:solarized_trailing = 1
+let g:solarized_termcolors = 256
+let g:airline_theme = "solarized"
 colorscheme solarized
-
-" Also use solarized for airline.
-let g:airline_theme = 'solarized'
 
 " Only do this part when compiled with support for autocommands.
 if has("autocmd")
@@ -112,29 +89,20 @@ if !exists(":DiffOrig")
   command DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis | wincmd p | diffthis
 endif
 
-" Make it behave like most ides out there
+" Make it behave like most ides out there.
 set completeopt=longest,menuone
 
-" <C-S> completion (much like every other ide)
+" <C-S> completion (much like every other ide.)
 function! Completion_CtrlSpace()
-  if pumvisible() || &omnifunc == ''
+  if pumvisible() || &omnifunc == ""
     return "\<C-n>"
-  elseif col('.') > 1 && strpart(getline('.'), col('.') - 2, 3) =~ '^\w'
+  elseif col(".") > 1 && strpart(getline("."), col(".") - 2, 3) =~ "^\w"
     return "\<C-p>"
   endif
 endfunction
 inoremap <Nul> <C-R>=Completion_CtrlSpace()<CR>
-"inoremap <expr> <C-Space> pumvisible() \|\| &omnifunc == '' ?
-"\ "\<lt>C-n>" :
-"\ "\<lt>C-x>\<lt>C-o><c-r>=pumvisible() ?" .
-"\ "\"\\<lt>c-n>\\<lt>c-p>\\<lt>c-n>\" :" .
-"\ "\" \\<lt>bs>\\<lt>C-n>\"\<CR>"
-"imap <C-@> <C-Space>
 
-" Search toggle
-"nnoremap <silent> <C-s> :set hlsearch!<CR>
-
-" Smart HOME key
+" Smart HOME key.
 function! SmartHome()
   let s:col = col(".")
   normal! ^
@@ -145,33 +113,6 @@ endfunction
 nnoremap <silent> <Home> :call SmartHome()<CR>
 inoremap <silent> <Home> <C-O>:call SmartHome()<CR>
 
-" Tab navigation - command mode
-map <D-1> :tabn 1<CR>
-map <D-2> :tabn 2<CR>
-map <D-3> :tabn 3<CR>
-map <D-4> :tabn 4<CR>
-map <D-5> :tabn 5<CR>
-map <D-6> :tabn 6<CR>
-map <D-7> :tabn 7<CR>
-map <D-8> :tabn 8<CR>
-map <D-9> :tabn 9<CR>
-
-" Tab navigation - insert mode
-map! <D-1> <C-O>:tabn 1<CR>
-map! <D-2> <C-O>:tabn 2<CR>
-map! <D-3> <C-O>:tabn 3<CR>
-map! <D-4> <C-O>:tabn 4<CR>
-map! <D-5> <C-O>:tabn 5<CR>
-map! <D-6> <C-O>:tabn 6<CR>
-map! <D-7> <C-O>:tabn 7<CR>
-map! <D-8> <C-O>:tabn 8<CR>
-map! <D-9> <C-O>:tabn 9<CR>
-
-" Line numbers
-set number
-
-" Disable .viminfo
-set viminfo=
-
-" NERDTree
+" NERDTree.
 map <C-r> :NERDTreeToggle<CR>
+let NERDTreeMapOpenInTab='<ENTER>'
