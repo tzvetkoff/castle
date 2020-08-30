@@ -349,9 +349,6 @@ alias dirsize='du -csh'
 # rename is lame, ~/.bin/prename is better & more dangerous
 alias rename='prename'
 
-# i hate the .viminfo
-alias vim='vim -i NONE'
-
 # fix some other typos i make intensively
 alias CD='cd'
 alias cD='cd'
