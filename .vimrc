@@ -113,6 +113,16 @@ endfunction
 nnoremap <silent> <Home> :call SmartHome()<CR>
 inoremap <silent> <Home> <C-O>:call SmartHome()<CR>
 
+" Write as root.
+function WriteAsRoot()
+  if bufname("%") != ""
+    silent execute "write !sudo tee >/dev/null ".bufname("%")
+    edit!
+  endif
+endfunction
+command W call WriteAsRoot()
+cmap w!! w !sudo tee >/dev/null %
+
 " NERDTree.
 map <C-r> :NERDTreeToggle<CR>
 let NERDTreeMapOpenInTab='<ENTER>'
