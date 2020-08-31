@@ -9,5 +9,6 @@ https://github.com/airblade/vim-gitgutter.git           vim-gitgutter
 https://github.com/ctrlpvim/ctrlp.vim                   vim-ctrlp
 https://github.com/dense-analysis/ale.git               vim-ale
 https://github.com/editorconfig/editorconfig-vim.git    vim-editorconfig
+https://github.com/fatih/vim-go.git                     vim-go
 https://github.com/elixir-lang/vim-elixir.git           vim-elixir
 https://github.com/rust-lang/rust.vim                   vim-rust

@@ -104,6 +104,12 @@ endfunction
 command W call WriteAsRoot()
 cmap w!! w !sudo tee >/dev/null %
 
+" Strip trailing whitespaces.
+function! StripTrailingWhitespaces()
+  silent execute "%s/\\s\\+$//g"
+endfunction
+command Strip call StripTrailingWhitespaces()
+
 " GitGutter.
 let g:gitgutter_enabled = 1
 let g:gitgutter_sign_allow_clobber = 1
