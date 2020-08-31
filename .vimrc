@@ -14,26 +14,28 @@ catch
 endtry
 
 " Options.
-set nocompatible                " force vim mode
-set laststatus=2                " always show the status bar
-set encoding=utf-8              " default to utf-8
-set t_Co=256                    " force 256 colors
-set backspace=indent,eol,start  " allow backspacing over everything
-set nobackup                    " do not keep a backup file, use versions instead
-set history=50                  " keep 50 lines of command line history
-set ruler                       " show the cursor position all the time
-set showcmd                     " display incomplete commands
-set incsearch                   " do incremental searching
-set tabstop=4                   " set hard tab to 4 spaces
-set softtabstop=4               " and soft tab to 4 spaces
-set shiftwidth=4                " and shift width too
-set noexpandtab                 " default to tabs instead of spaces
-set textwidth=0                 " don't enforce text width
-set wrapmargin=0                " don't enforce text wrap
-set number                      " show line numbers
-set cursorline                  " highlight current line
-set nofoldenable                " disable code folding
-set viminfo=                    " disable .viminfo
+set nocompatible                                " force vim mode
+set laststatus=2                                " always show the status bar
+set encoding=utf-8                              " default to utf-8
+set t_Co=256                                    " force 256 colors
+set backspace=indent,eol,start                  " allow backspacing over everything
+set nobackup                                    " do not keep a backup file, use versions instead
+set history=50                                  " keep 50 lines of command line history
+set ruler                                       " show the cursor position all the time
+set showcmd                                     " display incomplete commands
+set incsearch                                   " do incremental searching
+set tabstop=4                                   " set hard tab to 4 spaces
+set softtabstop=4                               " and soft tab to 4 spaces
+set shiftwidth=4                                " and shift width too
+set noexpandtab                                 " default to tabs instead of spaces
+set textwidth=0                                 " don't enforce text width
+set wrapmargin=0                                " don't enforce text wrap
+set number                                      " show line numbers
+set cursorline                                  " highlight current line
+set nofoldenable                                " disable code folding
+set viminfo=                                    " disable .viminfo
+set list                                        " list invisible characters
+set listchars=eol:¬,tab:🠂\ ,space:·,nbsp:_      " like eol, tab, space, nbsp
 
 " Disable the mouse.
 if has("mouse")
