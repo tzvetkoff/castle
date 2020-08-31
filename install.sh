@@ -22,8 +22,6 @@ HOME_SYMLINKS=(\
   .bin              \
   .gemrc            \
   .irbrc            \
-  .nano             \
-  .nanorc           \
   .pythonrc         \
   .vimrc            \
   .vim              \

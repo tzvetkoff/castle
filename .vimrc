@@ -64,6 +64,9 @@ if !exists(":DiffOrig")
   command DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis | wincmd p | diffthis
 endif
 
+" Duh.
+cmap Q q
+
 " Open help in tabs.
 cabbrev help tab help
 
@@ -105,7 +108,7 @@ cmap w!! w !sudo tee >/dev/null %
 let g:gitgutter_enabled = 1
 let g:gitgutter_sign_allow_clobber = 1
 
-" Syntastic
+" ALE/Syntastic.
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
