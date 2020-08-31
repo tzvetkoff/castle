@@ -35,7 +35,11 @@ set cursorline                                  " highlight current line
 set nofoldenable                                " disable code folding
 set viminfo=                                    " disable .viminfo
 set list                                        " list invisible characters
-set listchars=eol:¬,tab:🠂\ ,space:·,nbsp:_      " like eol, tab, space, nbsp
+if v:version < 800
+  set listchars=eol:¬,tab:🠂\ ,nbsp:_              " old versions can't list space
+else
+  set listchars=eol:¬,tab:🠂\ ,space:·,nbsp:_      " but newer do
+endif
 
 " Disable the mouse.
 if has("mouse")
@@ -131,3 +135,8 @@ let g:ctrlp_prompt_mappings = {
   \ 'AcceptSelection("e")': ['<2-LeftMouse>'],
   \ 'AcceptSelection("t")': ['<cr>'],
   \ }
+
+" Go.
+if v:version < 800
+  let g:go_loaded_install = 1
+endif
