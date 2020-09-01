@@ -73,6 +73,13 @@ endif
 " Duh.
 cmap Q q
 
+" Tab navigation.
+cabbrev <expr> t getcmdtype() == ":" && getcmdline() == "t" ? "tabn" : "t"
+cabbrev t tabn
+for i in range(1, 99)
+  execute "cmap t".i." tabn ".i
+endfor
+
 " Open help in tabs.
 cabbrev help tab help
 
@@ -131,6 +138,9 @@ let NERDTreeMapOpenInTab = '<ENTER>'
 
 " CtrlP.
 let g:ctrlp_dotfiles = 1
+let g:ctrlp_custom_ignore = {
+  \ 'dir': '\v[\/](\.git|node_modules)$',
+  \ }
 let g:ctrlp_prompt_mappings = {
   \ 'AcceptSelection("e")': ['<2-LeftMouse>'],
   \ 'AcceptSelection("t")': ['<cr>'],
