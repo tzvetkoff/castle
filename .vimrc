@@ -2,18 +2,18 @@
 " ~/.vimrc
 "
 " Author: Latchezar Tzvetkoff <latchezar@tzvetkoff.net>
-" vim: filetype=vim tabstop=2 softtabstop=2 shiftwidth=2 expandtab
 "
 
-" Pathogen.
+" Pathogen. {{{
 try
   runtime bundle/vim-pathogen/autoload/pathogen.vim
   call pathogen#infect()
   call pathogen#helptags()
 catch
 endtry
+" }}}
 
-" Options.
+" Options. {{{
 set nocompatible                                " force vim mode
 set laststatus=2                                " always show the status bar
 set encoding=utf-8                              " default to utf-8
@@ -45,48 +45,25 @@ endif
 if has("mouse")
   set mouse=
 endif
+" }}}
 
-" Syntax highlighting.
+" Syntax highlighting & color scheme. {{{
 syntax on
-
-" Color scheme.
 set background=dark
 let g:solarized_transparent = 1
 let g:solarized_trailing = 1
 let g:solarized_termcolors = 256
 let g:airline_theme = "solarized"
 colorscheme solarized
+" }}}
 
-" Enable file type detection.
+" Indentation & completion. {{{
 filetype plugin indent on
 
-" Load autocomplete stuff.
-autocmd FileType *
-  \ execute "setlocal complete+=k/usr/share/vim/".
-  \   "vim".v:version[0].v:version[2]."/syntax/".getbufvar("%", "current_syntax").".vim"
-
-" Diff against the original contents.
-if !exists(":DiffOrig")
-  command DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis | wincmd p | diffthis
-endif
-
-" Duh.
-cmap Q q
-
-" Tab navigation.
-cabbrev <expr> t getcmdtype() == ":" && getcmdline() == "t" ? "tabn" : "t"
-cabbrev t tabn
-for i in range(1, 99)
-  execute "cmap t".i." tabn ".i
-endfor
-
-" Open help in tabs.
-cabbrev help tab help
-
-" Make it behave like most ides out there.
+" Completion options.
 set completeopt=longest,menuone
 
-" <C-S> completion, much like every other ide.
+" <C-S> completion, much like every other IDE.
 function! Completion_CtrlSpace()
   if pumvisible() || &omnifunc == ""
     return "\<C-n>"
@@ -96,7 +73,33 @@ function! Completion_CtrlSpace()
 endfunction
 inoremap <Nul> <C-R>=Completion_CtrlSpace()<CR>
 
-" Smart HOME key.
+" Load autocomplete stuff.
+autocmd FileType *
+  \ execute "setlocal complete+=k/usr/share/vim/".
+  \   "vim".v:version[0].v:version[2]."/syntax/".getbufvar("%", "current_syntax").".vim"
+" }}}
+
+" Tab navigation. {{{
+cabbrev <expr> t getcmdtype() == ":" && getcmdline() == "t" ? "tabn" : "t"
+cabbrev t tabn
+for i in range(1, 99)
+  execute "cmap t".i." tabn ".i
+endfor
+
+cabbrev help tab help
+" }}}
+
+" Miscellaneous commands. {{{
+cmap Q q
+" }}}
+
+" Diff against the original contents. {{{
+if !exists(":DiffOrig")
+  command DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis | wincmd p | diffthis
+endif
+" }}}
+
+" Smart HOME key. {{{
 function! SmartHome()
   let s:col = col(".")
   normal! ^
@@ -106,8 +109,9 @@ function! SmartHome()
 endfunction
 nnoremap <silent> <Home> :call SmartHome()<CR>
 inoremap <silent> <Home> <C-O>:call SmartHome()<CR>
+" }}}
 
-" Write as root.
+" Write as root. {{{
 function! WriteAsRoot()
   if bufname("%") != ""
     silent execute "write !sudo tee >/dev/null ".bufname("%")
@@ -115,28 +119,34 @@ function! WriteAsRoot()
   endif
 endfunction
 command W call WriteAsRoot()
+command WriteAsRoot call WriteAsRoot()
 cmap w!! w !sudo tee >/dev/null %
+" }}}
 
-" Strip trailing whitespaces.
+" Strip trailing whitespaces. {{{
 function! StripTrailingWhitespaces()
   silent execute "%s/\\s\\+$//g"
 endfunction
 command Strip call StripTrailingWhitespaces()
+" }}}
 
-" GitGutter.
+" GitGutter. {{{
 let g:gitgutter_enabled = 1
 let g:gitgutter_sign_allow_clobber = 1
+" }}}
 
-" ALE/Syntastic.
+" ALE/Syntastic. {{{
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
+" }}}
 
-" NERDTree.
+" NERDTree. {{{
 map <C-r> :NERDTreeToggle<CR>
 let NERDTreeMapOpenInTab = '<ENTER>'
+" }}}
 
-" CtrlP.
+" CtrlP. {{{
 let g:ctrlp_dotfiles = 1
 let g:ctrlp_custom_ignore = {
   \ 'dir': '\v[\/](\.git|node_modules)$',
@@ -145,8 +155,13 @@ let g:ctrlp_prompt_mappings = {
   \ 'AcceptSelection("e")': ['<2-LeftMouse>'],
   \ 'AcceptSelection("t")': ['<cr>'],
   \ }
+" }}}
 
-" Go.
+" Go. {{{
 if v:version < 800
   let g:go_loaded_install = 1
 endif
+" }}}
+
+" ----------------------------------------------------------
+" vim:fen:fdm=marker:fmr={{{,}}}:fdl=0:fdc=1:ts=2:sts=2:sw=2
