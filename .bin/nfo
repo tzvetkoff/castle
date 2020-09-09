@@ -6,5 +6,5 @@ if [[ ${1} = '-h' || ${1} = '--help' ]]; then
   exit ${1}
 fi
 
-iconv -fCP437 "${@}"
+iconv -f CP437 "${@}"
 [[ -n "${1}" ]] && test "$(tail -c 1 "${1}")" && echo
