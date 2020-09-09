@@ -79,6 +79,20 @@ autocmd FileType *
   \   "vim".v:version[0].v:version[2]."/syntax/".getbufvar("%", "current_syntax").".vim"
 " }}}
 
+" File encoding stuff. {{{
+function! SetEncoding(encoding, force)
+  if a:force || !exists("b:auto_encoding")
+    let b:auto_encoding = a:encoding
+    exec "e! ++enc=".a:encoding
+  endif
+endfunction
+
+command -nargs=1 SetEncoding call SetEncoding("<args>", 1)
+cabbrev enc SetEncoding
+
+autocmd BufNewFile,BufRead *.nfo set filetype=nfo | call SetEncoding("cp437", 0)
+" }}}
+
 " Tab navigation. {{{
 cabbrev <expr> t getcmdtype() == ":" && getcmdline() == "t" ? "tabn" : "t"
 cabbrev t tabn
