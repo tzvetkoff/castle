@@ -1,8 +1,5 @@
-"
 " ~/.vimrc
-"
 " Author: Latchezar Tzvetkoff <latchezar@tzvetkoff.net>
-"
 
 " Pathogen. {{{
 try
@@ -47,7 +44,7 @@ if has("mouse")
 endif
 " }}}
 
-" Syntax highlighting & color scheme. {{{
+" Color scheme. {{{
 syntax on
 set background=dark
 let g:solarized_transparent = 1
@@ -57,21 +54,40 @@ let g:airline_theme = "solarized"
 colorscheme solarized
 " }}}
 
-" Indentation & completion. {{{
+" Indentation. {{{
 filetype plugin indent on
 
-" Completion options.
+" File-based indentation settings.
+autocmd FileType c,cpp,cxx,h,hpp,hxx setlocal tabstop=4 softtabstop=4 shiftwidth=4 expandtab
+autocmd FileType sh setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
+autocmd FileType rb setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
+autocmd FileType vim setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
+" }}}
+
+" Completion. {{{
 set completeopt=longest,menuone
 
-" <C-S> completion, much like every other IDE.
-function! Completion_CtrlSpace()
+" <C-S> completion.
+function! CtrlSpaceCompletion()
   if pumvisible() || &omnifunc == ""
     return "\<C-n>"
   elseif col(".") > 1 && strpart(getline("."), col(".") - 2, 3) =~ "^\w"
     return "\<C-p>"
   endif
 endfunction
-inoremap <Nul> <C-R>=Completion_CtrlSpace()<CR>
+inoremap <Nul> <C-R>=CtrlSpaceCompletion()<CR>
+
+" <TAB> completion, even more like modern IDEs.
+function! TabCompletion()
+  let col = col('.') - 1
+  if !col || getline('.')[col - 1] !~ '\k'
+    return "\<tab>"
+  else
+    return "\<c-n>"
+  endif
+endfunction
+inoremap <expr> <tab> TabCompletion()
+inoremap <s-tab> <c-p>
 
 " Load autocomplete stuff.
 autocmd FileType *
