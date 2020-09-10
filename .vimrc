@@ -155,7 +155,7 @@ cmap w!! w !sudo tee >/dev/null %
 
 " Strip trailing whitespaces. {{{
 function! StripTrailingWhitespaces()
-  silent execute "%s/\\s\\+$//g"
+  silent! execute "%s/\\s\\+$//g"
 endfunction
 command Strip call StripTrailingWhitespaces()
 " }}}
