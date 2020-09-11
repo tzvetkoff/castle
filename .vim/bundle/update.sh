@@ -24,6 +24,8 @@ yellow="\033[1;33m"
 while read -r remote local branch; do
   if [[ -d "${root}/${local}" && -d "${root}/${local}/.git" ]]; then
     pushd "${root}/${local}" >/dev/null
+
+    remote="$(git remote get-url origin)"
     echo -e "-> Updating ${green}${local}${reset} from ${red}${remote}${reset}${branch:+ (${yellow}${branch}${reset})}"
 
     if [[ -n "${branch}" ]]; then
