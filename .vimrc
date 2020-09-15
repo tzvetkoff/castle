@@ -71,28 +71,44 @@ set completeopt=longest,menuone
 function! CtrlSpaceCompletion()
   if pumvisible() || &omnifunc == ""
     return "\<C-n>"
-  elseif col(".") > 1 && strpart(getline("."), col(".") - 2, 3) =~ "^\w"
+  elseif col(".") > 1 && strpart(getline("."), col(".") - 2, 3) =~ "^\\w"
     return "\<C-p>"
   endif
 endfunction
 inoremap <Nul> <C-R>=CtrlSpaceCompletion()<CR>
 
-" <TAB> completion, even more like modern IDEs.
+" <TAB> completion.
 function! TabCompletion()
-  let col = col('.') - 1
-  if !col || getline('.')[col - 1] !~ '\k'
+  let col = col(".")
+  let line = getline(".")
+  let left = strpart(line, 0, col - 1)
+  let right = strpart(line, col - 1)
+
+  if left =~ "^\\s*$" || left =~ "\\s$"
     return "\<tab>"
   else
     return "\<c-n>"
+  end
+endfunction!
+inoremap <expr> <tab> TabCompletion()
+
+" <S-TAB> completion.
+function! ShiftTabCompletion()
+  let col = col(".")
+  let line = getline(".")
+  let left = strpart(line, 0, col - 1)
+  let right = strpart(line, col - 1)
+
+  if left =~ "^\\s*$" || left =~ "\\s$"
+    return "\<c-d>"
+  else
+    return "\<c-p>"
   endif
 endfunction
-inoremap <expr> <tab> TabCompletion()
-inoremap <s-tab> <c-p>
+inoremap <expr> <s-tab> ShiftTabCompletion()
 
 " Load autocomplete stuff.
-autocmd FileType *
-  \ execute "setlocal complete+=k/usr/share/vim/".
-  \   "vim".v:version[0].v:version[2]."/syntax/".getbufvar("%", "current_syntax").".vim"
+autocmd FileType * execute "setlocal complete+=k/usr/share/vim/vim".v:version[0].v:version[2]."/syntax/".getbufvar("%", "current_syntax").".vim"
 " }}}
 
 " File encoding stuff. {{{
@@ -173,17 +189,17 @@ set statusline+=%*
 
 " NERDTree. {{{
 map <C-r> :NERDTreeToggle<CR>
-let NERDTreeMapOpenInTab = '<ENTER>'
+let NERDTreeMapOpenInTab = "<ENTER>"
 " }}}
 
 " CtrlP. {{{
 let g:ctrlp_dotfiles = 1
 let g:ctrlp_custom_ignore = {
-  \ 'dir': '\v[\/](\.git|node_modules)$',
+  \ "dir": "\\v[\\/](\\.git|node_modules)$",
   \ }
 let g:ctrlp_prompt_mappings = {
-  \ 'AcceptSelection("e")': ['<2-LeftMouse>'],
-  \ 'AcceptSelection("t")': ['<cr>'],
+  \ "AcceptSelection(\"e\")": ["<2-LeftMouse>"],
+  \ "AcceptSelection(\"t\")": ["<cr>"],
   \ }
 " }}}
 
