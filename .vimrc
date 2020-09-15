@@ -137,6 +137,9 @@ cabbrev help tab help
 
 " Miscellaneous commands. {{{
 cmap Q q
+cmap W w
+cmap Wq wq
+cmap WQ wq
 " }}}
 
 " Diff against the original contents. {{{
@@ -164,7 +167,6 @@ function! WriteAsRoot()
     edit!
   endif
 endfunction
-command W call WriteAsRoot()
 command WriteAsRoot call WriteAsRoot()
 cmap w!! w !sudo tee >/dev/null %
 " }}}
