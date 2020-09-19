@@ -129,17 +129,18 @@ autocmd BufNewFile,BufRead *.nfo set filetype=nfo | call SetEncoding("cp437", 0)
 cabbrev <expr> t getcmdtype() == ":" && getcmdline() == "t" ? "tabn" : "t"
 cabbrev t tabn
 for i in range(1, 99)
-  execute "cmap t".i." tabn ".i
+  execute "cabbrev t".i." tabn ".i
+  execute "cabbrev T".i." tabn ".i
 endfor
 
 cabbrev help tab help
 " }}}
 
 " Miscellaneous commands. {{{
-cmap Q q
-cmap W w
-cmap Wq wq
-cmap WQ wq
+command -nargs=* -complete=file -bang W w<bang> <args>
+command -bang Q q<bang>
+cabbrev Wq wq
+cabbrev WQ wq
 " }}}
 
 " Diff against the original contents. {{{
@@ -168,7 +169,7 @@ function! WriteAsRoot()
   endif
 endfunction
 command WriteAsRoot call WriteAsRoot()
-cmap w!! w !sudo tee >/dev/null %
+cabbrev w!! WriteAsRoot
 " }}}
 
 " Strip trailing whitespaces. {{{
