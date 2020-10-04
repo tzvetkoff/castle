@@ -111,7 +111,7 @@ inoremap <expr> <s-tab> ShiftTabCompletion()
 autocmd FileType * execute "setlocal complete+=k/usr/share/vim/vim".v:version[0].v:version[2]."/syntax/".getbufvar("%", "current_syntax").".vim"
 " }}}
 
-" File encoding stuff. {{{
+" File type/encoding stuff. {{{
 function! SetEncoding(encoding, force)
   if a:force || !exists("b:auto_encoding")
     let b:auto_encoding = a:encoding
@@ -122,7 +122,9 @@ endfunction
 command -nargs=1 SetEncoding call SetEncoding("<args>", 1)
 cabbrev enc SetEncoding
 
-autocmd BufNewFile,BufRead *.nfo set filetype=nfo | call SetEncoding("cp437", 0)
+" File-based type/encoding settings.
+autocmd BufNewFile,BufRead *.cnf setlocal filetype=dosini
+autocmd BufNewFile,BufRead *.nfo setlocal filetype=nfo | call SetEncoding("cp437", 0)
 " }}}
 
 " Tab navigation. {{{
