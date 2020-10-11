@@ -20,6 +20,7 @@ set nobackup                                    " do not keep a backup file, use
 set history=50                                  " keep 50 lines of command line history
 set ruler                                       " show the cursor position all the time
 set showcmd                                     " display incomplete commands
+set hlsearch                                    " highlight search results
 set incsearch                                   " do incremental searching
 set tabstop=4                                   " set hard tab to 4 spaces
 set softtabstop=4                               " and soft tab to 4 spaces
@@ -31,6 +32,8 @@ set number                                      " show line numbers
 set cursorline                                  " highlight current line
 set nofoldenable                                " disable code folding
 set viminfo=                                    " disable .viminfo
+set ttyfast                                     " fast redraw
+set wildmenu                                    " completion menu in command mode
 set list                                        " list invisible characters
 if v:version < 800
   set listchars=eol:¬,tab:🠂\ ,nbsp:_              " old versions can't list space
