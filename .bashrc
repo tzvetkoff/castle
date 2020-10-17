@@ -269,6 +269,7 @@ icon_name_and_window_title() {
   fi
 }
 
+trap - DEBUG
 trap icon_name_and_window_title DEBUG
 
 #
