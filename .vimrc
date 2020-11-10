@@ -123,7 +123,7 @@ function! SetEncoding(encoding, force)
 endfunction
 
 command -nargs=1 SetEncoding call SetEncoding("<args>", 1)
-cabbrev enc SetEncoding
+cabbrev <expr> enc getcmdtype() == ":" && getcmdline() == "enc" ? "SetEncoding" : "enc"
 
 " File-based type/encoding settings.
 autocmd BufNewFile,BufRead *.cnf setlocal filetype=dosini
@@ -132,20 +132,19 @@ autocmd BufNewFile,BufRead *.nfo setlocal filetype=nfo | call SetEncoding("cp437
 
 " Tab navigation. {{{
 cabbrev <expr> t getcmdtype() == ":" && getcmdline() == "t" ? "tabn" : "t"
-cabbrev t tabn
 for i in range(1, 99)
-  execute "cabbrev t".i." tabn ".i
-  execute "cabbrev T".i." tabn ".i
+  execute "cabbrev <expr> t".i." getcmdtype() == \":\" && getcmdline() == \"t".i."\" ? \"tabn ".i."\" : \"t".i."\""
+  execute "cabbrev <expr> T".i." getcmdtype() == \":\" && getcmdline() == \"T".i."\" ? \"tabn ".i."\" : \"T".i."\""
 endfor
 
-cabbrev help tab help
+cabbrev <expr> help getcmdtype() == ":" && getcmdline() == "help" ? "tab help" : "help"
 " }}}
 
 " Miscellaneous commands. {{{
 command -nargs=* -complete=file -bang W w<bang> <args>
 command -bang Q q<bang>
-cabbrev Wq wq
-cabbrev WQ wq
+cabbrev <expr> Wq getcmdtype() == ":" && getcmdline() == "Wq" ? "wq" : "Wq"
+cabbrev <expr> WQ getcmdtype() == ":" && getcmdline() == "WQ" ? "wq" : "WQ"
 " }}}
 
 " Diff against the original contents. {{{
@@ -174,7 +173,7 @@ function! WriteAsRoot()
   endif
 endfunction
 command WriteAsRoot call WriteAsRoot()
-cabbrev w!! WriteAsRoot
+cabbrev <expr> w!! getcmdtype() == ":" && getcmdline() == "w!!" ? "WriteAsRoot" : "w!!"
 " }}}
 
 " Strip trailing whitespaces. {{{
