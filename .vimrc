@@ -58,6 +58,9 @@ colorscheme solarized
 " }}}
 
 " Indentation. {{{
+vnoremap > >gv
+vnoremap < <gv
+
 filetype plugin indent on
 
 " File-based indentation settings.
@@ -202,12 +205,12 @@ let NERDTreeMapOpenInTab = "<ENTER>"
 " CtrlP. {{{
 let g:ctrlp_dotfiles = 1
 let g:ctrlp_custom_ignore = {
-  \ "dir": "\\v[\\/](\\.git|node_modules)$",
-  \ }
+      \ "dir": "\\v[\\/](\\.git|node_modules)$",
+      \ }
 let g:ctrlp_prompt_mappings = {
-  \ "AcceptSelection(\"e\")": ["<2-LeftMouse>"],
-  \ "AcceptSelection(\"t\")": ["<cr>"],
-  \ }
+      \ "AcceptSelection(\"e\")": ["<2-LeftMouse>"],
+      \ "AcceptSelection(\"t\")": ["<cr>"],
+      \ }
 " }}}
 
 " Go. {{{
