@@ -28,6 +28,7 @@ set shiftwidth=4                                " and shift width too
 set noexpandtab                                 " default to tabs instead of spaces
 set textwidth=0                                 " don't enforce text width
 set wrapmargin=0                                " don't enforce text wrap
+set colorcolumn=80,100,120                      " long line markers
 set number                                      " show line numbers
 set cursorline                                  " highlight current line
 set nofoldenable                                " disable code folding
