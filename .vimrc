@@ -35,6 +35,9 @@ set nofoldenable                                " disable code folding
 set viminfo=                                    " disable .viminfo
 set ttyfast                                     " fast redraw
 set wildmenu                                    " completion menu in command mode
+set spell                                       " enable spell checking
+set spelllang=en                                " default to english
+set spellfile=${HOME}/.vim/spell/en.utf-8.add   " local spell dict
 set list                                        " list invisible characters
 if v:version < 800
   set listchars=eol:¬,tab:🠂\ ,nbsp:_              " old versions can't list space

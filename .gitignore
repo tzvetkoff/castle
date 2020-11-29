@@ -2,5 +2,6 @@
 .DS_Store
 ._.*
 
-# Vim bundle
+# Vim stuff
 /.vim/bundle/vim-*
+/.vim/spell/*
