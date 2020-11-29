@@ -87,7 +87,7 @@ prompt_command_git_hook() {
 
     if [[ -n ${git_dir} ]]; then
       local reset='\[\033[0m\]' grey='\[\033[1;30m\]' red='\[\033[1;31m\]' green='\[\033[1;32m\]' yellow='\[\033[1;33m\]' blue='\[\033[1;34m\]'
-      local branch= extra=
+      local branch='' extra=''
 
       if [[ -d "${git_dir}/rebase-apply" ]]; then
         if [[ -f "${git_dir}/rebase-apply/rebasing" ]]; then
@@ -106,23 +106,23 @@ prompt_command_git_hook() {
         branch="$(< "${git_dir}/rebase-merge/head-name")"
       elif [[ -f "${git_dir}/MERGE_HEAD" ]]; then
         extra="|${yellow}merge${reset}"
-        branch=`git --git-dir="${git_dir}" symbolic-ref HEAD 2>/dev/null`
+        branch="$(git --git-dir="${git_dir}" symbolic-ref HEAD 2>/dev/null)"
       else
-        if ! branch=`git --git-dir="${git_dir}" symbolic-ref HEAD 2>/dev/null`; then
-          if branch=`git --git-dir="${git_dir}" describe --exact-match HEAD 2>/dev/null`; then
+        if ! branch="$(git --git-dir="${git_dir}" symbolic-ref HEAD 2>/dev/null)"; then
+          if branch="$(git --git-dir="${git_dir}" describe --exact-match HEAD 2>/dev/null)"; then
             branch="${blue}${branch}"
-          elif branch=`git --git-dir="${git_dir}" describe --tags HEAD 2>/dev/null`; then
+          elif branch="$(git --git-dir="${git_dir}" describe --tags HEAD 2>/dev/null)"; then
             branch="${blue}${branch}"
           else
-            branch="${blue}`cut -c1-8 "${git_dir}/HEAD"`"
+            branch="${blue}$(cut -c1-8 "${git_dir}/HEAD")"
           fi
         fi
       fi
 
       branch="${branch#refs/heads/}"
       if [[ -n ${branch} ]]; then
-        local status=`git status --porcelain 2>/dev/null | head -1`
-        if [[ -n ${status} ]]; then
+        local status="$(git status --porcelain 2>/dev/null | head -1)"
+        if [[ -n "${status}" ]]; then
           local git="${reset}(${grey}git:${red}${branch}${reset}${extra})"
         else
           local git="${reset}(${grey}git:${green}${branch}${reset}${extra})"
@@ -153,9 +153,9 @@ prompt_command_svn_hook() {
     if [[ -n ${svn_dir} ]]; then
       local reset='\[\033[0m\]' grey='\[\033[1;30m\]' red='\[\033[1;31m\]' green='\[\033[1;32m\]'
 
-      local revision=`svn info 2>/dev/null | grep Revision: | cut -d' ' -f2`
+      local revision="$(svn info 2>/dev/null | grep Revision: | cut -d' ' -f2)"
       if [[ -n ${revision} ]]; then
-        local status=`svn status 2>/dev/null | head -1`
+        local status="$(svn status 2>/dev/null | head -1)"
         if [[ -n ${status} ]]; then
           local svn="${reset}(${grey}svn:${red}r${revision}${reset})"
         else
@@ -187,9 +187,9 @@ prompt_command_hg_hook() {
     if [[ -n ${hg_dir} ]]; then
       local reset='\[\033[0m\]' grey='\[\033[1;30m\]' red='\[\033[1;31m\]' green='\[\033[1;32m\]'
 
-      local branch=`hg branch 2>/dev/null`
+      local branch="$(hg branch 2>/dev/null)"
       if [[ -n ${branch} ]]; then
-        local status=`hg status 2>/dev/null | head -1`
+        local status="$(hg status 2>/dev/null | head -1)"
         if [[ -n ${status} ]]; then
           local hg="${reset}(${grey}hg:${red}${branch}${reset})"
         else
@@ -288,7 +288,7 @@ if [[ -n ${SSH_CLIENT} || -n ${SSH_TTY} ]]; then
 elif [[ -z ${BASHRC_DISABLE_SSH} ]]; then
   pid=$$
   while [[ -n ${pid} && ${pid} -ne 1 ]]; do
-    pid_cmd="`ps -oppid= -ocomm= -p${pid}`"
+    pid_cmd="$(ps -oppid= -ocomm= -p${pid})"
     pid="${pid_cmd%% *}"
     cmd="${pid_cmd#* }"
     if [[ ${cmd} = *sshd ]]; then
