@@ -11,7 +11,7 @@ usage() {
   echo '  -h, --help            Print this message and exit'
   echo '  -t, --top=N           Take top N (default: 20)'
   echo '  -u, --size-unit=U     Size unit (default: K)'
-  exit ${1}
+  exit "${1}"
 }
 
 #
@@ -92,7 +92,7 @@ GIT_DIR="${GIT_DIR}/.git"
 {
   echo 'SHA|Size|Packed|Path'
   echo ':separator:'
-  git verify-pack -v ${GIT_DIR}/objects/pack/pack-*.idx | grep ' blob ' | sort -k3nr | head -n ${TOP} | while read OBJECT; do
+  git verify-pack -v ${GIT_DIR}/objects/pack/pack-*.idx | grep ' blob ' | sort -k3nr | head -n ${TOP} | while read -r OBJECT; do
     set -- ${OBJECT}
     SHA="${1}"
     UNPACKED_SIZE="${3}"

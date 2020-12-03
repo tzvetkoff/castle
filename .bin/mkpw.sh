@@ -9,7 +9,7 @@ usage() {
   echo '  -c C, --charset=C     custom charset [default: 0123456789abcdef]'
   echo '  -l L, --length=L      length of generated passwords [default: 16]'
   echo '  -n N, --count=N       number of passwords to generate [default: 8]'
-  exit ${1}
+  exit "${1}"
 }
 
 charset='0123456789abcdef'
@@ -41,5 +41,5 @@ while [[ -n "${1}" ]]; do
 done
 
 for ((i = 0; i < count; ++i)) do
-  cat /dev/urandom | tr -dc "${charset}" | fold -w ${length} | head -n 1
+  tr -dc "${charset}" < /dev/urandom | fold -w "${length}" | head -1
 done

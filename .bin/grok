@@ -14,7 +14,7 @@ usage() {
   echo '  --local-port=P        Set local port (required)'
   echo '  --remote-port=P       Set remote port (optional)'
   echo '  --save-default        Save server option to ~/.grok/server'
-  exit ${1}
+  exit "${1}"
 }
 
 #

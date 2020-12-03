@@ -14,7 +14,7 @@ usage() {
   echo 'Common options:'
   echo '  -h, --help        Print this message and exit'
   echo '  -v, --version     Print version information and exit'
-  exit ${1}
+  exit "${1}"
 }
 
 #

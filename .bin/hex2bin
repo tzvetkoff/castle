@@ -3,5 +3,5 @@
 if [[ -z "${1}" ]]; then
   xxd -p -r
 else
-  cat ${1} | xxd -p -r
+  xxd -p -r < "${1}"
 fi

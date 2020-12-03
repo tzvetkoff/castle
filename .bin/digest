@@ -22,7 +22,7 @@ usage() {
   echo 'Common options:'
   echo '  -h, --help        Print this message and exit'
   echo '  -v, --version     Print version information and exit'
-  exit ${1}
+  exit "${1}"
 }
 
 #
@@ -30,7 +30,7 @@ usage() {
 #
 
 _crc32() {
-  ${QUIET} || (${ALL} && echo -n 'crc32: ' || echo -n "${@}: ")
+  ${QUIET} || (${ALL} && echo -n 'crc32: ' || echo -n "${*}: ")
 
   if type -p crc32 >/dev/null 2>&1; then
     crc32 "${@}"
@@ -42,7 +42,7 @@ _crc32() {
 }
 
 _md5() {
-  ${QUIET} || (${ALL} && echo -n 'md5: ' || echo -n "${@}: ")
+  ${QUIET} || (${ALL} && echo -n 'md5: ' || echo -n "${*}: ")
 
   if type -p md5sum >/dev/null 2>&1; then
     md5sum "${@}" | cut -d' ' -f1
@@ -56,7 +56,7 @@ _md5() {
 }
 
 _sha1() {
-  ${QUIET} || (${ALL} && echo -n 'sha1: ' || echo -n "${@}: ")
+  ${QUIET} || (${ALL} && echo -n 'sha1: ' || echo -n "${*}: ")
 
   if type -p sha1sum >/dev/null 2>&1; then
     sha1sum "${@}" | cut -d' ' -f1
@@ -70,7 +70,7 @@ _sha1() {
 }
 
 _sha256() {
-  ${QUIET} || (${ALL} && echo -n 'sha256: ' || echo -n "${@}: ")
+  ${QUIET} || (${ALL} && echo -n 'sha256: ' || echo -n "${*}: ")
 
   if type -p sha256sum >/dev/null 2>&1; then
     sha256sum "${@}" | cut -d' ' -f1
@@ -84,7 +84,7 @@ _sha256() {
 }
 
 _sha384() {
-  ${QUIET} || (${ALL} && echo -n 'sha384: ' || echo -n "${@}: ")
+  ${QUIET} || (${ALL} && echo -n 'sha384: ' || echo -n "${*}: ")
 
   if type -p sha384sum >/dev/null 2>&1; then
     sha384sum "${@}" | cut -d' ' -f1
@@ -98,7 +98,7 @@ _sha384() {
 }
 
 _sha512() {
-  ${QUIET} || (${ALL} && echo -n 'sha512: ' || echo -n "${@}: ")
+  ${QUIET} || (${ALL} && echo -n 'sha512: ' || echo -n "${*}: ")
 
   if type -p sha512sum >/dev/null 2>&1; then
     sha512sum "${@}" | cut -d' ' -f1
@@ -112,7 +112,7 @@ _sha512() {
 }
 
 _rmd160() {
-  ${QUIET} || (${ALL} && echo -n 'rmd160: ' || echo -n "${@}: ")
+  ${QUIET} || (${ALL} && echo -n 'rmd160: ' || echo -n "${*}: ")
 
   if type -p rmd160 >/dev/null 2>&1; then
     rmd160 -q "${@}"

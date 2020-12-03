@@ -3,7 +3,7 @@
 if [[ ${1} = '-h' || ${1} = '--help' ]]; then
   echo 'usage:'
   echo "  ${0} [file.nfo]"
-  exit ${1}
+  exit "${1}"
 fi
 
 iconv -f CP437 "${@}"

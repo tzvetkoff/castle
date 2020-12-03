@@ -63,9 +63,9 @@ prompt_command_user_host_pwd_hook() {
   local host="${blue}${HOSTNAME%%.*}${reset}"
 
   local pwd="${PWD}"
-  [[ "${pwd}" = ${HOME} || "${pwd}" = ${HOME}/* ]]  && pwd='~'"${PWD#${HOME}}"
-  [[ "${pwd}" = /home/* ]]                          && pwd='~'"${pwd#/home/}"
-  [[ "${pwd}" = /Users/* ]]                         && pwd='~'"${pwd#/Users/}"
+  [[ "${pwd}" = "${HOME}" || "${pwd}" = ${HOME}/* ]] && pwd='~'"${PWD#${HOME}}"
+  [[ "${pwd}" = /home/* ]]                           && pwd='~'"${pwd#/home/}"
+  [[ "${pwd}" = /Users/* ]]                          && pwd='~'"${pwd#/Users/}"
   pwd="${yellow}${pwd}${reset}"
 
   __prompt_string="${user}@${host}(${pwd}"    # hack: the missing ")" is added in the `tail`
@@ -76,7 +76,7 @@ prompt_command_user_host_pwd_hook() {
 #
 
 prompt_command_git_hook() {
-  [[ -n ${BASHRC_DISABLE_GIT} ]] && return
+  [[ -n "${BASHRC_DISABLE_GIT}" ]] && return
 
   if [[ "${PWD}" != "${HOME}" ]]; then
     local dir="${PWD}" git_dir=
@@ -85,9 +85,9 @@ prompt_command_git_hook() {
       dir="${dir%/*}"
     done
 
-    if [[ -n ${git_dir} ]]; then
+    if [[ -n "${git_dir}" ]]; then
       local reset='\[\033[0m\]' grey='\[\033[1;30m\]' red='\[\033[1;31m\]' green='\[\033[1;32m\]' yellow='\[\033[1;33m\]' blue='\[\033[1;34m\]'
-      local branch='' extra=''
+      local branch='' extra='' status='' git=''
 
       if [[ -d "${git_dir}/rebase-apply" ]]; then
         if [[ -f "${git_dir}/rebase-apply/rebasing" ]]; then
@@ -121,11 +121,11 @@ prompt_command_git_hook() {
 
       branch="${branch#refs/heads/}"
       if [[ -n ${branch} ]]; then
-        local status="$(git status --porcelain 2>/dev/null | head -1)"
+        status="$(git status --porcelain 2>/dev/null | head -1)"
         if [[ -n "${status}" ]]; then
-          local git="${reset}(${grey}git:${red}${branch}${reset}${extra})"
+          git="${reset}(${grey}git:${red}${branch}${reset}${extra})"
         else
-          local git="${reset}(${grey}git:${green}${branch}${reset}${extra})"
+          git="${reset}(${grey}git:${green}${branch}${reset}${extra})"
         fi
       fi
 
@@ -134,14 +134,14 @@ prompt_command_git_hook() {
   fi
 }
 
-[[ -z ${BASHRC_DISABLE_GIT} ]] && prompt_command_hooks+=('prompt_command_git_hook')
+[[ -z "${BASHRC_DISABLE_GIT}" ]] && prompt_command_hooks+=('prompt_command_git_hook')
 
 #
 # svn
 #
 
 prompt_command_svn_hook() {
-  [[ -n ${BASHRC_DISABLE_SVN} ]] && return
+  [[ -n "${BASHRC_DISABLE_SVN}" ]] && return
 
   if [[ "${PWD}" != "${HOME}" ]]; then
     local dir="${PWD}" svn_dir=
@@ -152,14 +152,15 @@ prompt_command_svn_hook() {
 
     if [[ -n ${svn_dir} ]]; then
       local reset='\[\033[0m\]' grey='\[\033[1;30m\]' red='\[\033[1;31m\]' green='\[\033[1;32m\]'
+      local revision='' status='' svn=''
 
-      local revision="$(svn info 2>/dev/null | grep Revision: | cut -d' ' -f2)"
+      revision="$(svn info 2>/dev/null | grep Revision: | cut -d' ' -f2)"
       if [[ -n ${revision} ]]; then
-        local status="$(svn status 2>/dev/null | head -1)"
+        status="$(svn status 2>/dev/null | head -1)"
         if [[ -n ${status} ]]; then
-          local svn="${reset}(${grey}svn:${red}r${revision}${reset})"
+          svn="${reset}(${grey}svn:${red}r${revision}${reset})"
         else
-          local svn="${reset}(${grey}svn:${green}r${revision}${reset})"
+          svn="${reset}(${grey}svn:${green}r${revision}${reset})"
         fi
       fi
 
@@ -168,17 +169,17 @@ prompt_command_svn_hook() {
   fi
 }
 
-[[ -z ${BASHRC_DISABLE_SVN} ]] && prompt_command_hooks+=('prompt_command_svn_hook')
+[[ -z "${BASHRC_DISABLE_SVN}" ]] && prompt_command_hooks+=('prompt_command_svn_hook')
 
 #
 # mercurial
 #
 
 prompt_command_hg_hook() {
-  [[ -n ${BASHRC_DISABLE_HG} ]] && return
+  [[ -n "${BASHRC_DISABLE_HG}" ]] && return
 
   if [[ "${PWD}" != "${HOME}" ]]; then
-    local dir="${PWD}" hg_dir=
+    local dir="${PWD}" hg_dir=''
     while [[ "${dir}" != '/' && -n "${dir}" ]]; do
       [[ -z ${hg_dir} && -e "${dir}/.hg"  ]] && hg_dir="${dir}/.hg" && break
       dir="${dir%/*}"
@@ -186,14 +187,15 @@ prompt_command_hg_hook() {
 
     if [[ -n ${hg_dir} ]]; then
       local reset='\[\033[0m\]' grey='\[\033[1;30m\]' red='\[\033[1;31m\]' green='\[\033[1;32m\]'
+      local branch='' status='' hg=''
 
-      local branch="$(hg branch 2>/dev/null)"
+      branch="$(hg branch 2>/dev/null)"
       if [[ -n ${branch} ]]; then
-        local status="$(hg status 2>/dev/null | head -1)"
+        status="$(hg status 2>/dev/null | head -1)"
         if [[ -n ${status} ]]; then
-          local hg="${reset}(${grey}hg:${red}${branch}${reset})"
+          hg="${reset}(${grey}hg:${red}${branch}${reset})"
         else
-          local hg="${reset}(${grey}hg:${green}${branch}${reset})"
+          hg="${reset}(${grey}hg:${green}${branch}${reset})"
         fi
       fi
 
@@ -202,7 +204,7 @@ prompt_command_hg_hook() {
   fi
 }
 
-[[ -z ${BASHRC_DISABLE_HG} ]] && prompt_command_hooks+=('prompt_command_hg_hook')
+[[ -z "${BASHRC_DISABLE_HG}" ]] && prompt_command_hooks+=('prompt_command_hg_hook')
 
 #
 # envmgr
@@ -212,30 +214,30 @@ prompt_command_envmgr_hook() {
   [[ -n ${BASHRC_DISABLE_ENVMGR} ]] && return
 
   local reset='\[\033[0m\]' grey='\[\033[1;30m\]' cyan='\[\033[0;36m\]'
-  local env=
+  local envmgr=''
 
   if [[ -z ${BASHRC_DISABLE_ENVMGR_RUBY} && -n ${GEM_HOME} && ${GEM_HOME} != *@global ]]; then
     local rb="${GEM_HOME##*/}"
-    env="${env}{${grey}rb:${cyan}${rb#ruby-}${reset}}"
+    envmgr="${envmgr}{${grey}rb:${cyan}${rb#ruby-}${reset}}"
   fi
 
   if [[ -z ${BASHRC_DISABLE_ENVMGR_ERLANG} && -n ${ENVMGR_ERLANG_PREFIX} ]]; then
-    env="${env}{${grey}erl:${cyan}${ENVMGR_ERLANG_PREFIX##*/}${reset}}"
+    envmgr="${envmgr}{${grey}erl:${cyan}${ENVMGR_ERLANG_PREFIX##*/}${reset}}"
   fi
 
   if [[ -z ${BASHRC_DISABLE_ENVMGR_ELIXIR} && -n ${MIX_HOME} ]]; then
-    env="${env}{${grey}ex:${cyan}${MIX_HOME##*/}${reset}}"
+    envmgr="${envmgr}{${grey}ex:${cyan}${MIX_HOME##*/}${reset}}"
   fi
 
   if [[ -z ${BASHRC_DISABLE_ENVMGR_GO} && -n ${ENVMGR_GO_PREFIX} ]]; then
-    env="${env}{${grey}go:${cyan}${ENVMGR_GO_PREFIX##*/}${reset}}"
+    envmgr="${envmgr}{${grey}go:${cyan}${ENVMGR_GO_PREFIX##*/}${reset}}"
   fi
 
   if [[ -z ${BASHRC_DISABLE_ENVMGR_NODE} && -n ${NPM_CONFIG_PREFIX} ]]; then
-    env="${env}{${grey}node:${cyan}${NPM_CONFIG_PREFIX##*/}${reset}}"
+    envmgr="${envmgr}{${grey}node:${cyan}${NPM_CONFIG_PREFIX##*/}${reset}}"
   fi
 
-  __prompt_string="${__prompt_string}${env}"
+  __prompt_string="${__prompt_string}${envmgr}"
 }
 
 [[ -z ${BASHRC_DISABLE_ENVMGR} ]] && prompt_command_hooks+=('prompt_command_envmgr_hook')
@@ -254,9 +256,9 @@ icon_name_and_window_title() {
 
   # current directory
   local pwd="${PWD}"
-  [[ "${pwd}" = ${HOME} || "${pwd}" = ${HOME}/* ]]  && pwd='~'"${PWD#${HOME}}"
-  [[ "${pwd}" = /home/* ]]                          && pwd='~'"${pwd#/home/}"
-  [[ "${pwd}" = /Users/* ]]                         && pwd='~'"${pwd#/Users/}"
+  [[ "${pwd}" = "${HOME}" || "${pwd}" = ${HOME}/* ]] && pwd='~'"${PWD#${HOME}}"
+  [[ "${pwd}" = /home/* ]]                           && pwd='~'"${pwd#/home/}"
+  [[ "${pwd}" = /Users/* ]]                          && pwd='~'"${pwd#/Users/}"
 
   # set the icon name & window title
   if [[ ${BASH_COMMAND} = prompt_command ]]; then
@@ -283,9 +285,9 @@ umask 0022
 #
 
 BASHRC_SSH='false'
-if [[ -n ${SSH_CLIENT} || -n ${SSH_TTY} ]]; then
+if [[ -n "${SSH_CLIENT}" || -n "${SSH_TTY}" ]]; then
   BASHRC_SSH='true'
-elif [[ -z ${BASHRC_DISABLE_SSH} ]]; then
+elif [[ -z "${BASHRC_DISABLE_SSH}" ]]; then
   pid=$$
   while [[ -n ${pid} && ${pid} -ne 1 ]]; do
     pid_cmd="$(ps -oppid= -ocomm= -p${pid})"
@@ -355,7 +357,7 @@ alias CD='cd'
 alias cD='cd'
 alias Cd='cd'
 alias cd..='cd ..'
-cd.(){ cd ."${@}"; }
+cd.(){ cd ."${*}" || return 1; }
 
 # rails
 alias c='r console'

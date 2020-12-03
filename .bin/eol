@@ -10,7 +10,7 @@ usage() {
   echo 'Options:'
   echo '  -h, --help            Print this message and exit'
   echo '  -e, --exclude=glob    Exclude glob'
-  exit ${1}
+  exit "${1}"
 }
 
 #
@@ -64,6 +64,6 @@ for glob in "${exclude[@]}"; do
 done
 
 # do the rambo
-find "${dir}" -type 'f' "${exclude_params[@]}" | while read filename; do
+find "${dir}" -type 'f' "${exclude_params[@]}" | while read -r filename; do
   test "$(tail -c 1 "${filename}")" && echo "${filename}"
 done

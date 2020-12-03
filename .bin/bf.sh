@@ -7,8 +7,8 @@ fi
 
 C="s[0]=0; p=0;"
 
-while read -n1 c; do
-  case $c in
+while read -rn1 c; do
+  case "${c}" in
     \+) C="${C} s[\$p]=\$((\${s[\$p]}+1));";;
     \-) C="${C} s[\$p]=\$((\${s[\$p]}-1));";;
     \>) C="${C} p=\$((\$p+1));";;
@@ -18,6 +18,6 @@ while read -n1 c; do
     \[) C="${C} while [[ \${s[\$p]} > 0 ]]; do ";;
     \]) C="${C} done;";;
   esac;
-done < ${1};
+done < "${1}";
 
-eval ${C}
+eval "${C}"

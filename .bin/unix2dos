@@ -1,11 +1,11 @@
 #!/bin/bash
 
 if [[ -z "${1}" ]]; then
-  echo "Usage: `basename ${0}` <files>"
+  echo "Usage: $(basename "${0}") <files>"
   exit 1
 fi
 
-if [[ -n "${FORCE_COLOR}" || ( -t 1 && "`tput colors 2>/dev/null`" -gt 0 ) ]]; then
+if [[ -n "${FORCE_COLOR}" || ( -t 1 && "$(tput colors 2>/dev/null)" -gt 0 ) ]]; then
   green="\033[01;32m"
   red="\033[01;31m"
   reset="\033[00m"

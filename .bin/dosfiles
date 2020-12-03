@@ -10,7 +10,7 @@ usage() {
   echo 'Options:'
   echo '  -h, --help            Print this message and exit'
   echo '  -e, --exclude=glob    Exclude glob'
-  exit ${1}
+  exit "${1}"
 }
 
 #
@@ -64,4 +64,4 @@ for glob in "${exclude[@]}"; do
 done
 
 # do the rambo
-find "${dir}" -type 'f' "${exclude_params[@]}" -exec grep -l `printf '\r\n'` {} \;
+find "${dir}" -type 'f' "${exclude_params[@]}" -exec grep -l "$(printf '\r\n')" {} \;

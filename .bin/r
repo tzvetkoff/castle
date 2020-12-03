@@ -13,10 +13,10 @@ search=(./bin/rails
         ../../../../../../../../../../bin/rails
         ../../../../../../../../../../../bin/rails
         ../../../../../../../../../../../../bin/rails
-        "`which rails`")
+        "$(type -p rails)")
 
 for rails in "${search[@]}"; do
-  if [[ -x "${rails}" ]]; then
+  if [[ -n "${rails}" && -x "${rails}" ]]; then
     exec "${rails}" "${@}"
   fi
 done
