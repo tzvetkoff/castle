@@ -3,5 +3,9 @@
 ._.*
 
 # Vim stuff
+/.vim/autoload/*
 /.vim/bundle/vim-*
 /.vim/spell/*
+
+# Keep the keepers
+!.keep

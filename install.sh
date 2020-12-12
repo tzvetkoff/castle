@@ -1,48 +1,38 @@
 #!/bin/bash
 
 #
+# this script's path
+#
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+#
 # dirs to create @ ~/
 #
 
-HOME_DIRS=(\
-  .bashrc.d         \
+INSTALL_DIRS=(\
+  "${HOME}/.bashrc.d" \
 )
 
 #
 # files to symlink @ ~/
 #
 
-HOME_SYMLINKS=(\
-  .aprc             \
-  .bash_profile     \
-  .bashrc           \
-  .bashrc.d/go      \
-  .bashrc.d/k8s     \
-  .bash_completion  \
-  .bin              \
-  .gemrc            \
-  .irbrc            \
-  .pythonrc         \
-  .vimrc            \
-  .vim              \
-  .tmux.conf        \
+INSTALL_SYMLINKS=(\
+  "${ROOT}/.aprc:${HOME}/.aprc"                       \
+  "${ROOT}/.bash_profile:${HOME}/.bash_profile"       \
+  "${ROOT}/.bashrc:${HOME}/.bashrc"                   \
+  "${ROOT}/.bashrc.d/go:${HOME}/.bashrc.d/go"         \
+  "${ROOT}/.bashrc.d/k8s:${HOME}/.bashrc.d/k8s"       \
+  "${ROOT}/.bash_completion:${HOME}/.bash_completion" \
+  "${ROOT}/.bin:${HOME}/.bin"                         \
+  "${ROOT}/.gemrc:${HOME}/.gemrc"                     \
+  "${ROOT}/.irbrc:${HOME}/.irbrc"                     \
+  "${ROOT}/.pythonrc:${HOME}/.pythonrc"               \
+  "${ROOT}/.vimrc:${HOME}/.vimrc"                     \
+  "${ROOT}/.vim:${HOME}/.vim"                         \
+  "${ROOT}/.tmux.conf:${HOME}/.tmux.conf"             \
 )
-
-#
-# colors
-#
-
-COLOR_RED="\033[01;31m"
-COLOR_GREEN="\033[01;32m"
-COLOR_YELLOW="\033[01;33m"
-COLOR_BLUE="\033[01;34m"
-COLOR_WHITE="\033[00;00m"
-
-#
-# this script's path
-#
-
-ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 #
 # force flag
@@ -53,6 +43,16 @@ if [[ "${1}" = '-f' || "${1}" = '--force' ]]; then
 else
   FORCE='false'
 fi
+
+#
+# colors
+#
+
+COLOR_RED="\033[01;31m"
+COLOR_GREEN="\033[01;32m"
+COLOR_YELLOW="\033[01;33m"
+COLOR_BLUE="\033[01;34m"
+COLOR_WHITE="\033[00;00m"
 
 #
 # question? [y/N]
@@ -70,33 +70,36 @@ QUESTION() {
 }
 
 #
-# create dirs @ ~/
+# install dirs
 #
 
-create_home_dirs() {
-  for dir in "${HOME_DIRS[@]}"; do
-    echo -e "${COLOR_GREEN}mkdir${COLOR_WHITE} ${HOME}/${dir}"
-    mkdir -p "${HOME}/${dir}"
+install_dirs() {
+  local dir
+  for dir in "${INSTALL_DIRS[@]}"; do
+    echo -e "${COLOR_GREEN}mkdir${COLOR_WHITE} ${dir}"
+    mkdir -p "${dir}"
   done
 }
 
 #
-# symlink files @ ~/
+# install symlinks
 #
 
-create_home_symlinks() {
-  for symlink in "${HOME_SYMLINKS[@]}"; do
-    if [[ -e "${HOME}/${symlink}" ]]; then
-      if ${FORCE} || QUESTION "File ${COLOR_WHITE}${HOME}/${symlink}${COLOR_YELLOW} already exists. Overwrite?"; then
-        rm -rf -- "${HOME}/${symlink}"
+install_symlinks() {
+  local src_dst
+  for src_dst in "${INSTALL_SYMLINKS[@]}"; do
+    local src="${src_dst%:*}" dst="${src_dst#*:}"
+    if [[ -e "${dst}" ]]; then
+      if ${FORCE} || QUESTION "File ${COLOR_WHITE}${dst}${COLOR_YELLOW} already exists. Overwrite?"; then
+        rm -rf -- "${dst}"
       else
-        echo -e "${COLOR_RED}skip${COLOR_WHITE} ${HOME}/${symlink}"
+        echo -e "${COLOR_RED}skip${COLOR_WHITE} ${dst}"
         continue
       fi
     fi
 
-    echo -e "${COLOR_GREEN}install${COLOR_WHITE} ${HOME}/${symlink}"
-    ln -s "${ROOT}/${symlink}" "${HOME}/${symlink}"
+    echo -e "${COLOR_GREEN}install${COLOR_WHITE} ${dst}"
+    ln -s "${src}" "${dst}"
   done
 }
 
@@ -104,7 +107,7 @@ create_home_symlinks() {
 # create ~/.gitconfig
 #
 
-create_home_gitconfig() {
+install_gitconfig() {
   if [[ -e "${HOME}/.gitconfig" ]]; then
     if ! ${FORCE} && ! QUESTION "File ${COLOR_WHITE}${HOME}/.gitconfig${COLOR_YELLOW} already exists. Overwrite?"; then
       echo -e "${COLOR_RED}skip${COLOR_WHITE} ${HOME}/.gitconfig"
@@ -132,7 +135,7 @@ create_home_gitconfig() {
 # create ~/.my.cnf
 #
 
-create_home_mycnf() {
+install_mycnf() {
   if [[ -e "${HOME}/.my.cnf" ]]; then
     if ! ${FORCE} && ! QUESTION "File ${COLOR_WHITE}${HOME}/.my.cnf${COLOR_YELLOW} already exists. Overwrite?"; then
       echo -e "${COLOR_RED}skip${COLOR_WHITE} ${HOME}/.my.cnf"
@@ -154,12 +157,31 @@ EOF
 }
 
 #
+# misc stuff
+#
+
+install_misc() {
+  case "${OSTYPE}" in
+    linux-gnu)
+      "${ROOT}/misc/linux/xterm-256color-clear.sh"
+      ;;
+    freebsd*)
+      "${ROOT}/misc/freebsd/termcap.sh"
+      ;;
+    darwin*) :
+      "${ROOT}/misc/osx/osx.sh"
+      ;;
+  esac
+}
+
+#
 # do the actual job
 #
 
 if [[ "${BASH_SOURCE[0]}" = "${0}" ]]; then
-  create_home_dirs
-  create_home_symlinks
-  create_home_gitconfig
-  create_home_mycnf
+  install_dirs
+  install_symlinks
+  install_gitconfig
+  install_mycnf
+  install_misc
 fi
