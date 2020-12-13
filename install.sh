@@ -7,7 +7,7 @@
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 #
-# dirs to create @ ~/
+# dirs to create
 #
 
 INSTALL_DIRS=(\
@@ -15,23 +15,23 @@ INSTALL_DIRS=(\
 )
 
 #
-# files to symlink @ ~/
+# files to symlink
 #
 
 INSTALL_SYMLINKS=(\
   "${ROOT}/.aprc:${HOME}/.aprc"                       \
+  "${ROOT}/.bash_completion:${HOME}/.bash_completion" \
   "${ROOT}/.bash_profile:${HOME}/.bash_profile"       \
-  "${ROOT}/.bashrc:${HOME}/.bashrc"                   \
   "${ROOT}/.bashrc.d/go:${HOME}/.bashrc.d/go"         \
   "${ROOT}/.bashrc.d/k8s:${HOME}/.bashrc.d/k8s"       \
-  "${ROOT}/.bash_completion:${HOME}/.bash_completion" \
+  "${ROOT}/.bashrc:${HOME}/.bashrc"                   \
   "${ROOT}/.bin:${HOME}/.bin"                         \
   "${ROOT}/.gemrc:${HOME}/.gemrc"                     \
   "${ROOT}/.irbrc:${HOME}/.irbrc"                     \
   "${ROOT}/.pythonrc:${HOME}/.pythonrc"               \
-  "${ROOT}/.vimrc:${HOME}/.vimrc"                     \
-  "${ROOT}/.vim:${HOME}/.vim"                         \
   "${ROOT}/.tmux.conf:${HOME}/.tmux.conf"             \
+  "${ROOT}/.vim:${HOME}/.vim"                         \
+  "${ROOT}/.vimrc:${HOME}/.vimrc"                     \
 )
 
 #

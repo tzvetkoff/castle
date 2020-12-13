@@ -7,7 +7,7 @@
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 #
-# files to symlink @ ~/
+# files to symlink
 #
 
 INSTALL_SYMLINKS=(\
