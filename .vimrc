@@ -2,12 +2,14 @@
 " Author: Latchezar Tzvetkoff <latchezar@tzvetkoff.net>
 
 " Pathogen. {{{
-try
-  runtime bundle/vim-pathogen/autoload/pathogen.vim
-  call pathogen#infect()
-  call pathogen#helptags()
-catch
-endtry
+if v:version < 800
+  try
+    runtime pack/w00t/start/vim-pathogen/autoload/pathogen.vim
+    call pathogen#infect()
+    call pathogen#helptags()
+  catch
+  endtry
+endif
 " }}}
 
 " Options. {{{

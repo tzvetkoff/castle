@@ -15,4 +15,4 @@ echo -e "-> Updating ${green}castle${reset} from ${red}${remote}${reset}"
 git pull origin
 echo
 
-./.vim/bundle/update.sh
+./.vim/pack/w00t/start/update.sh
