@@ -4,7 +4,7 @@
 
 # Vim stuff
 /.vim/autoload/*
-/.vim/pack/w00t/start/vim-*
+/.vim/pack/*/*/vim-*
 /.vim/spell/*
 
 # Keep the keepers
