@@ -198,6 +198,7 @@ let g:gitgutter_sign_allow_clobber = 1
 " }}}
 
 " ALE/Syntastic. {{{
+let g:ale_cache_executable_check_failures = 1
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
