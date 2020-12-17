@@ -197,11 +197,10 @@ let g:gitgutter_enabled = 1
 let g:gitgutter_sign_allow_clobber = 1
 " }}}
 
-" ALE/Syntastic. {{{
-let g:ale_cache_executable_check_failures = 1
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
+" ALE. {{{
+let g:ale_echo_msg_error_str = 'error'
+let g:ale_echo_msg_warning_str = 'warning'
+let g:ale_echo_msg_format = '[%linter%::%severity%] %s '
 " }}}
 
 " NERDTree. {{{
