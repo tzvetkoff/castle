@@ -2,7 +2,7 @@
 " Author: Latchezar Tzvetkoff <latchezar@tzvetkoff.net>
 
 " Pathogen. {{{
-if v:version < 90000
+if v:version < 800
   try
     runtime pack/w00t/opt/vim-pathogen/autoload/pathogen.vim
     call pathogen#infect()
