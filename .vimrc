@@ -200,7 +200,7 @@ let g:gitgutter_sign_allow_clobber = 1
 " ALE. {{{
 let g:ale_echo_msg_error_str = 'error'
 let g:ale_echo_msg_warning_str = 'warning'
-let g:ale_echo_msg_format = '[%linter%::%severity%] %s '
+let g:ale_echo_msg_format = '[%linter%::%severity%] %code: %%s '
 map ]l :lnext<CR>
 map [l :lprev<CR>
 " }}}
