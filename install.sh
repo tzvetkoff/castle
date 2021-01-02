@@ -118,6 +118,7 @@ install_gitconfig() {
   git config --global user.name 'Latchezar Tzvetkoff'
   git config --global user.email 'latchezar'$'\100''tzvetkoff'$'\056''net'
   [[ "${USER}" != 'git' ]] && git config --global core.hooksPath "\$GIT_DIR/hooks-$(od -An -N32 -tx /dev/urandom | tr -d '\n ')"
+  git config --global init.defaultBranch 'master'
   git config --global pull.ff 'only'
   git config --global color.ui 'true'
   git config --global alias.st 'status'
