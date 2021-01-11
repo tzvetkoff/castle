@@ -24,10 +24,10 @@ export BASHRC="${BASH_SOURCE[0]}"
 # the prompt string
 #
 
-prompt_command_hooks=()
+__prompt_command_hooks=()
 
-prompt_command() {
-  for __prompt_command_hook in prompt_command_head prompt_command_user_host_pwd_hook "${prompt_command_hooks[@]}" prompt_command_tail; do
+__prompt_command() {
+  for __prompt_command_hook in __prompt_command_head __prompt_command_user_host_pwd_hook "${__prompt_command_hooks[@]}" __prompt_command_tail; do
     "${__prompt_command_hook}"
   done
 
@@ -39,7 +39,7 @@ prompt_command() {
 # head
 #
 
-prompt_command_head() {
+__prompt_command_head() {
   [[ ${?} -eq 0 ]] && __prompt_string_tail='\$' || __prompt_string_tail='\[\033[01;31m\]\$\[\033[0m\]'
   __prompt_string_head='\[\033[0m\]'
 }
@@ -48,7 +48,7 @@ prompt_command_head() {
 # tail
 #
 
-prompt_command_tail() {
+__prompt_command_tail() {
   __prompt_string="${__prompt_string_head}[${__prompt_string})]${__prompt_string_tail} "
 }
 
@@ -56,7 +56,7 @@ prompt_command_tail() {
 # user@host(pwd) with some colors
 #
 
-prompt_command_user_host_pwd_hook() {
+__prompt_command_user_host_pwd_hook() {
   local reset='\[\033[0m\]' red='\[\033[1;31m\]' green='\[\033[1;32m\]' yellow='\[\033[1;33m\]' blue='\[\033[1;34m\]'
 
   [[ ${UID} -eq 0 ]] && local user="${red}${USER}${reset}" || local user="${green}${USER}${reset}"
@@ -75,7 +75,7 @@ prompt_command_user_host_pwd_hook() {
 # git
 #
 
-prompt_command_git_hook() {
+__prompt_command_git_hook() {
   [[ -n "${BASHRC_DISABLE_GIT}" ]] && return
 
   if [[ "${PWD}" != "${HOME}" ]]; then
@@ -134,13 +134,13 @@ prompt_command_git_hook() {
   fi
 }
 
-[[ -z "${BASHRC_DISABLE_GIT}" ]] && prompt_command_hooks+=('prompt_command_git_hook')
+[[ -z "${BASHRC_DISABLE_GIT}" ]] && __prompt_command_hooks+=('__prompt_command_git_hook')
 
 #
 # svn
 #
 
-prompt_command_svn_hook() {
+__prompt_command_svn_hook() {
   [[ -n "${BASHRC_DISABLE_SVN}" ]] && return
 
   if [[ "${PWD}" != "${HOME}" ]]; then
@@ -169,13 +169,13 @@ prompt_command_svn_hook() {
   fi
 }
 
-[[ -z "${BASHRC_DISABLE_SVN}" ]] && prompt_command_hooks+=('prompt_command_svn_hook')
+[[ -z "${BASHRC_DISABLE_SVN}" ]] && __prompt_command_hooks+=('__prompt_command_svn_hook')
 
 #
 # mercurial
 #
 
-prompt_command_hg_hook() {
+__prompt_command_hg_hook() {
   [[ -n "${BASHRC_DISABLE_HG}" ]] && return
 
   if [[ "${PWD}" != "${HOME}" ]]; then
@@ -204,13 +204,13 @@ prompt_command_hg_hook() {
   fi
 }
 
-[[ -z "${BASHRC_DISABLE_HG}" ]] && prompt_command_hooks+=('prompt_command_hg_hook')
+[[ -z "${BASHRC_DISABLE_HG}" ]] && __prompt_command_hooks+=('__prompt_command_hg_hook')
 
 #
 # envmgr
 #
 
-prompt_command_envmgr_hook() {
+__prompt_command_envmgr_hook() {
   [[ -n ${BASHRC_DISABLE_ENVMGR} ]] && return
 
   local reset='\[\033[0m\]' grey='\[\033[1;30m\]' cyan='\[\033[0;36m\]'
@@ -240,16 +240,16 @@ prompt_command_envmgr_hook() {
   __prompt_string="${__prompt_string}${envmgr}"
 }
 
-[[ -z ${BASHRC_DISABLE_ENVMGR} ]] && prompt_command_hooks+=('prompt_command_envmgr_hook')
+[[ -z ${BASHRC_DISABLE_ENVMGR} ]] && __prompt_command_hooks+=('__prompt_command_envmgr_hook')
 
 PS1='\u@\h:\w\$ '
-PROMPT_COMMAND=prompt_command
+PROMPT_COMMAND=__prompt_command
 
 #
 # icon name & window title
 #
 
-icon_name_and_window_title() {
+__xterm_window_title() {
   # hostname
   local host="${HOSTNAME%%.*}"
 
@@ -260,7 +260,7 @@ icon_name_and_window_title() {
   [[ "${pwd}" = /Users/* ]]                          && pwd='~'"${pwd#/Users/}"
 
   # set the icon name & window title
-  if [[ ${BASH_COMMAND} = prompt_command ]]; then
+  if [[ ${BASH_COMMAND} = '__prompt_command' ]]; then
     echo -ne "\033]0;${USER}@${host}:${pwd}\007"
   else
     local bash_command="${BASH_COMMAND//\\/\\\\}"
@@ -269,7 +269,7 @@ icon_name_and_window_title() {
 }
 
 trap - DEBUG
-trap icon_name_and_window_title DEBUG
+trap __xterm_window_title DEBUG
 
 #
 # umask !@#$

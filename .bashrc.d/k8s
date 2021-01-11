@@ -5,7 +5,7 @@ if [[ -d "${HOME}/KubeConf" ]]; then
   # bash prompt command hook
   #
 
-  prompt_command_k8s_hook() {
+  __prompt_command_k8s_hook() {
     if [[ -n ${KUBECONFIG} ]]; then
       local reset='\[\033[0m\]' grey='\[\033[1;30m\]' cyan='\[\033[0;36m\]'
       local k8s="${KUBECONFIG##*/}";
@@ -14,17 +14,18 @@ if [[ -d "${HOME}/KubeConf" ]]; then
     fi
   }
 
-  prompt_command_hooks+=('prompt_command_k8s_hook')
+  __prompt_command_hooks+=('__prompt_command_k8s_hook')
 
   #
   # create functions that activate each env
   #
 
   shopt -s nullglob
-  for file in "${HOME}/KubeConf"/*.kubeconfig; do
-    base="${file##*/}"
-    base="${base%.*}"
-    eval "${base}() { echo 'Activating \"${base}\" k8s env...'; export KUBECONFIG=\"${file}\"; }"
+  for __kubeconfig in "${HOME}/KubeConf"/*.kubeconfig; do
+    __kubename="${__kubeconfig##*/}"
+    __kubename="${__kubename%.*}"
+    eval "${__kubename}() { echo 'Activating \"${__kubename}\" k8s env...'; export KUBECONFIG=\"${__kubeconfig}\"; }"
   done
   shopt -u nullglob
+  unset __kubeconfig __kubename
 fi
