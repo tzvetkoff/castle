@@ -1,0 +1,12 @@
+#!/bin/sh
+
+if [[ -n "${1}" ]]; then
+  while [[ -n "${1}" ]]; do
+    echo -n "${1}" | base64 -w0
+    echo
+
+    shift
+  done
+else
+  base64
+fi

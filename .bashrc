@@ -251,8 +251,7 @@ PROMPT_COMMAND=prompt_command
 
 icon_name_and_window_title() {
   # hostname
-  ${BASHRC_SSH} && local host_icon_name="${HOSTNAME%%.*}:" || local host_icon_name=
-  local host_window_title="${HOSTNAME%%.*}"
+  local host="${HOSTNAME%%.*}"
 
   # current directory
   local pwd="${PWD}"
@@ -262,12 +261,10 @@ icon_name_and_window_title() {
 
   # set the icon name & window title
   if [[ ${BASH_COMMAND} = prompt_command ]]; then
-    echo -ne "\033]1;${host_icon_name}bash\007"
-    echo -ne "\033]2;${USER}@${host_window_title}:${pwd}\007"
+    echo -ne "\033]0;${USER}@${host}:${pwd}\007"
   else
     local bash_command="${BASH_COMMAND//\\/\\\\}"
-    echo -ne "\033]1;${host_icon_name}${bash_command%% *}\007"
-    echo -ne "\033]2;${USER}@${host_window_title}:${pwd} > ${bash_command}\007"
+    echo -ne "\033]0;${USER}@${host}:${pwd} > ${bash_command}\007"
   fi
 }
 
@@ -279,28 +276,6 @@ trap icon_name_and_window_title DEBUG
 #
 
 umask 0022
-
-#
-# detect ssh session
-#
-
-BASHRC_SSH='false'
-if [[ -n "${SSH_CLIENT}" || -n "${SSH_TTY}" ]]; then
-  BASHRC_SSH='true'
-elif [[ -z "${BASHRC_DISABLE_SSH}" ]]; then
-  pid=$$
-  while [[ -n ${pid} && ${pid} -ne 1 ]]; do
-    pid_cmd="$(ps -oppid= -ocomm= -p${pid})"
-    pid="${pid_cmd%% *}"
-    cmd="${pid_cmd#* }"
-    if [[ ${cmd} = *sshd ]]; then
-      BASHRC_SSH='true'
-      break
-    fi
-  done
-fi
-unset pid_cmd pid cmd
-export BASHRC_SSH
 
 #
 # aliases (and some function overrides)
