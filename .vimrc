@@ -210,6 +210,13 @@ map <C-r> :NERDTreeToggle<CR>
 let NERDTreeMapOpenInTab = "<ENTER>"
 " }}}
 
+" NERDCommenter. {{{
+let g:NERDSpaceDelims = 1
+nnoremap <silent> <C-_> :call NERDComment('n', 'toggle')<CR>
+vnoremap <silent> <C-_> :call NERDComment('v', 'toggle')<CR>gv
+inoremap <silent> <C-_> <C-O>:call NERDComment('i', 'toggle')<CR>
+" }}}
+
 " CtrlP. {{{
 let g:ctrlp_dotfiles = 1
 let g:ctrlp_custom_ignore = {
