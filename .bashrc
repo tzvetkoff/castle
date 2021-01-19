@@ -233,8 +233,8 @@ __prompt_command_envmgr_hook() {
     envmgr="${envmgr}{${grey}go:${cyan}${ENVMGR_GO_PREFIX##*/}${reset}}"
   fi
 
-  if [[ -z ${BASHRC_DISABLE_ENVMGR_NODE} && -n ${NPM_CONFIG_PREFIX} ]]; then
-    envmgr="${envmgr}{${grey}node:${cyan}${NPM_CONFIG_PREFIX##*/}${reset}}"
+  if [[ -z ${BASHRC_DISABLE_ENVMGR_NODE} && -n ${ENVMGR_NODE_PREFIX} ]]; then
+    envmgr="${envmgr}{${grey}node:${cyan}${ENVMGR_NODE_PREFIX##*/}${reset}}"
   fi
 
   __prompt_string="${__prompt_string}${envmgr}"
