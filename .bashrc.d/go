@@ -1,5 +1,4 @@
 #!/bin/bash
 
 export GOPATH="${HOME}/.go"
-export GOPROXY='http://172.17.0.1:8008|https://proxy.golang.org,direct'
 export PATH="${PATH}:${GOPATH}/bin"
