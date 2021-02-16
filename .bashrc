@@ -237,6 +237,10 @@ __prompt_command_envmgr_hook() {
     envmgr="${envmgr}{${grey}node:${cyan}${ENVMGR_NODE_PREFIX##*/}${reset}}"
   fi
 
+  if [[ -z ${BASHRC_DISABLE_ENVMGR_MUSL} && -n ${ENVMGR_MUSL_PREFIX} ]]; then
+    envmgr="${envmgr}{${grey}musl:${cyan}${ENVMGR_MUSL_PREFIX##*/}${reset}}"
+  fi
+
   __prompt_string="${__prompt_string}${envmgr}"
 }
 
