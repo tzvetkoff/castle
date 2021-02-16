@@ -254,6 +254,9 @@ PROMPT_COMMAND=__prompt_command
 #
 
 __xterm_window_title() {
+  # user char
+  [[ ${UID} -eq 0 ]] && local uchar='#' || local uchar='$'
+
   # hostname
   local host="${HOSTNAME%%.*}"
 
@@ -265,10 +268,10 @@ __xterm_window_title() {
 
   # set the icon name & window title
   if [[ ${BASH_COMMAND} = '__prompt_command' ]]; then
-    echo -ne "\033]0;${USER}@${host}:${pwd}\007"
+    echo -ne "\033]0;${USER}@${host}:${pwd} ${uchar}\007"
   else
     local bash_command="${BASH_COMMAND//\\/\\\\}"
-    echo -ne "\033]0;${USER}@${host}:${pwd} > ${bash_command}\007"
+    echo -ne "\033]0;${USER}@${host}:${pwd} ${uchar} ${bash_command}\007"
   fi
 }
 
