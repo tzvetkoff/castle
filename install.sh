@@ -121,6 +121,10 @@ install_gitconfig() {
   git config --global init.defaultBranch 'master'
   git config --global pull.ff 'only'
   git config --global color.ui 'true'
+  git config --global diff.tool 'vimdiff'
+  git config --global difftool.prompt 'false'
+  git config --global merge.tool 'vimdiff'
+  git config --global mergetool.prompt 'false'
   git config --global alias.st 'status'
   git config --global alias.ci 'commit'
   git config --global alias.co 'checkout'
@@ -163,15 +167,9 @@ EOF
 
 install_misc() {
   case "${OSTYPE}" in
-    linux-gnu)
-      "${ROOT}/misc/linux/xterm-256color-clear.sh"
-      ;;
-    freebsd*)
-      "${ROOT}/misc/freebsd/termcap.sh"
-      ;;
-    darwin*) :
-      "${ROOT}/misc/osx/osx.sh"
-      ;;
+    linux-gnu) "${ROOT}/misc/linux/xterm-256color-clear.sh" "${@}";;
+    freebsd*)  "${ROOT}/misc/freebsd/termcap.sh" "${@}";;
+    darwin*)   "${ROOT}/misc/osx/osx.sh" "${@}";;
   esac
 }
 
@@ -184,5 +182,5 @@ if [[ "${BASH_SOURCE[0]}" = "${0}" ]]; then
   install_symlinks
   install_gitconfig
   install_mycnf
-  install_misc
+  install_misc "${@}"
 fi
