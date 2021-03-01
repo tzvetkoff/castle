@@ -268,10 +268,10 @@ __xterm_window_title() {
 
   # set the icon name & window title
   if [[ ${BASH_COMMAND} = '__prompt_command' ]]; then
-    echo -ne "\033]0;${USER}@${host}:${pwd} ${uchar}\007"
+    echo -ne "\033]0;[${USER}@${host}:${pwd}]${uchar}\007"
   else
     local bash_command="${BASH_COMMAND//\\/\\\\}"
-    echo -ne "\033]0;${USER}@${host}:${pwd} ${uchar} ${bash_command}\007"
+    echo -ne "\033]0;[${USER}@${host}:${pwd}]${uchar} ${bash_command}\007"
   fi
 }
 
