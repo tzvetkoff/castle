@@ -63,9 +63,8 @@ __prompt_command_user_host_pwd_hook() {
   local host="${blue}${HOSTNAME%%.*}${reset}"
 
   local pwd="${PWD}"
-  [[ "${pwd}" = "${HOME}" || "${pwd}" = ${HOME}/* ]] && pwd='~'"${PWD#${HOME}}"
-  [[ "${pwd}" = /home/* ]]                           && pwd='~'"${pwd#/home/}"
-  [[ "${pwd}" = /Users/* ]]                          && pwd='~'"${pwd#/Users/}"
+  [[ "${pwd}" = "${HOME}" || "${pwd}" = ${HOME}/* ]] && pwd="~${PWD#${HOME}}"
+  [[ "${pwd}" = /home/* ]]                           && pwd="~${pwd#/home/}"
   pwd="${yellow}${pwd}${reset}"
 
   __prompt_string="${user}@${host}(${pwd}"    # hack: the missing ")" is added in the `tail`
@@ -81,7 +80,7 @@ __prompt_command_git_hook() {
   if [[ "${PWD}" != "${HOME}" ]]; then
     local dir="${PWD}" git_dir=
     while [[ "${dir}" != '/' && -n "${dir}" ]]; do
-      [[ -z ${git_dir} && -e "${dir}/.git" ]] && git_dir="${dir}/.git" && break
+      [[ -e "${dir}/.git" ]] && git_dir="${dir}/.git" && break
       dir="${dir%/*}"
     done
 
@@ -146,7 +145,7 @@ __prompt_command_svn_hook() {
   if [[ "${PWD}" != "${HOME}" ]]; then
     local dir="${PWD}" svn_dir=
     while [[ "${dir}" != '/' && -n "${dir}" ]]; do
-      [[ -z ${svn_dir} && -e "${dir}/.svn" ]] && svn_dir="${dir}/.svn" && break
+      [[ -e "${dir}/.svn" ]] && svn_dir="${dir}/.svn" && break
       dir="${dir%/*}"
     done
 
@@ -181,7 +180,7 @@ __prompt_command_hg_hook() {
   if [[ "${PWD}" != "${HOME}" ]]; then
     local dir="${PWD}" hg_dir=''
     while [[ "${dir}" != '/' && -n "${dir}" ]]; do
-      [[ -z ${hg_dir} && -e "${dir}/.hg"  ]] && hg_dir="${dir}/.hg" && break
+      [[ -e "${dir}/.hg" ]] && hg_dir="${dir}/.hg" && break
       dir="${dir%/*}"
     done
 
@@ -262,9 +261,8 @@ __xterm_window_title() {
 
   # current directory
   local pwd="${PWD}"
-  [[ "${pwd}" = "${HOME}" || "${pwd}" = ${HOME}/* ]] && pwd='~'"${PWD#${HOME}}"
-  [[ "${pwd}" = /home/* ]]                           && pwd='~'"${pwd#/home/}"
-  [[ "${pwd}" = /Users/* ]]                          && pwd='~'"${pwd#/Users/}"
+  [[ "${pwd}" = "${HOME}" || "${pwd}" = ${HOME}/* ]] && pwd="~${PWD#${HOME}}"
+  [[ "${pwd}" = /home/* ]]                           && pwd="~${pwd#/home/}"
 
   # set the icon name & window title
   if [[ ${BASH_COMMAND} = '__prompt_command' ]]; then
