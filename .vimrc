@@ -85,6 +85,8 @@ set completeopt=longest,menuone
 function! CtrlSpaceCompletion()
   if pumvisible() || &omnifunc == ""
     return "\<C-n>"
+  elseif &omnifunc != ""
+    return "\<C-x>\<C-o>"
   elseif col(".") > 1 && strpart(getline("."), col(".") - 2, 3) =~ "^\\w"
     return "\<C-p>"
   endif
@@ -98,10 +100,14 @@ function! TabCompletion()
   let left = strpart(line, 0, col - 1)
   let right = strpart(line, col - 1)
 
-  if left =~ "^\\s*$" || left =~ "\\s$"
+  if pumvisible()
+    return "\<C-n>"
+  elseif left =~ "^\\s*$" || left =~ "\\s$"
     return "\<tab>"
+  elseif &omnifunc != ""
+    return "\<C-x>\<C-o>"
   else
-    return "\<c-n>"
+    return "\<C-n>"
   end
 endfunction!
 inoremap <expr> <tab> TabCompletion()
@@ -113,8 +119,12 @@ function! ShiftTabCompletion()
   let left = strpart(line, 0, col - 1)
   let right = strpart(line, col - 1)
 
-  if left =~ "^\\s*$" || left =~ "\\s$"
+  if pumvisible()
+    return "\<C-p>"
+  elseif left =~ "^\\s*$" || left =~ "\\s$"
     return "\<c-d>"
+  elseif &omnifunc != ""
+    return "\<C-x>\<C-o>"
   else
     return "\<c-p>"
   endif
