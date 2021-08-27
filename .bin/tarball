@@ -141,5 +141,5 @@ esac
 if [[ -z "${COMPRESSOR}" ]]; then
   tar cf "${ARCHIVE}" "${@}"
 else
-  tar c "${@}" | "${COMPRESSOR}" "${COMPRESSOR_ARGS[@]}" > "${ARCHIVE}"
+  tar cf - "${@}" | "${COMPRESSOR}" "${COMPRESSOR_ARGS[@]}" > "${ARCHIVE}"
 fi
