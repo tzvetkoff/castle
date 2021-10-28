@@ -152,6 +152,11 @@ autocmd BufNewFile,BufRead *.nfo setlocal filetype=nfo | call SetEncoding("cp437
 " }}}
 
 " Tab navigation. {{{
+augroup open-tabs
+  au!
+  au VimEnter * ++nested if !&diff | tab all | tabfirst | endif
+augroup end
+
 cabbrev <expr> t getcmdtype() == ":" && getcmdline() == "t" ? "tabn" : "t"
 for i in range(1, 99)
   execute "cabbrev <expr> t".i." getcmdtype() == \":\" && getcmdline() == \"t".i."\" ? \"tabn ".i."\" : \"t".i."\""
