@@ -229,9 +229,9 @@ let NERDTreeMapOpenInTab = "<ENTER>"
 
 " NERDCommenter. {{{
 let g:NERDSpaceDelims = 1
-nnoremap <silent> <C-_> :call NERDComment('n', 'toggle')<CR>
-vnoremap <silent> <C-_> :call NERDComment('v', 'toggle')<CR>gv
-inoremap <silent> <C-_> <C-O>:call NERDComment('i', 'toggle')<CR>
+nnoremap <silent> <C-_> :call nerdcommenter#Comment('n', 'toggle')<CR>
+vnoremap <silent> <C-_> :call nerdcommenter#Comment('v', 'toggle')<CR>gv
+inoremap <silent> <C-_> <C-O>:call nerdcommenter#Comment('i', 'toggle')<CR>
 " }}}
 
 " CtrlP. {{{
