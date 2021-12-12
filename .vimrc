@@ -51,6 +51,8 @@ endif
 if has("mouse")
   set mouse=
 endif
+
+let g:netrw_dirhistmax = 0
 " }}}
 
 " Color scheme. {{{
