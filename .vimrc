@@ -159,6 +159,11 @@ augroup open-tabs
   au VimEnter * nested if !&diff | tab all | tabfirst | endif
 augroup end
 
+cabbrev <expr> n "tabnew"
+cabbrev <expr> o "tabnew"
+cabbrev tn tabnext
+cabbrev tp tabprevious
+
 cabbrev <expr> t getcmdtype() == ":" && getcmdline() == "t" ? "tabn" : "t"
 for i in range(1, 99)
   execute "cabbrev <expr> t".i." getcmdtype() == \":\" && getcmdline() == \"t".i."\" ? \"tabn ".i."\" : \"t".i."\""
