@@ -353,6 +353,7 @@ alias su='sudo su'
 alias chown='sudo chown'
 
 # ssh & scp
+alias ssh-nokey='ssh -o PasswordAuthentication=yes -o PreferredAuthentications=keyboard-interactive,password -o PubkeyAuthentication=no'
 alias ssh-guest='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
 alias sshrc-guest='sshrc -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
 alias scp-guest='scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
