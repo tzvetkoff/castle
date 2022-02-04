@@ -1,0 +1,4 @@
+#!/bin/bash
+[[ -z "${1}" ]] && echo "usage: ${0} <archive.tar.zst> [files...]" && exit 1
+[[ -z "${2}" ]] && set -- "${1%%/}.tar.zst" "${1}"
+exec tarball -czst "${@}"
