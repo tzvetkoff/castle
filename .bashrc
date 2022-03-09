@@ -473,4 +473,4 @@ fi
 # show message-of-the-day (not really)
 #
 
-[[ -z ${BASHRC_DISABLE_MOTD} ]] && type -p motd >/dev/null && motd
+[[ -z "${BASHRC_DISABLE_MOTD}" && -x "${HOME}/.motd" ]] && "${HOME}/.motd"

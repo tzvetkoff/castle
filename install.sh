@@ -25,6 +25,7 @@ INSTALL_SYMLINKS=(\
   "${ROOT}/.bashrc.d/go:${HOME}/.bashrc.d/go"         \
   "${ROOT}/.bashrc.d/k8s:${HOME}/.bashrc.d/k8s"       \
   "${ROOT}/.bashrc:${HOME}/.bashrc"                   \
+  "${ROOT}/.bin/motd:${HOME}/.motd"                   \
   "${ROOT}/.bin:${HOME}/.bin"                         \
   "${ROOT}/.gemrc:${HOME}/.gemrc"                     \
   "${ROOT}/.irbrc:${HOME}/.irbrc"                     \
