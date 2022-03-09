@@ -407,8 +407,8 @@ set +H
 # set some other handy stuff
 #
 
-export SVN_EDITOR=vim
 export EDITOR=vim
+export VISUAL=vim
 
 #
 # nicer python
