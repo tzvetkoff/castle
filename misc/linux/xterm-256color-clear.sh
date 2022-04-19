@@ -21,10 +21,10 @@ COLOR_BLUE="\033[01;34m"
 COLOR_WHITE="\033[00;00m"
 
 #
-# question? [y/N]
+# ask? [y/N]
 #
 
-QUESTION() {
+ask() {
   echo -ne "${COLOR_YELLOW}${*} ${COLOR_BLUE}[y/N]${COLOR_WHITE} "
   read -n 1 -r
   echo
@@ -39,9 +39,9 @@ QUESTION() {
 # recompile xterm-256color terminfo entry
 #
 
-install_x256c() {
+install_xterm_256color() {
   if [[ -e "${HOME}/.terminfo/x/xterm-256color" ]]; then
-    if ${FORCE} || QUESTION "File ${COLOR_WHITE}${HOME}/.terminfo/x/xterm-256color${COLOR_YELLOW} already exists. Overwrite?"; then
+    if ${FORCE} || ask "File ${COLOR_WHITE}${HOME}/.terminfo/x/xterm-256color${COLOR_YELLOW} already exists. Overwrite?"; then
       rm -rf -- "${HOME}/.terminfo/x/xterm-256color"
     else
       echo -e "${COLOR_RED}skip${COLOR_WHITE} ${HOME}/.terminfo/x/xterm-256color"
@@ -58,5 +58,5 @@ install_x256c() {
 #
 
 if [[ "${BASH_SOURCE[0]}" = "${0}" ]]; then
-  install_x256c
+  install_xterm_256color
 fi

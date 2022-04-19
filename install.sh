@@ -56,10 +56,10 @@ COLOR_BLUE="\033[01;34m"
 COLOR_WHITE="\033[00;00m"
 
 #
-# question? [y/N]
+# ask? [y/N]
 #
 
-QUESTION() {
+ask() {
   echo -ne "${COLOR_YELLOW}${*} ${COLOR_BLUE}[y/N]${COLOR_WHITE} "
   read -n 1 -r
   echo
@@ -91,7 +91,7 @@ install_symlinks() {
   for src_dst in "${INSTALL_SYMLINKS[@]}"; do
     local src="${src_dst%:*}" dst="${src_dst#*:}"
     if [[ -e "${dst}" ]]; then
-      if ${FORCE} || QUESTION "File ${COLOR_WHITE}${dst}${COLOR_YELLOW} already exists. Overwrite?"; then
+      if ${FORCE} || ask "File ${COLOR_WHITE}${dst}${COLOR_YELLOW} already exists. Overwrite?"; then
         rm -rf -- "${dst}"
       else
         echo -e "${COLOR_RED}skip${COLOR_WHITE} ${dst}"
@@ -110,7 +110,7 @@ install_symlinks() {
 
 install_gitconfig() {
   if [[ -e "${HOME}/.gitconfig" ]]; then
-    if ! ${FORCE} && ! QUESTION "File ${COLOR_WHITE}${HOME}/.gitconfig${COLOR_YELLOW} already exists. Overwrite?"; then
+    if ! ${FORCE} && ! ask "File ${COLOR_WHITE}${HOME}/.gitconfig${COLOR_YELLOW} already exists. Overwrite?"; then
       echo -e "${COLOR_RED}skip${COLOR_WHITE} ${HOME}/.gitconfig"
       return 0
     fi
@@ -134,6 +134,7 @@ install_gitconfig() {
   git config --global alias.rb 'rubocop'
   git config --global alias.df 'diff --ignore-all-space'
   git config --global alias.lg 'log --color --graph --pretty=format:"%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset" --abbrev-commit'
+  git config --global remote.\*.tagOpt '--tags'
   echo -e "${COLOR_GREEN}create${COLOR_WHITE} ${HOME}/.gitconfig"
 }
 
@@ -143,7 +144,7 @@ install_gitconfig() {
 
 install_mycnf() {
   if [[ -e "${HOME}/.my.cnf" ]]; then
-    if ! ${FORCE} && ! QUESTION "File ${COLOR_WHITE}${HOME}/.my.cnf${COLOR_YELLOW} already exists. Overwrite?"; then
+    if ! ${FORCE} && ! ask "File ${COLOR_WHITE}${HOME}/.my.cnf${COLOR_YELLOW} already exists. Overwrite?"; then
       echo -e "${COLOR_RED}skip${COLOR_WHITE} ${HOME}/.my.cnf"
       return 0
     fi

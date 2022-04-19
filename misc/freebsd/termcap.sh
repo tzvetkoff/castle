@@ -35,10 +35,10 @@ COLOR_BLUE="\033[01;34m"
 COLOR_WHITE="\033[00;00m"
 
 #
-# question? [y/N]
+# ask? [y/N]
 #
 
-QUESTION() {
+ask() {
   echo -ne "${COLOR_YELLOW}${*} ${COLOR_BLUE}[y/N]${COLOR_WHITE} "
   read -n 1 -r
   echo
@@ -58,7 +58,7 @@ install_symlinks() {
   for src_dst in "${INSTALL_SYMLINKS[@]}"; do
     local src="${src_dst%:*}" dst="${src_dst#*:}"
     if [[ -e "${dst}" ]]; then
-      if ${FORCE} || QUESTION "File ${COLOR_WHITE}${dst}${COLOR_YELLOW} already exists. Overwrite?"; then
+      if ${FORCE} || ask "File ${COLOR_WHITE}${dst}${COLOR_YELLOW} already exists. Overwrite?"; then
         rm -rf -- "${dst}"
       else
         echo -e "${COLOR_RED}skip${COLOR_WHITE} ${dst}"
