@@ -63,7 +63,7 @@ __prompt_command_user_host_pwd_hook() {
   local host="${blue}${HOSTNAME%%.*}${reset}"
 
   local pwd="${PWD}"
-  [[ "${pwd}" = "${HOME}" || "${pwd}" = ${HOME}/* ]] && pwd="~${PWD#${HOME}}"
+  [[ "${pwd}" = "${HOME}" || "${pwd}" = ${HOME}/* ]] && pwd="~${PWD#"${HOME}"}"
   [[ "${pwd}" = /home/* ]]                           && pwd="~${pwd#/home/}"
   pwd="${yellow}${pwd}${reset}"
 
@@ -261,7 +261,7 @@ __xterm_window_title() {
 
   # current directory
   local pwd="${PWD}"
-  [[ "${pwd}" = "${HOME}" || "${pwd}" = ${HOME}/* ]] && pwd="~${PWD#${HOME}}"
+  [[ "${pwd}" = "${HOME}" || "${pwd}" = ${HOME}/* ]] && pwd="~${PWD#"${HOME}"}"
   [[ "${pwd}" = /home/* ]]                           && pwd="~${pwd#/home/}"
 
   # set the icon name & window title
