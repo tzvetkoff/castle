@@ -134,7 +134,7 @@ install_gitconfig() {
   git config --global alias.rb 'rubocop'
   git config --global alias.df 'diff --ignore-all-space'
   git config --global alias.lg 'log --color --graph --pretty=format:"%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset" --abbrev-commit'
-  git config --global remote.\*.tagOpt '--tags'
+  git config --global remote.origin.tagOpt '--tags'
   echo -e "${COLOR_GREEN}create${COLOR_WHITE} ${HOME}/.gitconfig"
 }
 
