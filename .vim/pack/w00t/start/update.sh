@@ -6,7 +6,7 @@ set -e
 # This script's path
 #
 
-root="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+root="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
 
 #
 # Some colors
