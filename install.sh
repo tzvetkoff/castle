@@ -22,6 +22,7 @@ INSTALL_SYMLINKS=(\
   "${ROOT}/.aprc:${HOME}/.aprc"                       \
   "${ROOT}/.bash_completion:${HOME}/.bash_completion" \
   "${ROOT}/.bash_profile:${HOME}/.bash_profile"       \
+  "${ROOT}/.bashrc.d/aws:${HOME}/.bashrc.d/aws"       \
   "${ROOT}/.bashrc.d/go:${HOME}/.bashrc.d/go"         \
   "${ROOT}/.bashrc.d/k8s:${HOME}/.bashrc.d/k8s"       \
   "${ROOT}/.bashrc:${HOME}/.bashrc"                   \
