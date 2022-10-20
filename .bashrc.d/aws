@@ -1,19 +1,27 @@
 #!/bin/bash
 
-awsprofile() {
-  if [[ -z "${1}" ]]; then
-    awk '/\[profile/ { gsub(/\]/, ""); print $2 }' <"${HOME}/.aws/config"
-  else
-    export AWS_PROFILE="${1}"
-  fi
-}
+if [[ -f "${HOME}/.aws/config" ]]; then
+  #
+  # bash prompt command hook
+  #
+  __prompt_command_aws_hook() {
+    if [[ -n "${AWS_PROFILE}" ]]; then
+      local reset='\[\033[0m\]' grey='\[\033[1;30m\]' cyan='\[\033[0;36m\]'
+      local aws="{${grey}aws:${cyan}${AWS_PROFILE}${reset}}"
+      __prompt_string="${__prompt_string}${aws}"
+    fi
+  }
 
-__prompt_command_aws_hook() {
-  if [[ -n "${AWS_PROFILE}" ]]; then
-    local reset='\[\033[0m\]' grey='\[\033[1;30m\]' cyan='\[\033[0;36m\]'
-    local aws="{${grey}aws:${cyan}${AWS_PROFILE}${reset}}"
-    __prompt_string="${__prompt_string}${aws}"
-  fi
-}
+  __prompt_command_hooks+=('__prompt_command_aws_hook')
 
-__prompt_command_hooks+=('__prompt_command_aws_hook')
+  #
+  # create functions that activate each env
+  #
+
+  aws--default() { echo 'Activating default AWS profile...'; unset AWS_PROFILE; }
+
+  while read -r __profile; do
+    eval "aws--${__profile}() { echo 'Activating \"${__profile}\" AWS profile...'; export AWS_PROFILE=\"${__profile}\"; }"
+  done < <(awk '/\[profile .*]/ { gsub(/[\[\]]/, ""); print $2 }' < "${HOME}/.aws/config")
+  unset __profile
+fi
