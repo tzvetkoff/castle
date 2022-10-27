@@ -11,6 +11,7 @@ https://github.com/preservim/nerdcommenter.git          vim-nerdcommenter
 https://github.com/tzvetkoff/vim-yankee.git             vim-yankee
 https://github.com/tzvetkoff/vim-hexmode.git            vim-hexmode
 https://github.com/fatih/vim-go.git                     vim-go
+https://github.com/rust-lang/rust.vim.git               vim-rust
 https://github.com/hashivim/vim-terraform.git           vim-terraform
 https://github.com/elixir-lang/vim-elixir.git           vim-elixir
 https://github.com/cespare/vim-toml.git                 vim-toml

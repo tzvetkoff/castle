@@ -225,6 +225,9 @@ let g:gitgutter_sign_allow_clobber = 1
 let g:ale_echo_msg_error_str = 'error'
 let g:ale_echo_msg_warning_str = 'warning'
 let g:ale_echo_msg_format = '[%linter%::%severity%] %code: %%s '
+let g:ale_pattern_options = {
+      \ '.*\.rs$': {'ale_enabled': 0},
+      \ }
 map ]l :lnext<CR>
 map [l :lprev<CR>
 " }}}
