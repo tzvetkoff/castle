@@ -17,6 +17,8 @@ set nocompatible                                " force vim mode
 set laststatus=2                                " always show the status bar
 set encoding=utf-8                              " default to utf-8
 set t_Co=256                                    " force 256 colors
+set t_fd=                                       " xfce4-terminal has issues with focus events
+set t_fe=                                       " meh-meh
 set backspace=indent,eol,start                  " allow backspacing over everything
 set nobackup                                    " do not keep a backup file, use versions instead
 set history=50                                  " keep 50 lines of command line history
