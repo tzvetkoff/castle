@@ -41,18 +41,27 @@ end
 Array.send(:include, ArrExt)
 
 class IPCalc
-  attr_reader :ip
+  attr_reader :src, :ip
 
   def initialize(hostname = 'localhost')
+
     if hostname =~ /^\d{1,3}\.\d{1,3}\.\d{1,3}.\d{1,3}$/
-      @ip = hostname.split('.').map(&:to_i)
+      @src = hostname.split('.').map(&:to_i)
+      @ip = hostname.split('.').map(&:to_i).map_with_index{ |x, y| 256 ** (3 - y) * x }.sum.then do |i|
+        [(i / 256 ** 3), (i / 256 ** 2 % 256), (i / 256 % 256), (i % 256)]
+      end
     else
+      @src = Socket.gethostbyname(hostname).last.chars.map(&:ord)
       @ip = Socket.gethostbyname(hostname).last.chars.map(&:ord)
     end
   end
 
   def to_s
     result = ''
+
+    result << "ORI (???????) : #{src.join('.')}\n"
+    result << "ORI (32)      : #{src.map_with_index{ |x, y| 256 ** (3 - y) * x }.sum}\n"
+    result << "\n"
 
     result << "DEC (8/8/8/8) : #{ip.join('.')}\n"
     result << "BIN (8/8/8/8) : #{ip.map(&:to_bin_s).join('.')}\n"
