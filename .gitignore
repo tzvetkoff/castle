@@ -6,6 +6,7 @@
 /.vim/autoload/*
 /.vim/pack/*/*/vim-*
 /.vim/spell/*
+/.vim/local.vim
 
 # Keep the keepers
 !.keep

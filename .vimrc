@@ -46,7 +46,7 @@ set list                                        " list invisible characters
 if v:version < 800
   set listchars=eol:¬,tab:🠂\ ,nbsp:_              " old versions can't list space
 else
-  set listchars=eol:¬,tab:🠂\ ,space:·,nbsp:_      " but newer do
+  set listchars=eol:¬,tab:🠂\ ,space:·,nbsp:_      " but newer can
 endif
 
 " Disable the mouse.
@@ -224,11 +224,11 @@ let g:gitgutter_sign_allow_clobber = 1
 " }}}
 
 " ALE. {{{
-let g:ale_echo_msg_error_str = 'error'
-let g:ale_echo_msg_warning_str = 'warning'
-let g:ale_echo_msg_format = '[%linter%::%severity%] %code: %%s '
+let g:ale_echo_msg_error_str = "error"
+let g:ale_echo_msg_warning_str = "warning"
+let g:ale_echo_msg_format = "[%linter%::%severity%] %code: %%s "
 let g:ale_pattern_options = {
-      \ '.*\.rs$': {'ale_enabled': 0},
+      \ ".*\\.rs$": {"ale_enabled": 0},
       \ }
 map ]l :lnext<CR>
 map [l :lprev<CR>
@@ -241,9 +241,9 @@ let NERDTreeMapOpenInTab = "<ENTER>"
 
 " NERDCommenter. {{{
 let g:NERDSpaceDelims = 1
-nnoremap <silent> <C-_> :call nerdcommenter#Comment('n', 'toggle')<CR>
-vnoremap <silent> <C-_> :call nerdcommenter#Comment('v', 'toggle')<CR>gv
-inoremap <silent> <C-_> <C-O>:call nerdcommenter#Comment('i', 'toggle')<CR>
+nnoremap <silent> <C-_> :call nerdcommenter#Comment("n", "toggle")<CR>
+vnoremap <silent> <C-_> :call nerdcommenter#Comment("v", "toggle")<CR>gv
+inoremap <silent> <C-_> <C-O>:call nerdcommenter#Comment("i", "toggle")<CR>
 " }}}
 
 " CtrlP. {{{
@@ -260,6 +260,12 @@ let g:ctrlp_prompt_mappings = {
 " Go. {{{
 if v:version < 800
   let g:go_loaded_install = 1
+endif
+" }}}
+
+" {{{ Local vimrc.
+if filereadable(expand("~/.vim/local.vim"))
+  source ~/.vim/local.vim
 endif
 " }}}
 
