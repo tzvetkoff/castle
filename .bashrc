@@ -369,20 +369,27 @@ if [[ ${OSTYPE} = darwin* ]]; then
 fi
 
 #
-# remove /usr/local/sbin & /usr/local/bin from path
+# remove /usr/local/sbin, /usr/local/bin, /usr/sbin, /usr/bin, /sbin, /bin from path
 #
 
-PATH="${PATH/\/usr\/local\/sbin:}"
+PATH="${PATH/^\/usr\/local\/sbin:}"
 PATH="${PATH/:\/usr\/local\/sbin}"
-PATH="${PATH/\/usr\/local\/bin:}"
+PATH="${PATH/^\/usr\/local\/bin:}"
 PATH="${PATH/:\/usr\/local\/bin}"
+PATH="${PATH/^\/usr\/sbin:}"
+PATH="${PATH/:\/usr\/sbin}"
+PATH="${PATH/^\/usr\/bin:}"
+PATH="${PATH/:\/usr\/bin}"
+PATH="${PATH/^\/sbin:}"
+PATH="${PATH/:\/sbin}"
+PATH="${PATH/^\/bin:}"
+PATH="${PATH/:\/bin}"
 
 #
-# prepend /usr/local/sbin, /usr/local/bin, ~/bin, ~/.bin, ~/local/bin, ~/.local/bin to path
+# prepend /usr/local/sbin, /usr/local/bin, /usr/sbin, /usr/bin, /sbin, /bin, ~/bin, ~/.bin, ~/local/bin, ~/.local/bin to path
 #
 
-[[ ! "${PATH}" = */usr/local/sbin* ]] && PATH="/usr/local/sbin:${PATH}"
-[[ ! "${PATH}" = */usr/local/bin* ]]  && PATH="/usr/local/bin:${PATH}"
+PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:${PATH}"
 [[ -d "${HOME}/bin" ]]                && PATH="${HOME}/bin:${PATH}"
 [[ -d "${HOME}/.bin" ]]               && PATH="${HOME}/.bin:${PATH}"
 [[ -d "${HOME}/local/bin" ]]          && PATH="${HOME}/local/bin:${PATH}"
