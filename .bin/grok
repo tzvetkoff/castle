@@ -9,10 +9,12 @@ usage() {
   echo "  ${0} [options] [LOCAL_PORT:SERVER[:REMOTE_PORT]]"
   echo
   echo 'Options:'
-  echo '  -h, --help                Print this message'
-  echo '  -s S, --server=S          SSH server (required)'
-  echo '  -l P, --local-port=P      Set local port (required)'
-  echo '  -r P, --remote-port=P     Set remote port (optional)'
+  echo '  -h, --help                                    Print this message and exit'
+  echo '  -s SERVER, --server=SERVER                    Server (required)'
+  echo '  -l LOCAL_PORT, --local-port=LOCAL_PORT        Local port (required)'
+  echo "  -L LOCAL_ADDR, --local-addr=LOCAL_ADDR        Local address (optional, default: ${LOCAL_ADDR})"
+  echo '  -r REMOTE_PORT, --remote-port=REMOTE_PORT     Remote port (optional, default: LOCAL_PORT)'
+  echo "  -R REMOTE_ADDR, --remote-addr=REMOTE_ADDR     Remote address (optional, default: ${REMOTE_ADDR})"
   exit "${1}"
 }
 
@@ -22,7 +24,9 @@ usage() {
 
 SERVER=''
 LOCAL_PORT=''
+LOCAL_ADDR='127.0.0.1'
 REMOTE_PORT=''
+REMOTE_ADDR='*'
 
 ARGS=()
 PARSE='true'
@@ -44,9 +48,17 @@ while [[ -n "${1}" ]]; do
       -l|--local-port) LOCAL_PORT="${2}"; shift;;
       -l*)             LOCAL_PORT="${1:2}";;
 
+      --local-addr=*)  LOCAL_ADDR="${1:13}";;
+      -L|--local-addr) LOCAL_ADDR="${2}"; shift;;
+      -L*)             LOCAL_ADDR="${1:2}";;
+
       -r|--remote-port) REMOTE_PORT="${2}"; shift;;
       --remote-port=*)  REMOTE_PORT="${1:14}";;
       -r*)              REMOTE_PORT="${1:2}";;
+
+      -R|--remote-addr) REMOTE_ADDR="${2}"; shift;;
+      --remote-addr=*)  REMOTE_ADDR="${1:14}";;
+      -R*)              REMOTE_ADDR="${1:2}";;
 
       --) PARSE='false';;
       -*) echo "${0}: invalid option: ${1}" >&2; echo >&2; usage 1 >&2;;
@@ -106,10 +118,12 @@ if [[ -z "${LOCAL_PORT}" ]]; then
   usage 1
 fi
 
-[[ -z "${REMOTE_PORT}" ]] && REMOTE_PORT="${LOCAL_PORT}"
+if [[ -z "${REMOTE_PORT}" ]]; then
+  REMOTE_PORT="${LOCAL_PORT}"
+fi
 
 #
 # Do the magic.
 #
 
-ssh -TnNqR "0.0.0.0:${REMOTE_PORT}:localhost:${LOCAL_PORT}" "${SERVER}"
+ssh -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null -TnNR "${BIND}:${REMOTE_PORT}:${LOCAL_ADDR}:${LOCAL_PORT}" "${SERVER}"
