@@ -22,12 +22,24 @@ if [[ -d "${HOME}/KubeConf" ]]; then
 
   k8s--default() { echo 'Activating default k8s env...'; unset KUBECONFIG; }
 
-  shopt -s nullglob
-  for __kubeconfig in "${HOME}/KubeConf"/*.kubeconfig; do
-    __kubename="${__kubeconfig##*/}"
-    __kubename="${__kubename%.*}"
-    eval "k8s--${__kubename}() { echo 'Activating \"${__kubename}\" k8s env...'; export KUBECONFIG=\"${__kubeconfig}\"; }"
-  done
-  shopt -u nullglob
-  unset __kubeconfig __kubename
+  k8s--reload() {
+    local __funcname __kubeconfig __kubename
+
+    while read -r __funcname; do
+      if [[ "${__funcname}" = k8s--* && "${__funcname}" != 'k8s--default' && "${__funcname}" != 'k8s--reload' ]]; then
+        echo "unset -f $__funcname"
+        unset -f "${__funcname}"
+      fi
+    done < <(declare -F | awk '{ print $3 }')
+
+    shopt -s nullglob
+    for __kubeconfig in "${HOME}/KubeConf"/*.kubeconfig; do
+      __kubename="${__kubeconfig##*/}"
+      __kubename="${__kubename%.*}"
+      eval "k8s--${__kubename}() { echo 'Activating \"${__kubename}\" k8s env...'; export KUBECONFIG=\"${__kubeconfig}\"; }"
+    done
+    shopt -u nullglob
+  }
+
+  k8s--reload
 fi

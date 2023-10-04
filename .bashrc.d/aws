@@ -4,6 +4,7 @@ if [[ -f "${HOME}/.aws/config" ]]; then
   #
   # bash prompt command hook
   #
+
   __prompt_command_aws_hook() {
     if [[ -n "${AWS_PROFILE}" ]]; then
       local reset='\[\033[0m\]' grey='\[\033[1;30m\]' cyan='\[\033[0;36m\]'
@@ -20,8 +21,19 @@ if [[ -f "${HOME}/.aws/config" ]]; then
 
   aws--default() { echo 'Activating default AWS profile...'; unset AWS_PROFILE; }
 
-  while read -r __profile; do
-    eval "aws--${__profile}() { echo 'Activating \"${__profile}\" AWS profile...'; export AWS_PROFILE=\"${__profile}\"; }"
-  done < <(awk '/\[profile .*]/ { gsub(/[\[\]]/, ""); print $2 }' < "${HOME}/.aws/config")
-  unset __profile
+  aws--reload() {
+    local __funcname __profile
+
+    while read -r __funcname; do
+      if [[ "${__funcname}" = aws--* && "${__funcname}" != 'aws--default' && "${__funcname}" != 'aws--reload' ]]; then
+        unset -f "${__funcname}"
+      fi
+    done < <(declare -F | awk '{ print $3 }')
+
+    while read -r __profile; do
+      eval "aws--${__profile}() { echo 'Activating \"${__profile}\" AWS profile...'; export AWS_PROFILE=\"${__profile}\"; }"
+    done < <(awk '/\[profile .*]/ { gsub(/[\[\]]/, ""); print $2 }' < "${HOME}/.aws/config")
+  }
+
+  aws--reload
 fi
