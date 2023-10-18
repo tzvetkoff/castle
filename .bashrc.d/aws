@@ -26,6 +26,7 @@ if [[ -f "${HOME}/.aws/config" ]]; then
 
     while read -r __funcname; do
       if [[ "${__funcname}" = aws--* && "${__funcname}" != 'aws--default' && "${__funcname}" != 'aws--reload' ]]; then
+        echo "unset -f $__funcname"
         unset -f "${__funcname}"
       fi
     done < <(declare -F | awk '{ print $3 }')
