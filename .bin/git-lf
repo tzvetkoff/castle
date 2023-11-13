@@ -92,7 +92,7 @@ GIT_DIR="${GIT_DIR}/.git"
 {
   echo 'SHA|Size|Packed|Path'
   echo ':separator:'
-  git verify-pack -v "${GIT_DIR}/objects/pack"/pack-*.idx | grep ' blob ' | sort -k3nr | head -n ${TOP} | while read -r OBJECT; do
+  git verify-pack -v "${GIT_DIR}/objects/pack"/pack-*.idx | grep ' blob ' | sort -k3nr | head -n "${TOP}" | while read -r OBJECT; do
     # shellcheck disable=SC2086
     set -- ${OBJECT}
     SHA="${1}"
@@ -113,4 +113,4 @@ GIT_DIR="${GIT_DIR}/.git"
 
     echo "${SHA}|${UNPACKED_SIZE}|${PACKED_SIZE}|${FILE}"
   done
-} | text-table -s'|' -a'2:right' -a'3:right'
+} | text-table -c'|' -a'2:right' -a'3:right'

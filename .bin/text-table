@@ -107,7 +107,7 @@ module Text
       attr_accessor :colspan
       attr_reader :row
       def initialize(options = {})
-        @value  = options[:value].to_s
+        @value   = options[:value].to_s
         @row     = options[:row]
         @align   = options[:align  ] || :left
         @colspan = options[:colspan] || 1
@@ -154,16 +154,16 @@ OptionParser.new do |opts|
   opts.on('-i', '--input FILE', 'Read input from file (default: stdin)') do |val|
     input = File.open(val)
   end
-  opts.on('-s', '--csv-col-sep SEP', 'Set CSV column separator (default: auto)') do |val|
+  opts.on('-cSEP', '--col-sep SEP', 'Set CSV column separator (default: auto)') do |val|
     csv_opts[:col_sep] = val
   end
-  opts.on('-r', '--csv-row-sep SEP', 'Set CSV row separator (default: auto)') do |val|
+  opts.on('-rSEP', '--row-sep SEP', 'Set CSV row separator (default: auto)') do |val|
     csv_opts[:row_sep] = val
   end
-  opts.on('-q', '--csv-quote-char CH', 'Set CSV quote character (default: auto)') do |val|
+  opts.on('-qCH', '--csv-quote-char CH', 'Set CSV quote character (default: auto)') do |val|
     csv_opts[:quote_char] = val
   end
-  opts.on('-a', '--align COL:ALIGN', 'Align a column (default: left)') do |val|
+  opts.on('-aCOL:ALIGN', '--align COL:ALIGN', 'Align a column (default: left)') do |val|
     col, align = val.split(':')
     raise OptionParser::InvalidArgument, align unless ['left', 'right', 'center'].include?(align)
     alignments[col.to_i] = align.to_sym
@@ -198,7 +198,7 @@ input.each_line do |line|
   if [':sep', ':sep:', ':separator', ':separator:'].include?(line)
     table.rows << :separator
   else
-    row = CSV.parse_line(line, csv_opts)
+    row = CSV.parse_line(line, **csv_opts)
     table.rows << row
   end
 end
