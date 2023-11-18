@@ -177,6 +177,16 @@ install_misc() {
 }
 
 #
+# run update on first install
+#
+
+update_on_install() {
+  if [[ ! -d "${ROOT}/.vim/pack/w00t/opt/vim-pathogen" ]]; then
+    "${ROOT}/update.sh"
+  fi
+}
+
+#
 # do the actual job
 #
 
@@ -186,4 +196,5 @@ if [[ "${BASH_SOURCE[0]}" = "${0}" ]]; then
   install_gitconfig
   install_mycnf
   install_misc "${@}"
+  update_on_install
 fi
