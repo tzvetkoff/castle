@@ -141,7 +141,7 @@ autocmd FileType * execute "setlocal complete+=k/usr/share/vim/vim".v:version[0]
 
 " File type/encoding stuff. {{{
 function! SetEncoding(encoding, force)
-  if a:force || !exists("b:auto_encoding")
+  if !exists("b:auto_encoding") || a:force
     let b:auto_encoding = a:encoding
     exec "e! ++enc=".a:encoding
   endif
@@ -149,6 +149,9 @@ endfunction
 
 command -nargs=1 SetEncoding call SetEncoding("<args>", 1)
 cabbrev <expr> enc getcmdtype() == ":" && getcmdline() == "enc" ? "SetEncoding" : "enc"
+
+command -bang UTF8 call SetEncoding("utf-8", 1)
+cabbrev <expr> utf8 getcmdtype() == ":" && getcmdline() == "utf8" ? "UTF8" : "utf8"
 
 " File-based type/encoding settings.
 autocmd BufNewFile,BufRead *.cnf setlocal filetype=dosini
