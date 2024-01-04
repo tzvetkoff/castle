@@ -260,7 +260,7 @@ let g:ctrlp_custom_ignore = {
       \ }
 let g:ctrlp_prompt_mappings = {
       \ "AcceptSelection(\"e\")": ["<2-LeftMouse>"],
-      \ "AcceptSelection(\"t\")": ["<cr>"],
+      \ "AcceptSelection(\"t\")": ["<CR>"],
       \ }
 " }}}
 
