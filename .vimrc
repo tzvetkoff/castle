@@ -64,7 +64,11 @@ let g:solarized_transparent = 1
 let g:solarized_trailing = 1
 let g:solarized_termcolors = 256
 let g:airline_theme = "solarized"
-colorscheme solarized
+try
+  colorscheme solarized
+catch
+  colorscheme lunaperche
+endtry
 " }}}
 
 " Indentation. {{{
