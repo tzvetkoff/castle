@@ -215,8 +215,9 @@ __prompt_command_envmgr_hook() {
   local reset='\[\033[0m\]' grey='\[\033[1;30m\]' cyan='\[\033[0;36m\]'
   local envmgr=''
 
-  if [[ -z ${BASHRC_DISABLE_ENVMGR_RUBY} && -n ${GEM_HOME} && ${GEM_HOME} != *@global ]]; then
+  if [[ -z ${BASHRC_DISABLE_ENVMGR_RUBY} && -n ${GEM_HOME} ]]; then
     local rb="${GEM_HOME##*/}"
+    rb="${rb%@global}"
     envmgr="${envmgr}{${grey}rb:${cyan}${rb#ruby-}${reset}}"
   fi
 
@@ -234,6 +235,10 @@ __prompt_command_envmgr_hook() {
 
   if [[ -z ${BASHRC_DISABLE_ENVMGR_NODE} && -n ${ENVMGR_NODE_PREFIX} ]]; then
     envmgr="${envmgr}{${grey}node:${cyan}${ENVMGR_NODE_PREFIX##*/}${reset}}"
+  fi
+
+  if [[ -z ${BASHRC_DISABLE_ENVMGR_PYTHON} && -n ${VIRTUAL_ENV_PROMPT} ]]; then
+    envmgr="${envmgr}{${grey}py:${cyan}${VIRTUAL_ENV_PROMPT}${reset}}"
   fi
 
   if [[ -z ${BASHRC_DISABLE_ENVMGR_MUSL} && -n ${ENVMGR_MUSL_PREFIX} ]]; then
