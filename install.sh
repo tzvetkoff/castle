@@ -31,6 +31,7 @@ INSTALL_SYMLINKS=(\
   "${ROOT}/.gemrc:${HOME}/.gemrc"                     \
   "${ROOT}/.irbrc:${HOME}/.irbrc"                     \
   "${ROOT}/.pythonrc:${HOME}/.pythonrc"               \
+  "${ROOT}/.sqliterc:${HOME}/.sqliterc"               \
   "${ROOT}/.tmux.conf:${HOME}/.tmux.conf"             \
   "${ROOT}/.vim:${HOME}/.vim"                         \
   "${ROOT}/.vimrc:${HOME}/.vimrc"                     \
