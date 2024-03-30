@@ -112,8 +112,10 @@ __prompt_command_git_hook() {
             branch="${blue}${branch}"
           elif branch="$(git --git-dir="${git_dir}" describe --tags HEAD 2>/dev/null)"; then
             branch="${blue}${branch}"
-          else
+          elif [[ -f "${git_dir}/HEAD" ]]; then
             branch="${blue}$(cut -c1-8 "${git_dir}/HEAD")"
+          else
+            branch="${blue}$(git --git-dir="${git_dir}" rev-parse --short HEAD)"
           fi
         fi
       fi
@@ -237,12 +239,12 @@ __prompt_command_envmgr_hook() {
     envmgr="${envmgr}{${grey}node:${cyan}${ENVMGR_NODE_PREFIX##*/}${reset}}"
   fi
 
-  if [[ -z ${BASHRC_DISABLE_ENVMGR_PYTHON} && -n ${VIRTUAL_ENV_PROMPT} ]]; then
-    envmgr="${envmgr}{${grey}py:${cyan}${VIRTUAL_ENV_PROMPT}${reset}}"
-  fi
-
   if [[ -z ${BASHRC_DISABLE_ENVMGR_MUSL} && -n ${ENVMGR_MUSL_PREFIX} ]]; then
     envmgr="${envmgr}{${grey}musl:${cyan}${ENVMGR_MUSL_PREFIX##*/}${reset}}"
+  fi
+
+  if [[ -z ${BASHRC_DISABLE_ENVMGR_PYTHON} && -n ${VIRTUAL_ENV_PROMPT} ]]; then
+    envmgr="${envmgr}{${grey}py:${cyan}${VIRTUAL_ENV_PROMPT}${reset}}"
   fi
 
   __prompt_string="${__prompt_string}${envmgr}"
