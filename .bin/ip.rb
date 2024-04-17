@@ -51,8 +51,8 @@ class IPCalc
         [(i / 256 ** 3), (i / 256 ** 2 % 256), (i / 256 % 256), (i % 256)]
       end
     else
-      @src = Socket.gethostbyname(hostname).last.chars.map(&:ord)
-      @ip = Socket.gethostbyname(hostname).last.chars.map(&:ord)
+      @src = Addrinfo.getaddrinfo(hostname, 0, Socket::PF_INET).last.ip_address.split('.').map(&:to_i)
+      @ip = @src.dup
     end
   end
 
