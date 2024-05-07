@@ -1,3 +1,4 @@
 #!/bin/bash
 
-curl "${@}" 'https://c0re.pfoo.org/ip.php' && echo
+[[ -f "${HOME}/.config/whatismyip/config" ]] && source "${HOME}/.config/whatismyip/config"
+curl "${@}" "${URL:-https://c0re.pfoo.org/ip.php}" && echo
