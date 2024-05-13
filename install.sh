@@ -19,33 +19,39 @@ INSTALL_DIRS=(\
 #
 
 INSTALL_SYMLINKS=(\
-  "${ROOT}/.aprc:${HOME}/.aprc"                       \
-  "${ROOT}/.bash_completion:${HOME}/.bash_completion" \
-  "${ROOT}/.bash_profile:${HOME}/.bash_profile"       \
-  "${ROOT}/.bashrc.d/aws:${HOME}/.bashrc.d/aws"       \
-  "${ROOT}/.bashrc.d/go:${HOME}/.bashrc.d/go"         \
-  "${ROOT}/.bashrc.d/k8s:${HOME}/.bashrc.d/k8s"       \
-  "${ROOT}/.bashrc:${HOME}/.bashrc"                   \
-  "${ROOT}/.bin/motd:${HOME}/.motd"                   \
-  "${ROOT}/.bin:${HOME}/.bin"                         \
-  "${ROOT}/.gemrc:${HOME}/.gemrc"                     \
-  "${ROOT}/.irbrc:${HOME}/.irbrc"                     \
-  "${ROOT}/.pythonrc:${HOME}/.pythonrc"               \
-  "${ROOT}/.sqliterc:${HOME}/.sqliterc"               \
-  "${ROOT}/.tmux.conf:${HOME}/.tmux.conf"             \
-  "${ROOT}/.vim:${HOME}/.vim"                         \
-  "${ROOT}/.vimrc:${HOME}/.vimrc"                     \
+  "${ROOT}/.aprc:${HOME}/.aprc"                             \
+  "${ROOT}/.bash_completion:${HOME}/.bash_completion"       \
+  "${ROOT}/.bash_profile:${HOME}/.bash_profile"             \
+  "${ROOT}/.bashrc.d/aws:${HOME}/.bashrc.d/aws"             \
+  "${ROOT}/.bashrc.d/go:${HOME}/.bashrc.d/go"               \
+  "${ROOT}/.bashrc.d/k8s:${HOME}/.bashrc.d/k8s"             \
+  "${ROOT}/.bashrc.d/ssh-agent:${HOME}/.bashrc.d/ssh-agent" \
+  "${ROOT}/.bashrc:${HOME}/.bashrc"                         \
+  "${ROOT}/.bin/motd:${HOME}/.motd"                         \
+  "${ROOT}/.bin:${HOME}/.bin"                               \
+  "${ROOT}/.gemrc:${HOME}/.gemrc"                           \
+  "${ROOT}/.irbrc:${HOME}/.irbrc"                           \
+  "${ROOT}/.pythonrc:${HOME}/.pythonrc"                     \
+  "${ROOT}/.sqliterc:${HOME}/.sqliterc"                     \
+  "${ROOT}/.tmux.conf:${HOME}/.tmux.conf"                   \
+  "${ROOT}/.vim:${HOME}/.vim"                               \
+  "${ROOT}/.vimrc:${HOME}/.vimrc"                           \
 )
 
 #
-# force flag
+# force flags
 #
 
-if [[ "${1}" = '-f' || "${1}" = '--force' ]]; then
-  FORCE='true'
-else
-  FORCE='false'
-fi
+FORCE_YES='false'
+FORCE_NO='false'
+
+for ARG; do
+  if [[ "${ARG}" = '-f' || "${ARG}" = '--force' || "${ARG}" = '--force-yes' ]]; then
+    FORCE_YES='true'
+  elif [[ "${ARG}" = '-n' || "${ARG}" = '--no' || "${ARG}" = '--force-no' ]]; then
+    FORCE_NO='true'
+  fi
+done
 
 #
 # colors
@@ -63,8 +69,19 @@ COLOR_WHITE="\033[00;00m"
 
 ask() {
   echo -ne "${COLOR_YELLOW}${*} ${COLOR_BLUE}[y/N]${COLOR_WHITE} "
+
+  if ${FORCE_YES}; then
+    echo 'y'
+    return 0
+  fi
+  if ${FORCE_NO}; then
+    echo 'n'
+    return 1
+  fi
+
   read -n 1 -r
   echo
+
   if [[ "${REPLY}" =~ ^[Yy]$ ]]; then
     return 0
   else
@@ -93,7 +110,7 @@ install_symlinks() {
   for src_dst in "${INSTALL_SYMLINKS[@]}"; do
     local src="${src_dst%:*}" dst="${src_dst#*:}"
     if [[ -e "${dst}" ]]; then
-      if ${FORCE} || ask "File ${COLOR_WHITE}${dst}${COLOR_YELLOW} already exists. Overwrite?"; then
+      if ask "File ${COLOR_WHITE}${dst}${COLOR_YELLOW} already exists. Overwrite?"; then
         rm -rf -- "${dst}"
       else
         echo -e "${COLOR_RED}skip${COLOR_WHITE} ${dst}"
@@ -112,7 +129,7 @@ install_symlinks() {
 
 install_gitconfig() {
   if [[ -e "${HOME}/.gitconfig" ]]; then
-    if ! ${FORCE} && ! ask "File ${COLOR_WHITE}${HOME}/.gitconfig${COLOR_YELLOW} already exists. Overwrite?"; then
+    if ! ask "File ${COLOR_WHITE}${HOME}/.gitconfig${COLOR_YELLOW} already exists. Overwrite?"; then
       echo -e "${COLOR_RED}skip${COLOR_WHITE} ${HOME}/.gitconfig"
       return 0
     fi
@@ -146,7 +163,7 @@ install_gitconfig() {
 
 install_mycnf() {
   if [[ -e "${HOME}/.my.cnf" ]]; then
-    if ! ${FORCE} && ! ask "File ${COLOR_WHITE}${HOME}/.my.cnf${COLOR_YELLOW} already exists. Overwrite?"; then
+    if ! ask "File ${COLOR_WHITE}${HOME}/.my.cnf${COLOR_YELLOW} already exists. Overwrite?"; then
       echo -e "${COLOR_RED}skip${COLOR_WHITE} ${HOME}/.my.cnf"
       return 0
     fi

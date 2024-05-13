@@ -15,14 +15,19 @@ INSTALL_SYMLINKS=(\
 )
 
 #
-# force flag
+# force flags
 #
 
-if [[ "${1}" = '-f' || "${1}" = '--force' ]]; then
-  FORCE='true'
-else
-  FORCE='false'
-fi
+FORCE_YES='false'
+FORCE_NO='false'
+
+for ARG; do
+  if [[ "${ARG}" = '-f' || "${ARG}" = '--force' || "${ARG}" = '--force-yes' ]]; then
+    FORCE_YES='true'
+  elif [[ "${ARG}" = '-n' || "${ARG}" = '--no' || "${ARG}" = '--force-no' ]]; then
+    FORCE_NO='true'
+  fi
+done
 
 #
 # colors
@@ -40,8 +45,19 @@ COLOR_WHITE="\033[00;00m"
 
 ask() {
   echo -ne "${COLOR_YELLOW}${*} ${COLOR_BLUE}[y/N]${COLOR_WHITE} "
+
+  if ${FORCE_YES}; then
+    echo 'y'
+    return 0
+  fi
+  if ${FORCE_NO}; then
+    echo 'n'
+    return 1
+  fi
+
   read -n 1 -r
   echo
+
   if [[ "${REPLY}" =~ ^[Yy]$ ]]; then
     return 0
   else
@@ -58,7 +74,7 @@ install_symlinks() {
   for src_dst in "${INSTALL_SYMLINKS[@]}"; do
     local src="${src_dst%:*}" dst="${src_dst#*:}"
     if [[ -e "${dst}" ]]; then
-      if ${FORCE} || ask "File ${COLOR_WHITE}${dst}${COLOR_YELLOW} already exists. Overwrite?"; then
+      if ask "File ${COLOR_WHITE}${dst}${COLOR_YELLOW} already exists. Overwrite?"; then
         rm -rf -- "${dst}"
       else
         echo -e "${COLOR_RED}skip${COLOR_WHITE} ${dst}"
