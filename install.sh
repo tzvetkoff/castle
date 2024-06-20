@@ -140,6 +140,7 @@ install_gitconfig() {
   [[ "${USER}" != 'git' ]] && git config --global core.hooksPath "\$GIT_DIR/hooks-$(od -An -N32 -tx /dev/urandom | tr -d '\n ')"
   git config --global init.defaultBranch 'master'
   git config --global pull.ff 'only'
+  git config --global push.autoSetupRemote 'true'
   git config --global color.ui 'true'
   git config --global diff.tool 'vimdiff'
   git config --global difftool.prompt 'false'
