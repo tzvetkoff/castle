@@ -347,16 +347,16 @@ alias cd..='cd ..'
 cd.(){ cd ."${*}" || return 1; }
 
 # ruby/rails
-alias r='bundle exec rails'
-alias c='bundle exec rails console'
-alias s='bundle exec rails server --binding=0.0.0.0'
-alias g='bundle exec rails generate'
 alias b='bundle'
 alias bundel='bundle'
 alias bexec='bundle exec'
 alias bruby='bundle exec ruby'
 alias brake='bundle exec rake'
 alias bspec='bundle exec rspec'
+alias r='bundle exec rails'
+alias c='bundle exec rails console'
+alias s='bundle exec rails server --binding=0.0.0.0'
+alias g='bundle exec rails generate'
 
 # some administrative ones
 alias su='sudo su'
