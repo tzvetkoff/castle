@@ -413,6 +413,10 @@ export PATH
 
 export HISTFILE=/dev/null
 export LESSHISTFILE=/dev/null
+export MYSQL_HISTFILE=/dev/null
+export MYCLI_HISTFILE=/dev/null
+export PGCLI_HISTFILE=/dev/null
+export SQLITE_HISTORY=/dev/null
 
 #
 # disable history expansion

@@ -171,7 +171,7 @@ install_mycnf() {
   fi
 
   cat >"${HOME}/.my.cnf" <<EOF
-[mysql]
+[client]
 auto-rehash
 user=root
 local-infile=1
