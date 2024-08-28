@@ -110,7 +110,7 @@ __prompt_command_git_hook() {
         if ! branch="$(git --git-dir="${git_dir}" symbolic-ref HEAD 2>/dev/null)"; then
           if branch="$(git --git-dir="${git_dir}" describe --exact-match HEAD 2>/dev/null)"; then
             branch="${blue}${branch}"
-          elif branch="$(git --git-dir="${git_dir}" describe --tags HEAD 2>/dev/null)"; then
+          elif branch="$(git --git-dir="${git_dir}" describe --exact-match --tags HEAD 2>/dev/null)"; then
             branch="${blue}${branch}"
           elif [[ -f "${git_dir}/HEAD" ]]; then
             branch="${blue}$(cut -c1-8 "${git_dir}/HEAD")"
