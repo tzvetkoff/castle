@@ -1,4 +1,5 @@
 #!/bin/bash
 
 export GOPATH="${HOME}/.go"
+export GOCACHE="${GOPATH}/cache"
 export PATH="${PATH}:${GOPATH}/bin"

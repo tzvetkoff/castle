@@ -16,6 +16,7 @@ endif
 set nocompatible                                " force vim mode
 set laststatus=2                                " always show the status bar
 set encoding=utf-8                              " default to utf-8
+set fileencodings=utf-8,default,latin1          " always try utf-8 first
 set t_Co=256                                    " force 256 colors
 set t_fd=                                       " xfce4-terminal has issues with focus events
 set t_fe=                                       " meh-meh
