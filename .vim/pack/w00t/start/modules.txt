@@ -1,6 +1,9 @@
 https://github.com/vim-airline/vim-airline.git          vim-airline
 https://github.com/vim-airline/vim-airline-themes.git   vim-airline-themes
 https://github.com/tzvetkoff/vim-colors-solarized.git   vim-colors-solarized
+https://github.com/prabirshrestha/vim-lsp.git           vim-lsp
+https://github.com/mattn/vim-lsp-settings.git           vim-lsp-settings
+https://github.com/prabirshrestha/asyncomplete.vim      vim-lsp-asyncomplete
 https://github.com/scrooloose/nerdtree.git              vim-nerdtree
 https://github.com/tzvetkoff/vim-numbertoggle.git       vim-numbertoggle
 https://github.com/airblade/vim-gitgutter.git           vim-gitgutter

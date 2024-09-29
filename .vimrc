@@ -87,6 +87,26 @@ autocmd FileType tcl setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
 autocmd FileType vim setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
 " }}}
 
+" File type/encoding stuff. {{{
+function! SetEncoding(encoding, force)
+  if !exists("b:auto_encoding") || a:force
+    let b:auto_encoding = a:encoding
+    exec "e! ++enc=".a:encoding
+  endif
+endfunction
+
+command -nargs=1 SetEncoding call SetEncoding("<args>", 1)
+cabbrev <expr> enc getcmdtype() == ":" && getcmdline() == "enc" ? "SetEncoding" : "enc"
+
+command -bang UTF8 call SetEncoding("utf-8", 1)
+cabbrev <expr> utf8 getcmdtype() == ":" && getcmdline() == "utf8" ? "UTF8" : "utf8"
+" }}}
+
+" {{{ Extension-based type/encoding settings.
+autocmd BufNewFile,BufRead *.cnf setlocal filetype=dosini
+autocmd BufNewFile,BufRead *.nfo setlocal filetype=nfo | call SetEncoding("cp437", 0)
+" }}}
+
 " Completion. {{{
 set completeopt=longest,menuone
 
@@ -107,7 +127,7 @@ function! TabCompletion()
   let col = col(".")
   let line = getline(".")
   let left = strpart(line, 0, col - 1)
-  let right = strpart(line, col - 1)
+  "let right = strpart(line, col - 1)
 
   if pumvisible()
     return "\<C-n>"
@@ -118,7 +138,7 @@ function! TabCompletion()
   else
     return "\<C-n>"
   end
-endfunction!
+endfunction
 inoremap <expr> <tab> TabCompletion()
 
 " <S-TAB> completion.
@@ -126,7 +146,7 @@ function! ShiftTabCompletion()
   let col = col(".")
   let line = getline(".")
   let left = strpart(line, 0, col - 1)
-  let right = strpart(line, col - 1)
+  "let right = strpart(line, col - 1)
 
   if pumvisible()
     return "\<C-p>"
@@ -142,25 +162,6 @@ inoremap <expr> <s-tab> ShiftTabCompletion()
 
 " Load autocomplete stuff.
 autocmd FileType * execute "setlocal complete+=k/usr/share/vim/vim".v:version[0].v:version[2]."/syntax/".getbufvar("%", "current_syntax").".vim"
-" }}}
-
-" File type/encoding stuff. {{{
-function! SetEncoding(encoding, force)
-  if !exists("b:auto_encoding") || a:force
-    let b:auto_encoding = a:encoding
-    exec "e! ++enc=".a:encoding
-  endif
-endfunction
-
-command -nargs=1 SetEncoding call SetEncoding("<args>", 1)
-cabbrev <expr> enc getcmdtype() == ":" && getcmdline() == "enc" ? "SetEncoding" : "enc"
-
-command -bang UTF8 call SetEncoding("utf-8", 1)
-cabbrev <expr> utf8 getcmdtype() == ":" && getcmdline() == "utf8" ? "UTF8" : "utf8"
-
-" File-based type/encoding settings.
-autocmd BufNewFile,BufRead *.cnf setlocal filetype=dosini
-autocmd BufNewFile,BufRead *.nfo setlocal filetype=nfo | call SetEncoding("cp437", 0)
 " }}}
 
 " Tab navigation. {{{
