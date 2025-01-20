@@ -273,6 +273,12 @@ if v:version < 800
 endif
 " }}}
 
+" LSP. {{{
+let g:lsp_settings = {
+      \ "ruby-lsp": {"disabled": v:true}
+      \ }
+" }}}
+
 " {{{ Local vimrc.
 if filereadable(expand("~/.vim/local.vim"))
   source ~/.vim/local.vim
