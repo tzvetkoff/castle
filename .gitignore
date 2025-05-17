@@ -8,5 +8,9 @@
 /.vim/spell/*
 /.vim/local.vim
 
+# Local stuff
+/tmp
+/_*
+
 # Keep the keepers
 !.keep
