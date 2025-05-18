@@ -269,6 +269,7 @@ let g:ctrlp_prompt_mappings = {
 " }}}
 
 " Go. {{{
+let g:go_version_warning = 0
 if v:version < 800
   let g:go_loaded_install = 1
 endif
