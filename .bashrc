@@ -449,6 +449,8 @@ if [[ -z "${BASH_COMPLETION_VERSINFO}" ]]; then
     source /usr/local/share/bash-completion/bash_completion
   elif [[ -f /etc/bash_completion ]]; then
     source /etc/bash_completion
+  elif [[ -f /opt/homebrew/etc/bash_completion ]]; then
+    source /opt/homebrew/etc/bash_completion
   fi
 fi
 
