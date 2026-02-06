@@ -21,6 +21,7 @@ set t_Co=256                                    " force 256 colors
 set t_fd=                                       " xfce4-terminal has issues with focus events
 set t_fe=                                       " meh-meh
 set backspace=indent,eol,start                  " allow backspacing over everything
+set autoindent                                  " autoindent ftw
 set nobackup                                    " do not keep a backup file, use versions instead
 set history=50                                  " keep 50 lines of command line history
 set ruler                                       " show the cursor position all the time
@@ -198,16 +199,79 @@ if !exists(":DiffOrig")
 endif
 " }}}
 
-" Smart HOME key. {{{
-function! SmartHome()
-  let s:col = col(".")
-  normal! ^
-  if s:col == col(".")
-    normal! 0
+" Smart HOME/END. {{{
+function SmartHome(mode)
+  let curcol = col('.')
+
+  if curcol > indent('.') + 2
+    call cursor(0, curcol - 1)
   endif
+
+  if curcol == 1 || curcol > indent('.') + 1
+    if &wrap
+      normal! g^
+    else
+      normal! ^
+    endif
+  else
+    if &wrap
+      normal! g0
+    else
+      normal! 0
+    endif
+  endif
+
+  if a:mode ==? 'v'
+    normal! msgv`s
+  endif
+
+  return ''
 endfunction
-nnoremap <silent> <Home> :call SmartHome()<CR>
-inoremap <silent> <Home> <C-O>:call SmartHome()<CR>
+
+nmap <silent><Home> :call SmartHome('n')<cr>
+imap <silent><Home> <C-r>=SmartHome('i')<cr>
+vmap <silent><Home> <Esc>:call SmartHome('v')<cr>
+
+nmap <Esc>OH <Home>
+cmap <Esc>OH <Home>
+imap <Esc>OH <Home>
+
+function SmartEnd(mode)
+  let curcol = col('.')
+  let lastcol = a:mode ==? 'i' ? col('$') : col('$') - 1
+
+  if curcol < lastcol - 1
+    call cursor(0, curcol + 1)
+  endif
+
+  if curcol < lastcol
+    if &wrap
+      normal! g$
+    else
+      normal! $
+    endif
+  else
+    normal! g_
+  endif
+
+  if a:mode ==? 'i'
+    call cursor(0, col('.') + 1)
+  endif
+
+  if a:mode ==? 'v'
+    normal! msgv`s
+  endif
+
+  return ''
+endfunction
+
+nmap <silent><End> :call SmartEnd('n')<cr>
+imap <silent><End> <C-r>=SmartEnd('i')<cr>
+vmap <silent><End> <Esc>:call SmartEnd('v')<cr>
+
+nmap <Esc>OF <End>
+cmap <Esc>OF <End>
+imap <Esc>OF <End>
 " }}}
 
 " Write as root. {{{
