@@ -180,14 +180,12 @@ while [[ -n "${1}" ]]; do
   shift
 done
 
-set -- "${ARGS[@]}"
-
 #
 # check args
 #
 
-if [[ ${#} != 1 ]]; then
-  echo "$0: wrong number of arguments (given ${#}, expected 1)" >&2
+if [[ ${#ARGS[@]} -lt 1 ]]; then
+  echo "${0}: wrong number of arguments (given ${#ARGS[@]}, expected 1+)" >&2
   echo >&2
   usage 1 >&2
 fi
@@ -196,10 +194,12 @@ fi
 # do a run run
 #
 
-${ALL} || ${CRC32}  && _crc32  "${1}"
-${ALL} || ${MD5}    && _md5    "${1}"
-${ALL} || ${SHA1}   && _sha1   "${1}"
-${ALL} || ${SHA256} && _sha256 "${1}"
-${ALL} || ${SHA384} && _sha384 "${1}"
-${ALL} || ${SHA512} && _sha512 "${1}"
-${ALL} || ${RMD160} && _rmd160 "${1}"
+for fn in "${ARGS[@]}"; do
+  ${ALL} || ${CRC32}  && _crc32  "${fn}"
+  ${ALL} || ${MD5}    && _md5    "${fn}"
+  ${ALL} || ${SHA1}   && _sha1   "${fn}"
+  ${ALL} || ${SHA256} && _sha256 "${fn}"
+  ${ALL} || ${SHA384} && _sha384 "${fn}"
+  ${ALL} || ${SHA512} && _sha512 "${fn}"
+  ${ALL} || ${RMD160} && _rmd160 "${fn}"
+done
