@@ -100,6 +100,9 @@ endfunction
 command -nargs=1 SetEncoding call SetEncoding("<args>", 1)
 cabbrev <expr> enc getcmdtype() == ":" && getcmdline() == "enc" ? "SetEncoding" : "enc"
 
+command -nargs=1 SetCharset call SetEncoding("<args>", 1)
+cabbrev <expr> charset getcmdtype() == ":" && getcmdline() == "charset" ? "SetEncoding" : "charset"
+
 command -bang UTF8 call SetEncoding("utf-8", 1)
 cabbrev <expr> utf8 getcmdtype() == ":" && getcmdline() == "utf8" ? "UTF8" : "utf8"
 " }}}
