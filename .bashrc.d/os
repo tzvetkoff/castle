@@ -1,0 +1,16 @@
+#!/bin/bash
+
+if [[ ${UID} -ne 0 ]]; then
+  if [[ "${OSTYPE}" = linux-gnu ]]; then
+    if [[ -f /usr/bin/pacman ]]; then
+      alias pacman='sudo pacman'
+      alias paccache='sudo paccache'
+      alias pkgfile='sudo pkgfile'
+      alias downgrade='sudo downgrade'
+    elif [[ -f /usr/bin/apt ]]; then
+      alias apt='sudo apt'
+      alias apt-get='sudo apt-get'
+      alias apt-file='sudo apt-file'
+    fi
+  fi
+fi
