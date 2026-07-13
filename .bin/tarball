@@ -12,7 +12,8 @@ usage() {
   echo
   echo 'Options:'
   echo '  -c, --compression=C       Set compression to C (default: guess from extension)'
-  echo '  -t, --threads=N           Execute N parallel threads or processes (default: 1)'
+  echo "  -t, --threads=N           Execute N parallel threads or processes (default: ${THREADS})"
+  echo "  -o, --tar-opts=O          Set tar opts (default: ${TOPTS})"
   exit "${1}"
 }
 
@@ -22,6 +23,7 @@ usage() {
 
 COMPRESSION=
 THREADS=1
+TOPTS='cpf'
 ARGS=()
 
 #
@@ -48,6 +50,13 @@ while [[ -n "${1}" ]]; do
         THREADS="${1:10}";;
       -t*|-T*)
         THREADS="${1:2}";;
+
+      -o|--tar-opts)
+        TOPTS="${2}"; shift;;
+      --tar-opts=*)
+        TOPTS="${1:11}";;
+      -o*)
+        TOPTS="${1:2}";;
 
       --)
         PARSE=false;;
@@ -77,6 +86,14 @@ fi
 
 ARCHIVE="${1}"
 shift
+
+#
+# Treadify
+#
+
+if [[ ${THREADS} -eq 0 ]]; then
+  THREADS="$(nproc)"
+fi
 
 #
 # Check compression & level
@@ -139,7 +156,7 @@ esac
 #
 
 if [[ -z "${COMPRESSOR}" ]]; then
-  tar cf "${ARCHIVE}" "${@}"
+  tar "${TOPTS}" "${ARCHIVE}" "${@}"
 else
-  tar cf - "${@}" | "${COMPRESSOR}" "${COMPRESSOR_ARGS[@]}" > "${ARCHIVE}"
+  tar "${TOPTS}" - "${@}" | "${COMPRESSOR}" "${COMPRESSOR_ARGS[@]}" > "${ARCHIVE}"
 fi
