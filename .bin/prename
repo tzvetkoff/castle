@@ -4,8 +4,11 @@ $regex = shift @ARGV || die "Usage: rename <perl expression> <files>\n";
 
 for my $file (@ARGV) {
 	$_ = $file;
-	eval $regex;
+	eval $regex or die "invalid regex '$regex': $!\n";
+
 	if ($_ ne $file) {
-		rename $file, $_;
+		rename $file, $_ and
+			print STDOUT "rename($file, $_) :: ok\n" or
+			print STDERR "rename($file, $_) :: error ($!)\n";
 	}
 }
