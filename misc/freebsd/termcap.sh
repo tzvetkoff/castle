@@ -7,11 +7,11 @@
 ROOT="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
 
 #
-# files to symlink
+# files/directories to install
 #
 
-INSTALL_SYMLINKS=(\
-  "${ROOT}/.termcap:${HOME}/.termcap" \
+INSTALL=(
+  "${HOME}/.termcap:s:${ROOT}/.termcap"
 )
 
 #
@@ -66,24 +66,75 @@ ask() {
 }
 
 #
-# install symlinks
+# helper to install a directory
 #
 
-install_symlinks() {
-  local src_dst
-  for src_dst in "${INSTALL_SYMLINKS[@]}"; do
-    local src="${src_dst%:*}" dst="${src_dst#*:}"
-    if [[ -e "${dst}" ]]; then
-      if ask "File ${COLOR_WHITE}${dst}${COLOR_YELLOW} already exists. Overwrite?"; then
-        rm -rf -- "${dst}"
-      else
-        echo -e "${COLOR_RED}skip${COLOR_WHITE} ${dst}"
-        continue
-      fi
-    fi
+install_dir() {
+  local dir="${1}"
 
-    echo -e "${COLOR_GREEN}install${COLOR_WHITE} ${dst}"
-    ln -s "${src}" "${dst}"
+  if [[ -d "${dir}" ]]; then
+    echo -e "${COLOR_RED}skip${COLOR_WHITE} ${dir}"
+  else
+    echo -e "${COLOR_GREEN}mkdir${COLOR_WHITE} ${dir}"
+    mkdir -p "${dir}"
+  fi
+}
+
+#
+# helper to install a file
+#
+
+install_file() {
+  local dst="${1}" src="${2}"
+
+  if [[ -e "${dst}" ]]; then
+    if ask "File ${COLOR_WHITE}${dst}${COLOR_YELLOW} already exists. Overwrite?"; then
+      rm -rf -- "${dst}"
+    else
+      echo -e "${COLOR_RED}skip${COLOR_WHITE} ${dst}"
+      return
+    fi
+  fi
+
+  echo -e "${COLOR_GREEN}install${COLOR_WHITE} ${dst}"
+  cp -f "${src}" "${dst}"
+}
+
+#
+# helper to install a symlink
+#
+
+install_symlink() {
+  local dst="${1}" src="${2}"
+
+  if [[ -e "${dst}" ]]; then
+    if ask "File ${COLOR_WHITE}${dst}${COLOR_YELLOW} already exists. Overwrite?"; then
+      rm -rf -- "${dst}"
+    else
+      echo -e "${COLOR_RED}skip${COLOR_WHITE} ${dst}"
+      return
+    fi
+  fi
+
+  echo -e "${COLOR_GREEN}install${COLOR_WHITE} ${dst}"
+  ln -s "${src}" "${dst}"
+}
+
+#
+# install files/directories
+#
+
+install_files() {
+  local spec arr
+  for spec in "${INSTALL[@]}"; do
+    IFS=':' read -ra arr <<< "${spec}"
+
+    case "${arr[1]}" in
+      d) install_dir "${arr[0]}";;
+      f) install_file "${arr[0]}" "${arr[2]}";;
+      s) install_symlink "${arr[0]}" "${arr[2]}";;
+      *) echo "${0}: bad install spec: ${spec}" >&2; exit 1;;
+    esac
   done
 }
 
@@ -92,5 +143,5 @@ install_symlinks() {
 #
 
 if [[ "${BASH_SOURCE[0]}" = "${0}" ]]; then
-  install_symlinks
+  install_files
 fi

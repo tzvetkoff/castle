@@ -7,36 +7,30 @@
 ROOT="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
 
 #
-# dirs to create
+# files/directories to install
 #
 
-INSTALL_DIRS=(\
-  "${HOME}/.bashrc.d" \
-)
+INSTALL=(
+  "${HOME}/.bashrc.d:d"
 
-#
-# files to symlink
-#
-
-INSTALL_SYMLINKS=(\
-  "${ROOT}/.aprc:${HOME}/.aprc"                             \
-  "${ROOT}/.bash_completion:${HOME}/.bash_completion"       \
-  "${ROOT}/.bash_profile:${HOME}/.bash_profile"             \
-  "${ROOT}/.bashrc.d/os:${HOME}/.bashrc.d/os"               \
-  "${ROOT}/.bashrc.d/aws:${HOME}/.bashrc.d/aws"             \
-  "${ROOT}/.bashrc.d/go:${HOME}/.bashrc.d/go"               \
-  "${ROOT}/.bashrc.d/k8s:${HOME}/.bashrc.d/k8s"             \
-  "${ROOT}/.bashrc.d/ssh-agent:${HOME}/.bashrc.d/ssh-agent" \
-  "${ROOT}/.bashrc:${HOME}/.bashrc"                         \
-  "${ROOT}/.bin/motd:${HOME}/.motd"                         \
-  "${ROOT}/.bin:${HOME}/.bin"                               \
-  "${ROOT}/.gemrc:${HOME}/.gemrc"                           \
-  "${ROOT}/.irbrc:${HOME}/.irbrc"                           \
-  "${ROOT}/.pythonrc:${HOME}/.pythonrc"                     \
-  "${ROOT}/.sqliterc:${HOME}/.sqliterc"                     \
-  "${ROOT}/.tmux.conf:${HOME}/.tmux.conf"                   \
-  "${ROOT}/.vim:${HOME}/.vim"                               \
-  "${ROOT}/.vimrc:${HOME}/.vimrc"                           \
+  "${HOME}/.aprc:s:${ROOT}/.aprc"
+  "${HOME}/.bash_completion:s:${ROOT}/.bash_completion"
+  "${HOME}/.bash_profile:s:${ROOT}/.bash_profile"
+  "${HOME}/.bashrc.d/aws:s:${ROOT}/.bashrc.d/aws"
+  "${HOME}/.bashrc.d/go:s:${ROOT}/.bashrc.d/go"
+  "${HOME}/.bashrc.d/k8s:s:${ROOT}/.bashrc.d/k8s"
+  "${HOME}/.bashrc.d/os:s:${ROOT}/.bashrc.d/os"
+  "${HOME}/.bashrc.d/ssh-agent:s:${ROOT}/.bashrc.d/ssh-agent"
+  "${HOME}/.bashrc:s:${ROOT}/.bashrc"
+  "${HOME}/.bin:s:${ROOT}/.bin"
+  "${HOME}/.gemrc:s:${ROOT}/.gemrc"
+  "${HOME}/.irbrc:s:${ROOT}/.irbrc"
+  "${HOME}/.motd:s:${ROOT}/.bin/motd"
+  "${HOME}/.pythonrc:s:${ROOT}/.pythonrc"
+  "${HOME}/.sqliterc:s:${ROOT}/.sqliterc"
+  "${HOME}/.tmux.conf:s:${ROOT}/.tmux.conf"
+  "${HOME}/.vimrc:s:${ROOT}/.vimrc"
+  "${HOME}/.vim:s:${ROOT}/.vim"
 )
 
 #
@@ -91,36 +85,75 @@ ask() {
 }
 
 #
-# install dirs
+# helper to install a directory
 #
 
-install_dirs() {
-  local dir
-  for dir in "${INSTALL_DIRS[@]}"; do
+install_dir() {
+  local dir="${1}"
+
+  if [[ -d "${dir}" ]]; then
+    echo -e "${COLOR_RED}skip${COLOR_WHITE} ${dir}"
+  else
     echo -e "${COLOR_GREEN}mkdir${COLOR_WHITE} ${dir}"
     mkdir -p "${dir}"
-  done
+  fi
 }
 
 #
-# install symlinks
+# helper to install a file
 #
 
-install_symlinks() {
-  local src_dst
-  for src_dst in "${INSTALL_SYMLINKS[@]}"; do
-    local src="${src_dst%:*}" dst="${src_dst#*:}"
-    if [[ -e "${dst}" ]]; then
-      if ask "File ${COLOR_WHITE}${dst}${COLOR_YELLOW} already exists. Overwrite?"; then
-        rm -rf -- "${dst}"
-      else
-        echo -e "${COLOR_RED}skip${COLOR_WHITE} ${dst}"
-        continue
-      fi
-    fi
+install_file() {
+  local dst="${1}" src="${2}"
 
-    echo -e "${COLOR_GREEN}install${COLOR_WHITE} ${dst}"
-    ln -s "${src}" "${dst}"
+  if [[ -e "${dst}" ]]; then
+    if ask "File ${COLOR_WHITE}${dst}${COLOR_YELLOW} already exists. Overwrite?"; then
+      rm -rf -- "${dst}"
+    else
+      echo -e "${COLOR_RED}skip${COLOR_WHITE} ${dst}"
+      return
+    fi
+  fi
+
+  echo -e "${COLOR_GREEN}install${COLOR_WHITE} ${dst}"
+  cp -f "${src}" "${dst}"
+}
+
+#
+# helper to install a symlink
+#
+
+install_symlink() {
+  local dst="${1}" src="${2}"
+
+  if [[ -e "${dst}" ]]; then
+    if ask "File ${COLOR_WHITE}${dst}${COLOR_YELLOW} already exists. Overwrite?"; then
+      rm -rf -- "${dst}"
+    else
+      echo -e "${COLOR_RED}skip${COLOR_WHITE} ${dst}"
+      return
+    fi
+  fi
+
+  echo -e "${COLOR_GREEN}install${COLOR_WHITE} ${dst}"
+  ln -s "${src}" "${dst}"
+}
+
+#
+# install files/directories
+#
+
+install_files() {
+  local spec arr
+  for spec in "${INSTALL[@]}"; do
+    IFS=':' read -ra arr <<< "${spec}"
+
+    case "${arr[1]}" in
+      d) install_dir "${arr[0]}";;
+      f) install_file "${arr[0]}" "${arr[2]}";;
+      s) install_symlink "${arr[0]}" "${arr[2]}";;
+      *) echo "${0}: bad install spec: ${spec}" >&2; exit 1;;
+    esac
   done
 }
 
@@ -213,8 +246,7 @@ update_on_install() {
 #
 
 if [[ "${BASH_SOURCE[0]}" = "${0}" ]]; then
-  install_dirs
-  install_symlinks
+  install_files
   install_gitconfig
   install_mycnf
   install_misc "${@}"
