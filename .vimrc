@@ -37,6 +37,7 @@ set wrapmargin=0                                " don't enforce text wrap
 set colorcolumn=80,100,120                      " long line markers
 set number                                      " show line numbers
 set cursorline                                  " highlight current line
+set guicursor=                                  " disable cursor styling
 set nofoldenable                                " disable code folding
 set viminfo=                                    " disable .viminfo
 set ttyfast                                     " fast redraw
