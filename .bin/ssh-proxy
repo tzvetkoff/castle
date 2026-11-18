@@ -1,0 +1,72 @@
+#!/bin/bash
+
+#
+# Usage
+#
+
+usage() {
+  echo "Usage: $0 [options] <args...>"
+  echo
+  echo 'Specific options:'
+  echo "  --proxy P         Set proxy server (default: ${proxy})"
+  echo
+  echo 'Common options:'
+  echo '  -h, --help        Print this message and exit'
+  exit "${1}"
+}
+
+#
+# Defaults
+#
+
+proxy='127.0.0.1:1080'
+args=()
+
+#
+# Parse command line
+#
+
+parse=true
+while [[ -n "${1}" ]]; do
+  if ${parse}; then
+    case "${1}" in
+      -h|--help)
+        usage 0;;
+
+      --proxy)
+        proxy="${2}"
+        shift
+        ;;
+      --proxy=*)
+        proxy="${1:8}"
+        ;;
+
+      --)
+        parse=false;;
+      -*)
+        echo "${0}: invalid option: ${1}" >&2; echo >&2; usage 1 >&2;;
+      *)
+        args+=("${1}");;
+    esac
+  else
+    args+=("${1}")
+  fi
+
+  shift
+done
+
+#
+# Check positional arguments
+#
+
+if [[ ${#args[@]} -lt 1 ]]; then
+  echo "${0}: wrong number of arguments (given ${#}, expected >= 1)" >&2
+  echo >&2
+  usage 1 >&2
+fi
+
+#
+# Magic!
+#
+
+ssh -o ProxyCommand="/usr/bin/nc -X 5 -x ${proxy} %h %p" "${args[@]}"
