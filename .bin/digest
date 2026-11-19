@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #
-# usage
+# Usage
 #
 
 usage() {
@@ -26,7 +26,7 @@ usage() {
 }
 
 #
-# message digest helpers
+# Message digest helpers
 #
 
 _crc32() {
@@ -124,7 +124,7 @@ _rmd160() {
 }
 
 #
-# parse command line arguments
+# Parse command line
 #
 
 ALL='true'
@@ -181,7 +181,7 @@ while [[ -n "${1}" ]]; do
 done
 
 #
-# check args
+# Check positional arguments
 #
 
 if [[ ${#ARGS[@]} -lt 1 ]]; then
@@ -191,7 +191,7 @@ if [[ ${#ARGS[@]} -lt 1 ]]; then
 fi
 
 #
-# do a run run
+# Do a barrel roll
 #
 
 for fn in "${ARGS[@]}"; do

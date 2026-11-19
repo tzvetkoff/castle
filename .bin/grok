@@ -72,7 +72,7 @@ while [[ -n "${1}" ]]; do
 done
 
 #
-# Positional arguments shorthand.
+# Positional arguments shorthand
 #
 
 if [[ ${#ARGS[@]} -gt 1 ]]; then
@@ -103,7 +103,7 @@ if [[ -n ${ARGS[0]} ]]; then
 fi
 
 #
-# Check settings.
+# Check settings
 #
 
 if [[ -z "${SERVER}" ]]; then
@@ -123,7 +123,7 @@ if [[ -z "${REMOTE_PORT}" ]]; then
 fi
 
 #
-# Do the magic.
+# Do the magic
 #
 
 ssh -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null -TnNR "${BIND}:${REMOTE_PORT}:${LOCAL_ADDR}:${LOCAL_PORT}" "${SERVER}"

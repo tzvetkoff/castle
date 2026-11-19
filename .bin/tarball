@@ -27,7 +27,7 @@ TOPTS='cpf'
 ARGS=()
 
 #
-# Parse arguments
+# Parse command line
 #
 
 PARSE=true

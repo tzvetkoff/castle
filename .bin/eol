@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #
-# usage
+# Usage
 #
 
 usage() {
@@ -14,7 +14,7 @@ usage() {
 }
 
 #
-# parse command line arguments
+# Parse command line
 #
 
 exclude=('*/.git/*' '*/.keep' '*/.gitkeep' '*/.DS_Store' '*.png' '*.jpg' '*.gif' '*.a' '*.so' '*.cache' '*/.idea/*')
@@ -51,19 +51,19 @@ done
 set -- "${args[@]}"
 
 #
-# do some actual work
+# Do some actual work
 #
 
 dir="${1}"
 dir="${dir:-.}"
 
-# prepare exclude params
+# Prepare exclude params
 exclude_params=()
 for glob in "${exclude[@]}"; do
   [[ -n "${glob}" ]] && exclude_params+=('!' '-wholename' "${glob}")
 done
 
-# do the rambo
+# Do the rambo!
 find "${dir}" -type 'f' "${exclude_params[@]}" | while read -r filename; do
   test "$(tail -c 1 "${filename}")" && echo "${filename}"
 done

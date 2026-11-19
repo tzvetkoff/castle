@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #
-# usage
+# Usage
 #
 
 usage() {
@@ -14,7 +14,7 @@ usage() {
 }
 
 #
-# parse args
+# Parse command line
 #
 
 ARGS=()
@@ -45,7 +45,7 @@ while [[ -n "${1}" ]]; do
 done
 
 #
-# find original tmux
+# Find tmux
 #
 
 for f in '/usr/bin/tmux' '/usr/local/bin/tmux'; do
@@ -61,7 +61,7 @@ if [[ -z "${TMUX}" ]]; then
 fi
 
 #
-# tmuxify
+# Tmuxify!
 #
 
 if [[ -n "${SESSION_NAME}" ]]; then

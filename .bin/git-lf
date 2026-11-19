@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #
-# usage
+# Usage
 #
 
 usage() {
@@ -15,12 +15,16 @@ usage() {
 }
 
 #
-# parse command line arguments
+# Defaults
 #
 
 TOP='20'
 SIZE_UNIT=K
 ARGS=()
+
+#
+# Parse command line
+#
 
 PARSE='true'
 while [[ -n "${1}" ]]; do
@@ -60,7 +64,7 @@ done
 set -- "${ARGS[@]}"
 
 #
-# check args
+# Sanity check
 #
 
 if [[ -z "${TOP}" || ! "${TOP}" =~ ^[0-9]+$ ]]; then
@@ -74,7 +78,7 @@ if [[ "${TOP}" = '0' ]]; then
 fi
 
 #
-# do some actual work
+# Do some actual work
 #
 
 GIT_DIR="${PWD}"

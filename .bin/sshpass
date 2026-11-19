@@ -27,7 +27,7 @@ set varname ""
 set args {}
 set non_option 0
 
-# Parse arguments
+# Parse command line
 for {set i 0} {$i < [llength $argv]} {incr i} {
   set arg [lindex $argv $i]
   switch -glob $arg {

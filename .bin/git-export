@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #
-# usage
+# Usage
 #
 
 usage() {
@@ -16,7 +16,7 @@ usage() {
 }
 
 #
-# parse command line arguments
+# Parse command line
 #
 
 REMOTE=''
@@ -69,7 +69,7 @@ done
 set -- "${ARGS[@]}"
 
 #
-# do some actual work
+# Do some actual work
 #
 
 TREE="${1}"

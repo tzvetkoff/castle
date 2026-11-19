@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #
-# usage
+# Usage
 #
 
 usage() {
@@ -18,18 +18,20 @@ usage() {
 }
 
 #
-# find stream editor
+# Find a suitable stream editor
 #
+
 if type -p vim >/dev/null; then
   ex='vim -E'
 elif type -p ex >/dev/null; then
   ex='ex'
 else
   echo "${0}: could not find vim/ex" >&2
+  exit 1
 fi
 
 #
-# parse command line arguments
+# Parse command line
 #
 
 operation() {
@@ -67,6 +69,10 @@ while [[ -n "${1}" ]]; do
 
   shift
 done
+
+#
+# Late-night programmer error message
+#
 
 if ! ${ARGS}; then
   echo "${0}: wrong number of arguments (given 0, expected >= 1)" >&2

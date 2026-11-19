@@ -4,7 +4,7 @@ require 'optparse'
 require 'csv'
 
 #
-# https://github.com/aptinio/text-table { table.rb, row.rb, cell.rb }
+# Stolen from https://github.com/aptinio/text-table { table.rb, row.rb, cell.rb }
 #
 
 module Text
@@ -136,7 +136,7 @@ module Text
 end
 
 #
-# parse command line arguments
+# Parse command line
 #
 
 input = ARGF
@@ -182,13 +182,13 @@ OptionParser.new do |opts|
 end.parse!
 
 #
-# handle ctrl-c
+# Handle C-C
 #
 
 Signal.trap('INT') { puts; exit! }
 
 #
-# render the table
+# Render the table
 #
 
 table = Text::Table.new
